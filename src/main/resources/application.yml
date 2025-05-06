@@ -1,0 +1,5 @@
+spring:
+    application:
+        name: htqlCV
+    profiles:
+        active: dev
