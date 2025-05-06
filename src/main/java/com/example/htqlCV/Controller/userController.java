@@ -2,6 +2,7 @@ package com.example.htqlCV.Controller;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,13 @@ public class userController {
     }
     @GetMapping("/")
     public List<user> getAllUser() {
+        var authentication=SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println(authentication.getAuthorities());
+         // Call the service method to get all users
+         List<user> users = userSevices.getAllUser();
+         // Return the list of users as a response
+         System.out.println("Get all user request received with size: " + users.size());
         return userSevices.getAllUser();
     }
     
