@@ -2,6 +2,8 @@ package com.example.htqlCV.Model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,5 +30,6 @@ public class role {
     @Column(name = "name")
     private String name;
     @OneToMany(mappedBy = "role")
+    @JsonManagedReference
     private List<userHasRole> userRoles;
 }

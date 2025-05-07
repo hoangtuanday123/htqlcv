@@ -2,7 +2,6 @@ package com.example.htqlCV.Service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.example.htqlCV.DAO.request.userHasRoleDTO;
 import com.example.htqlCV.Model.role;
 import com.example.htqlCV.Model.user;
 import com.example.htqlCV.Model.userHasRole;
@@ -25,4 +24,6 @@ public class userHasRoleServiceimpl implements userHasRoleServices {
         userHasRoleRespository.save(userHasRole_value);
         return userHasRole_value.getId();
     }
+
+  
 }

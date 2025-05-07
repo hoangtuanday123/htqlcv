@@ -41,5 +41,29 @@ public class userServiceImpl implements userSevices {
     public List<user> getAllUser() {
         return userRepository.findAll();
     }
+
+    @Override
+    public user getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public user updateUser(Long id, userRequestDTO userRequestDTO) {
+        user user_value = userRepository.findById(id).orElse(null);
+        if (user_value != null) {
+            user_value.setUsername(userRequestDTO.getUsername());
+            user_value.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+            user_value.setEmail(userRequestDTO.getEmail());
+            user_value.setPhoneNumber(userRequestDTO.getPhoneNumber());
+            user_value.setAddress(userRequestDTO.getAddress());
+            userRepository.save(user_value);
+        }
+        return user_value;
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
     
 }

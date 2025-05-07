@@ -3,8 +3,11 @@ package com.example.htqlCV.Controller;
 import java.util.List;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +17,8 @@ import com.example.htqlCV.Model.user;
 import com.example.htqlCV.Service.userSevices;
 
 import lombok.RequiredArgsConstructor;
+
+
 
 
 
@@ -41,6 +46,20 @@ public class userController {
          System.out.println("Get all user request received with size: " + users.size());
         return userSevices.getAllUser();
     }
+
+    @GetMapping("/{id}")
+    public user getUser(@PathVariable long id) {
+        return userSevices.getUserById(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public user updateUser(@PathVariable long id, @RequestBody userRequestDTO userRequestDTO) {
+        return userSevices.updateUser(id, userRequestDTO);
+    }
     
+    @DeleteMapping("/delete/{id}")
+    public void deleteUser(@PathVariable long id) {
+        userSevices.deleteUser(id);
+    }
     
 }
