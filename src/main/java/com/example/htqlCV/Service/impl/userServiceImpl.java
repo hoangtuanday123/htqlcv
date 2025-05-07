@@ -20,17 +20,21 @@ public class userServiceImpl implements userSevices {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
-    public long createUser(userRequestDTO userRequestDTO) {
-
-        user user_value = user.builder()
+    public user createUser(userRequestDTO userRequestDTO) {
+        try {
+            user user_value = user.builder()
                 .username(userRequestDTO.getUsername())
                 .password(passwordEncoder.encode(userRequestDTO.getPassword()))
                 .email(userRequestDTO.getEmail())
                 .phoneNumber(userRequestDTO.getPhoneNumber())
                 .address(userRequestDTO.getAddress())
                 .build(); 
-        userRepository.save(user_value);
-        return user_value.getId();
+            userRepository.save(user_value);
+            return user_value;
+        } catch (Exception e) {
+            return null;
+        }
+        
     }
 
     @Override

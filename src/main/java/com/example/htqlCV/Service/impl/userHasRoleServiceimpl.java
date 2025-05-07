@@ -1,0 +1,28 @@
+package com.example.htqlCV.Service.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.example.htqlCV.DAO.request.userHasRoleDTO;
+import com.example.htqlCV.Model.role;
+import com.example.htqlCV.Model.user;
+import com.example.htqlCV.Model.userHasRole;
+import com.example.htqlCV.Respository.userHasRoleRespository;
+import com.example.htqlCV.Service.userHasRoleServices;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class userHasRoleServiceimpl implements userHasRoleServices {
+    private final userHasRoleRespository userHasRoleRespository;
+
+    @Override
+    public long createUserHasRole(user userValue,role roleValue) {
+        userHasRole userHasRole_value = userHasRole.builder()
+                .user(userValue)
+                .role(roleValue)
+                .build();
+        userHasRoleRespository.save(userHasRole_value);
+        return userHasRole_value.getId();
+    }
+}

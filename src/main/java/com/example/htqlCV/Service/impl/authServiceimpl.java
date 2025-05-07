@@ -52,7 +52,7 @@ public class authServiceimpl implements authServices {
                 .issuer("your-issuer")
                 .issueTime(new Date())
                 .expirationTime(new Date(System.currentTimeMillis() + 3600 * 1000)) // 1 hour expiration
-                .claim("scope", user_value.getRole())
+                .claim("scope", user_value.getUserRoles())
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);

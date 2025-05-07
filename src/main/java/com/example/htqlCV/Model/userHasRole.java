@@ -2,7 +2,6 @@ package com.example.htqlCV.Model;
 
 import java.util.List;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,28 +15,26 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
-@Table(name = "tbl_user")
-public class user {
-    @Id     
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+@Table(name = "tbl_user_has_role")
+public class userHasRole {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username")
-    private String username;
-    @Column(name = "password")
-    private String password;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "phoneNumber")
-    private String phoneNumber;
-    @Column(name = "address")
-    private String address;
-   @OneToMany(mappedBy = "user")
-   private List<userHasRole> userRoles;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private user user;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private role role;
+
+    
 }

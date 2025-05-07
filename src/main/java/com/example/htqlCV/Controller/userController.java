@@ -27,7 +27,7 @@ public class userController {
     @PostMapping("/")
     public String createUser(@RequestBody userRequestDTO userRequestDTO) {
         System.out.println("Create user request received with username: " + userRequestDTO.getUsername());
-        long id=userSevices.createUser(userRequestDTO);
+        user id=userSevices.createUser(userRequestDTO);
         return String.valueOf(id);
     }
     @GetMapping("/")

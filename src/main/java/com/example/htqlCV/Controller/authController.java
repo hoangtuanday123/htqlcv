@@ -22,18 +22,10 @@ public class authController {
     public String login(@RequestBody authRequestDTO authRequestDTO) {
 
         String token = authService.authentication(authRequestDTO);
-        return token;
-
-    }
-
-    @GetMapping("/token")
-    public String Token(@RequestParam String token) {
-        boolean isValid = authService.validateToken(token);
-        if (isValid) {
-            return "Token is valid";
-        } else {
-            return "Token is invalid";
+        if (token == null) {
+            return "Login failed";
         }
+        return token;
 
     }
 

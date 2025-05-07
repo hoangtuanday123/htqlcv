@@ -9,6 +9,6 @@ import com.example.htqlCV.Model.user;
 
 
 public interface  userSevices {
-    long createUser(userRequestDTO userRequestDTO);
+    user createUser(userRequestDTO userRequestDTO);
     List<user> getAllUser();
 }
