@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { userStore } from '../stores/user'
 import { storeToRefs } from 'pinia';
 import pinia from '../stores/index';
+import { ref } from 'vue';
 const _userStore = userStore(pinia())
 
 const { authToken } = storeToRefs(_userStore);
@@ -35,6 +36,36 @@ export interface User {
   phoneNumber: string;
   roles: string[];
   password: string;
+}
+export interface refreshTokenDTO{
+  token:string
+}
+
+export interface Customer{
+  id: number;
+  name: string;
+  phone: string;
+  dob:Date;
+  address: string;
+  customerType: string;
+  mst: string;
+  cmnd: string;
+  email: string;
+  note: string;
+  companyName: string;
+}
+
+export interface CustomerRequest{
+  name: string;
+  phone: string;
+  dob:Date;
+  address: string;
+  customerType: string;
+  mst: string;
+  cmnd: string;
+  email: string;
+  note: string;
+  companyName: string;
 }
 axios.defaults.baseURL = 'http://localhost:8080';
 
@@ -82,16 +113,18 @@ const request = {
   delete: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
-const todos = {
-  list: () => request.get<Todo[]>('/todos'),
-  details: (id: string) => request.get<Todo>(`/todos/${id}`),
-  create: (data: Todo) => request.post<void>('/todos', data),
-};
+// const todos = {
+//   list: () => request.get<Todo[]>('/todos'),
+//   details: (id: string) => request.get<Todo>(`/todos/${id}`),
+//   create: (data: Todo) => request.post<void>('/todos', data),
+// };
 
 const auth = {
   login: (data: Login) => request.post<string>('/auth/login', data),
   home: () => request.get<string>('/random'),
   logout: (data: invalidTokenRequest) => request.post<void>('/auth/logout', data),
+  checkToken:(token: string) => request.get<string>(`/auth/check_token?token=${encodeURIComponent(token)}`),
+  refreshToken:(data:refreshTokenDTO) => request.post<string>('/auth/refresh-token',data),
 }
 
 const user = {
@@ -112,6 +145,14 @@ const role = {
 
 }
 
+const customer = {
+  getCustomers: () => request.get<Customer[]>('/customer/'),
+  getCustomer: (id: string) => request.get<Customer>(`/customer/${id}`),
+  createCustomer: (data: CustomerRequest) => request.post<number>('/customer/', data),
+  updateCustomer: (id: string, data: CustomerRequest) => request.put<void>(`/customer/${id}/update`, data),
+  deleteCustomer: (id: string) => request.delete<void>(`/customer/${id}/delete`),
+
+}
 
 
 const api = {

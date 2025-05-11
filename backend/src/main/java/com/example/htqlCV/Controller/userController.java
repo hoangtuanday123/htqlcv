@@ -68,6 +68,8 @@ public class userController {
     public currentUser getCurrentUser() {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            System.out.println("Current user: " + username);
+            // return null;
             return userSevices.getCurrentUser(username);
         } catch (Exception e) {
             System.out.println("Error retrieving token: " + e.getMessage());

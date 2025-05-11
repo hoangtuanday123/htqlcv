@@ -9,7 +9,8 @@ import {
 import routes from './routes';
 import { userStore } from '../stores/user'
 import { storeToRefs } from 'pinia'
-
+import api from '../services/api'
+import { biAndroid } from '@quasar/extras/bootstrap-icons';
 
 
 
@@ -49,9 +50,22 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const _userStore = userStore();
-    const { authToken } = storeToRefs(_userStore);
+    const { authToken,userInfo } = storeToRefs(_userStore);
+    if(authToken.value && userInfo.value!=null) {
+      const check_token= async () => {
+        return await api.api.auth.checkToken(authToken.value);
+      };
+      const tokenCheckResult = await check_token();
+      if (tokenCheckResult == "Token is invalid"){
+        console.log("refreshing token")
+        const new_token=await api.api.auth.refreshToken({token:authToken.value});
+        _userStore.saveToken(new_token)
+        const user = await api.api.user.getCurrentUser()
+        _userStore.saveUserInfo({ id: user['id'], username: user['username'], email: user['email'], phoneNumber: user['phoneNumber'], roles: user['roles'] })
+      }
+    }
     if (to.path === '/') next()
     if (to.path !== '/login' && !authToken.value) next({ path: '/login', query: { return_url: encodeURIComponent(to.fullPath) }})
     else next()

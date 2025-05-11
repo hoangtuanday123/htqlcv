@@ -33,8 +33,8 @@ public class authController {
 
     }
 
-    @GetMapping("/token")
-    public String token(@RequestParam String token) {
+    @GetMapping("/check_token")
+    public String checkToken(@RequestParam String token) {
         boolean a=authService.validateToken(token);
         if (a){
             return "Token is valid";

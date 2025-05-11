@@ -46,7 +46,7 @@ public class roleController {
        return roleServices.updateRole(id, roleRequestDTO);
     }
     
-    @DeleteMapping("/{id}/update")
+    @DeleteMapping("/{id}/delete")
     public void deleteRole(@PathVariable Long id) {
         roleServices.deleteRole(id);
     }
