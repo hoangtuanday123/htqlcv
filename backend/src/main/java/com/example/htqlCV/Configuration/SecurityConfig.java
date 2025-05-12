@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -44,7 +45,8 @@ public class SecurityConfig {
         "/user/current_user",
     };
     private final String[] ADMIN_ENDPOINTS = {
-        "/role/**","/user/{id}","/user/update/{id}","/user/delete/{id}","/customer/**"
+        "/role/**","/user/{id}","/user/update/{id}","/user/delete/{id}","/customer/**","/supplier/**",
+        "/category/**","/branchProduct/**","/product/**"
 
     };
     @Bean
@@ -65,7 +67,10 @@ public class SecurityConfig {
 
         return http.build();
     }
-
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(PUBLIC_ENDPOINTS);
+    }
     // @Bean
     // public JwtDecoder jwtDecoder() {
     //     // Khóa bí mật giống như trong quá trình ký token

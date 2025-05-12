@@ -59,8 +59,37 @@
                 <q-btn stretch flat :label="t('menu.contact_us')" to="/contact" />
             </template> -->
             <template v-if="currentUser.hasRole('admin')">
-                <q-btn stretch flat label="Roles" to="/admin/roles" />
-                <q-btn stretch flat label="Users" to="/admin/users" />
+                <q-btn-dropdown label="User" stretch flat no-caps>
+                    <q-list style="min-width: 180px">
+                        <q-item to="/admin/users" clickable>
+                            <q-item-section>Users</q-item-section>
+                        </q-item>
+                        <q-item to="/admin/roles" clickable>
+                            <q-item-section>Roles</q-item-section>
+                        </q-item>
+
+                    </q-list>
+                </q-btn-dropdown>
+                <q-btn-dropdown label="Products" stretch flat no-caps>
+                    <q-list style="min-width: 180px">
+                        <q-item to="/admin/products" clickable>
+                            <q-item-section>Products</q-item-section>
+                        </q-item>
+
+
+                    </q-list>
+                </q-btn-dropdown>
+                <q-btn-dropdown label="Partner" stretch flat no-caps>
+                    <q-list style="min-width: 180px">
+                        <q-item to="/admin/customers" clickable>
+                            <q-item-section>Customer</q-item-section>
+                        </q-item>
+                        <q-item to="/admin/suppliers" clickable>
+                            <q-item-section>Supplier</q-item-section>
+                        </q-item>
+
+                    </q-list>
+                </q-btn-dropdown>
             </template>
             <q-space />
             <!-- right side -->

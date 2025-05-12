@@ -29,14 +29,14 @@ let role: RoleRequest = reactive({
 
 async function fetch() {
     loading.value = true;
-    const res = await api.api.role.getRole(route.params.id[0])
+    const res = await api.api.role.getRole(route.params.id[0] as string)
     Object.assign(role, res)
     loading.value = false;
 }
 
 async function save() {
     loading.value = true
-    await api.api.role.updateRole(route.params.id[0], role)
+    await api.api.role.updateRole(route.params.id[0] as string, role)
     loading.value = false
 }
 

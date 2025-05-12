@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.htqlCV.DAO.request.customerRequestDTO;
@@ -32,7 +31,7 @@ public class customerController {
     }
 
     @GetMapping("/{id}")
-    public customer getcustomer(@RequestParam Long id){
+    public customer getcustomer(@PathVariable Long id){
         return customerServices.getCustomer(id);
     }
 

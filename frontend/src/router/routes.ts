@@ -56,6 +56,49 @@ const routes: RouteRecordRaw[] = [
               }
             ]
 
+          },
+          {
+            path: "customers",
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Admin/Customer/customer-list.vue')
+              },
+              {
+                path: 'create',
+                component: () => import('pages/Admin/Customer/customer-create.vue')
+              },
+              {
+                path: ':id/edit',
+                component: () => import('pages/Admin/Customer/customer-edit.vue')
+              }
+            ]
+          },
+          {
+            path: 'suppliers',
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Admin/Supplier/supplier-list.vue')
+              },
+              {
+                path: 'create',
+                component: () => import('pages/Admin/Supplier/supplier-create.vue')
+              },
+              {
+                path: ':id/edit',
+                component: () => import('pages/Admin/Supplier/supplier-edit.vue')
+              }
+            ]
+          },
+          {
+            path: 'products',
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Admin/Product/product-list.vue')
+              }
+            ]
           }
         ]
       }

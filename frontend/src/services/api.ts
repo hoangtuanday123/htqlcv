@@ -37,15 +37,15 @@ export interface User {
   roles: string[];
   password: string;
 }
-export interface refreshTokenDTO{
-  token:string
+export interface refreshTokenDTO {
+  token: string
 }
 
-export interface Customer{
+export interface Customer {
   id: number;
   name: string;
   phone: string;
-  dob:Date;
+  dob: Date;
   address: string;
   customerType: string;
   mst: string;
@@ -55,10 +55,10 @@ export interface Customer{
   companyName: string;
 }
 
-export interface CustomerRequest{
+export interface CustomerRequest {
   name: string;
   phone: string;
-  dob:Date;
+  dob: Date;
   address: string;
   customerType: string;
   mst: string;
@@ -67,6 +67,66 @@ export interface CustomerRequest{
   note: string;
   companyName: string;
 }
+
+export interface Supplier {
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+  branch: string;
+  mst: string;
+  email: string;
+  note: string;
+  company: string;
+}
+
+export interface SupplierRequest {
+  name: string;
+  phone: string;
+  address: string;
+  branch: string;
+  mst: string;
+  email: string;
+  note: string;
+  company: string;
+}
+export interface Category {
+  id: number;
+  name: string;
+}
+
+export interface CategoryRequest {
+  name: string;
+}
+
+export interface BranchProduct {
+  id: number;
+  name: string;
+}
+
+export interface BranchProductRequest {
+  name: string;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  capitalPrice: number;
+  salePrice: number;
+  stockQuantity: number;
+  categoryId: number;
+  branchProductId: number;
+}
+
+export interface ProductRequest {
+  name: string;
+  capitalPrice: number;
+  salePrice: number;
+  stockQuantity: number;
+  categoryId: number;
+  branchProductId: number;
+}
+
 axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
@@ -123,8 +183,8 @@ const auth = {
   login: (data: Login) => request.post<string>('/auth/login', data),
   home: () => request.get<string>('/random'),
   logout: (data: invalidTokenRequest) => request.post<void>('/auth/logout', data),
-  checkToken:(token: string) => request.get<string>(`/auth/check_token?token=${encodeURIComponent(token)}`),
-  refreshToken:(data:refreshTokenDTO) => request.post<string>('/auth/refresh-token',data),
+  checkToken: (token: string) => request.get<string>(`/auth/check_token?token=${encodeURIComponent(token)}`),
+  refreshToken: (data: refreshTokenDTO) => request.post<string>('/auth/refresh-token', data),
 }
 
 const user = {
@@ -154,11 +214,47 @@ const customer = {
 
 }
 
+const supplier = {
+  getSuppiers: () => request.get<Supplier[]>('/supplier/'),
+  getSupplier: (id: string) => request.get<Supplier>(`/supplier/${id}`),
+  createSupplier: (data: SupplierRequest) => request.post<number>('/supplier/', data),
+  updateSupplier: (id: string, data: SupplierRequest) => request.put<void>(`/supplier/${id}/update`, data),
+  deleteSupplier: (id: string) => request.delete<void>(`/supplier/${id}/delete`),
+
+}
+
+const category = {
+  getCategories: () => request.get<Category[]>('/category/'),
+  getCategory: (id: string) => request.get<Category>(`/category/${id}`),
+  createCategory: (data: CategoryRequest) => request.post<number>('/category/', data),
+  deleteCategory: (id: string) => request.delete<void>(`/category/${id}/delete`),
+}
+
+const branchProduct = {
+  getBranchProducts: () => request.get<BranchProduct[]>('/branchProduct/'),
+  getBranchProduct: (id: string) => request.get<BranchProduct>(`/branchProduct/${id}`),
+  createBranchProduct: (data: BranchProductRequest) => request.post<number>('/branchProduct/', data),
+  deleteBranchProduct: (id: string) => request.delete<void>(`/branchProduct/${id}/delete`),
+}
+
+const product = {
+  getProducts: () => request.get<Product[]>('/product/'),
+  getProduct: (id: string) => request.get<Product>(`/product/${id}`),
+  createProduct: (data: ProductRequest) => request.post<number>('/product/', data),
+  updateProduct: (id: string, data: ProductRequest) => request.put<void>(`/product/${id}/update`, data),
+  deleteProduct: (id: string) => request.delete<void>(`/product/${id}/delete`),
+
+}
 
 const api = {
   auth,
   user,
-  role
+  role,
+  customer,
+  supplier,
+  category,
+  branchProduct,
+  product,
 };
 
 export default { api };

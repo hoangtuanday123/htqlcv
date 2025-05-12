@@ -103,6 +103,7 @@ public class authServiceimpl implements authServices {
     public boolean validateToken(String token) {
         try {
             SignedJWT signedJWT=verifyToken(token);
+            System.out.println("signedJWT: " + signedJWT);
             if(signedJWT==null){
                 return false;
             }
@@ -132,12 +133,13 @@ public class authServiceimpl implements authServices {
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
             var verified=signedJWT.verify(verifier);
             if(!verified && expirationTime.after(new Date())){
-                throw new RuntimeException("Failed to verify JWT");
+                return null;
+                // throw new RuntimeException("Failed to verify JWT");
             }
             String jti = signedJWT.getJWTClaimsSet().getJWTID();
             if(invalidTokenRespository.existsById(jti)){
-               
-                throw new RuntimeException("Token is invalidated");
+               return null;
+                // throw new RuntimeException("Token is invalidated");
             }
             return signedJWT;
         } catch (Exception e) {

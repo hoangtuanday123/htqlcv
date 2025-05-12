@@ -6,9 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -23,11 +20,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "tbl_user")
-public class user {
-    @Id     
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class user extends abstractEntity{
     @Column(name = "username")
     private String username;
     @Column(name = "password")
@@ -38,7 +31,7 @@ public class user {
     private String phoneNumber;
     @Column(name = "address")
     private String address;
-   @OneToMany(mappedBy = "user")
-   @JsonManagedReference
-   private List<userHasRole> userRoles;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<userHasRole> userRoles;
 }
