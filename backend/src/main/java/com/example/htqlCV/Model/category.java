@@ -1,11 +1,11 @@
 package com.example.htqlCV.Model;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,8 +24,8 @@ public class category extends abstractEntity {
     @Column(name = "name")
     private String name;
     
-    @OneToOne(mappedBy = "category")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "category")
+    @JsonBackReference
     private product product;
     
 }

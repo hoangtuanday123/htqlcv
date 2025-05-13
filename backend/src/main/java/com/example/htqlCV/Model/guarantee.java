@@ -1,10 +1,11 @@
 package com.example.htqlCV.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,16 +15,19 @@ import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
-@Table(name = "tbl_branch_product")
-public class branchProduct extends abstractEntity  {
+@Table(name = "tbl_guarantee")
+public class guarantee extends abstractEntity{
     @Column(name = "name")
     private String name;
+    @Column(name = "guaranteeTime")
+    private Integer guaranteeTime;
 
-    @OneToMany(mappedBy = "branchProduct")
-    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @JsonManagedReference
     private product product;
 }

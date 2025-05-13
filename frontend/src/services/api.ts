@@ -114,8 +114,8 @@ export interface Product {
   capitalPrice: number;
   salePrice: number;
   stockQuantity: number;
-  categoryId: number;
-  branchProductId: number;
+  category: Category;
+  branchProduct: BranchProduct;
 }
 
 export interface ProductRequest {

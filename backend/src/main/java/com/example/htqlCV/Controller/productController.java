@@ -33,7 +33,6 @@ public class productController {
     @GetMapping("/{id}")
     public product getproduct(@PathVariable Long id) {
         var product= productService.getProductById(id);
-        System.out.println("product: " + product.toString());
         return product;
     }
     

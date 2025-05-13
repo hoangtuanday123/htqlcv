@@ -108,10 +108,6 @@ async function addCategory(scope) {
     loading.value = false
 }
 
-async function closeCategory() {
-    openPopupCategory.value = false
-    newCategoryName.value = ''
-}
 
 async function addBranchProduct(scope) {
     loading.value = true
