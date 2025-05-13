@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Roles</h1>
+        <h1>Products</h1>
         <div class="row q-gutter-md q-mb-md">
             <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
                 <template v-slot:append>
@@ -42,6 +42,7 @@ function search(rows, terms) {
 async function fetchProducts() {
     loading.value = true;
     const res = await api.api.product.getProducts();
+    console.log(res)
     products.value = res;
     loading.value = false;
 }

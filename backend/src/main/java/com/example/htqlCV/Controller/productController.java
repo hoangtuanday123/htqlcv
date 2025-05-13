@@ -32,10 +32,12 @@ public class productController {
 
     @GetMapping("/{id}")
     public product getproduct(@PathVariable Long id) {
-        return productService.getProductById(id);
+        var product= productService.getProductById(id);
+        System.out.println("product: " + product.toString());
+        return product;
     }
     
-    @PostMapping("/{id}")
+    @PostMapping("/")
     public Long createProduct(@RequestBody productRequestDTO productRequestDTO) {
         return productService.createProduct(productRequestDTO);
     }

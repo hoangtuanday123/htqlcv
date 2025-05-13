@@ -132,6 +132,7 @@ public class authServiceimpl implements authServices {
             SignedJWT signedJWT = SignedJWT.parse(token);
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
             var verified=signedJWT.verify(verifier);
+            System.out.println("verified: " + verified);
             if(!verified && expirationTime.after(new Date())){
                 return null;
                 // throw new RuntimeException("Failed to verify JWT");

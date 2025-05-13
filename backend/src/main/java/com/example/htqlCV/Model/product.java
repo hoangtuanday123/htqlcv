@@ -1,5 +1,7 @@
 package com.example.htqlCV.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -30,9 +32,11 @@ public class product extends abstractEntity {
 
     @OneToOne
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private category category;
 
     @OneToOne
     @JoinColumn(name = "branch_product_id")
+    @JsonBackReference
     private branchProduct branchProduct;
 }
