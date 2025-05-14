@@ -1,5 +1,7 @@
 package com.example.htqlCV.Model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -8,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,5 +47,9 @@ public class product extends abstractEntity {
 
     @OneToMany(mappedBy = "product")
     @JsonBackReference
-    private guarantee guarantee;
+    private List<guarantee> guarantee;
+
+    @OneToOne(mappedBy = "product")
+    @JsonBackReference
+    private purchaseOrderItems purchaseOrderItems;
 }

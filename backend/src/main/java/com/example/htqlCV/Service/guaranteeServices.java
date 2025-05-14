@@ -6,7 +6,7 @@ import com.example.htqlCV.DAO.request.guaranteeRequestDTO;
 import com.example.htqlCV.Model.guarantee;
 
 public interface  guaranteeServices {
-    List<guarantee> getAllGuarantee();
+    List<guarantee> getGuaranteeByProductId(Long id);
     guarantee getGuaranteeById(Long id);
     Long createGuarantee(guaranteeRequestDTO guarantee);
     void deleteGuarantee(Long id);

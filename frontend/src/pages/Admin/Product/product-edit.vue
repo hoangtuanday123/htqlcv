@@ -1,7 +1,8 @@
 <template>
   <q-page class="q-pa-md">
     <h1>Update Product</h1>
-    <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" narrow-indicator align="left">
+    <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" narrow-indicator
+      align="left">
       <q-tab name="infomations" label="Infomations" />
       <q-tab name="guarantee" label="Guarantee" />
     </q-tabs>
@@ -59,9 +60,32 @@
         </q-form>
       </q-tab-panel>
 
-      <q-tab-panel name="alarms">
-        <div class="text-h6">Alarms</div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      <q-tab-panel name="guarantee">
+        <div class="row q-gutter-md q-mb-md">
+          <q-btn color="accent" icon="add" @click="dialog = true" label="Create Guarantee" />
+        </div>
+        <q-table :rows="guarantees" :columns="columns" :loading="loading" row-key="id">
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props" auto-width style="min-width: 120px;">
+              <q-btn icon="delete" @click="deleteGuarantee(props.row)" round class="q-ml-sm" text-color="grey-7" />
+            </q-td>
+          </template>
+        </q-table>
+        <q-dialog v-model="dialog">
+          <q-card>
+
+            <q-card-section class="q-pt-none">
+              <q-input v-model="guaranteeRequest.name" label="Name" required />
+              <q-input v-model="guaranteeRequest.guaranteeTime" label="Name" type="number" required />
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Create" @click="createGuarantee" />
+              <q-btn flat label="Close" v-close-popup />
+            </q-card-actions>
+          </q-card>
+
+        </q-dialog>
       </q-tab-panel>
     </q-tab-panels>
   </q-page>
@@ -74,6 +98,8 @@ import api, {
   ProductRequest,
   Category,
   BranchProduct,
+  Guarantee,
+  GuaranteeRequest
 } from '../../../services/api';
 const route = useRoute();
 const loading = ref(false);
@@ -84,16 +110,27 @@ const newCategoryName = ref('');
 const openPopupBranchProduct = ref(false);
 const newBranchProductName = ref('');
 const tab = ref('infomations');
+const guarantees = ref<Guarantee[]>([]);
+const dialog = ref(false);
+let guaranteeRequest: GuaranteeRequest = reactive({
+  name: 'All ingredients',
+  guaranteeTime: 0,
+  productId: null,
+});
 let product: Product = reactive({
   id: 0,
   name: '',
   capitalPrice: 0,
   salePrice: 0,
   stockQuantity: 0,
-  category: { id: null },
-  branchProduct: { id: null },
+  category: { id: null, name: '' },
+  branchProduct: { id: null, name: '' },
 });
-
+const columns = [
+  { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
+  { name: 'guaranteeTime', label: 'Guarantee Time (month)', align: 'left' as const, field: 'guaranteeTime', sortable: true },
+  { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+];
 async function save() {
   loading.value = true;
   const productRequest = {
@@ -125,7 +162,8 @@ async function fetch() {
   }));
   const res = await api.api.product.getProduct(route.params.id as string);
   Object.assign(product, res);
-  console.log(product.category.id);
+  const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
+  guarantees.value = guaranteeRes;
   loading.value = false;
 }
 
@@ -137,7 +175,7 @@ async function addCategory(scope) {
     label: item.name,
     value: item.id,
   }));
-  product.categoryId = res;
+  product.category.id = res;
   loading.value = false;
 }
 
@@ -151,10 +189,27 @@ async function addBranchProduct(scope) {
     label: item.name,
     value: item.id,
   }));
-  product.branchProductId = res;
+  product.branchProduct.id = res;
   loading.value = false;
 }
 
+async function deleteGuarantee(guarantee) {
+  loading.value = true;
+  await api.api.guarantee.deleteGuarantee(guarantee.id);
+  const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
+  guarantees.value = guaranteeRes;
+  loading.value = false;
+}
+
+async function createGuarantee() {
+  loading.value = true;
+  guaranteeRequest.productId = Number(route.params.id);
+  await api.api.guarantee.createGuarantee(guaranteeRequest);
+  dialog.value = false;
+  const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
+  guarantees.value = guaranteeRes;
+  loading.value = false;
+}
 onMounted(async () => {
   await fetch();
 });

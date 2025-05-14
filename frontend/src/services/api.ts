@@ -127,6 +127,19 @@ export interface ProductRequest {
   branchProductId: number;
 }
 
+export interface Guarantee {
+  id: number;
+  name: string;
+  guaranteeTime: number;
+  productId: number;
+}
+
+export interface GuaranteeRequest {
+  name: string;
+  guaranteeTime: number;
+  productId: number;
+}
+
 axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
@@ -246,6 +259,11 @@ const product = {
 
 }
 
+const guarantee = {
+  getGuaranteeProduct: (product_id: String) => request.get<Guarantee[]>(`/guarantee/${product_id}/product`),
+  createGuarantee: (data: GuaranteeRequest) => request.post<number>('/guarantee/', data),
+  deleteGuarantee: (id: string) => request.delete<void>(`/guarantee/${id}/delete`),
+}
 const api = {
   auth,
   user,
@@ -255,6 +273,7 @@ const api = {
   category,
   branchProduct,
   product,
+  guarantee
 };
 
 export default { api };

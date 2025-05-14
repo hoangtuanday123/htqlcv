@@ -1,5 +1,7 @@
 package com.example.htqlCV.Model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -25,5 +27,5 @@ public class branchProduct extends abstractEntity  {
 
     @OneToMany(mappedBy = "branchProduct")
     @JsonBackReference
-    private product product;
+    private List<product> product;
 }

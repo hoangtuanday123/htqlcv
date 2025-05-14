@@ -1,0 +1,39 @@
+package com.example.htqlCV.Controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.htqlCV.DAO.request.purchaseOrdersRequestDTO;
+import com.example.htqlCV.Model.purchaseOrders;
+import com.example.htqlCV.Service.purchaseOrdersServices;
+
+import lombok.RequiredArgsConstructor;
+
+
+
+@RestController
+@RequestMapping("/purchaseOrders")
+@RequiredArgsConstructor
+public class purchaseOrdersController {
+    private final purchaseOrdersServices purchaseOrdersServices;
+    @GetMapping("/")
+    public List<purchaseOrders> getPurchaseOrders() {
+        return purchaseOrdersServices.getAllPurchaseOrders();
+    }
+    @GetMapping("/{id}")
+    public purchaseOrders getPurchaseOrders(@PathVariable Long id) {
+        return purchaseOrdersServices.getPurchaseOrdersById(id);
+    }
+    @PostMapping("/")
+    public Long createPurchaseOrders(@RequestBody purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
+        return purchaseOrdersServices.createPurchaseOrders(purchaseOrdersRequestDTO);
+    }
+    
+    
+}
