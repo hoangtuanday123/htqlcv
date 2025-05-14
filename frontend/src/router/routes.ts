@@ -107,6 +107,19 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('pages/Admin/Product/product-edit.vue')
               }
             ]
+          },
+          {
+            path:"purchaseOrders",
+            children:[
+              {
+                path:'',
+                component:()=>import('pages/Admin/PurchaseOrder/purchaseOrder-list.vue')
+              },
+              {
+                path:'create',
+                component:()=>import('pages/Admin/PurchaseOrder/purchaseOrder-create.vue')
+              }
+            ]
           }
         ]
       }

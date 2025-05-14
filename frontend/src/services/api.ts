@@ -139,6 +139,32 @@ export interface GuaranteeRequest {
   guaranteeTime: number;
   productId: number;
 }
+export interface PurchaseOrderItem {
+  id: number;
+  productId: number;
+  purchaseOrdersId: number;
+  quantity: number;
+  unitPrice: number;
+}
+export interface PurchaseOrder {
+  id: number;
+  totalAmount: number;
+  totalAmountPaid: number;
+  supplierId: number;
+  subStatus:string;
+  status:string;
+  purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
+
+}
+
+export interface PurchaseOrderRequest {
+  totalAmount: number;
+  totalAmountPaid: number;
+  supplierId: number;
+  subStatus:string;
+  status:string;
+  purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
+}
 
 axios.defaults.baseURL = 'http://localhost:8080';
 
@@ -259,10 +285,19 @@ const product = {
 
 }
 
+
 const guarantee = {
-  getGuaranteeProduct: (product_id: String) => request.get<Guarantee[]>(`/guarantee/${product_id}/product`),
+  getGuaranteeProduct: (product_id: string) => request.get<Guarantee[]>(`/guarantee/${product_id}/product`),
   createGuarantee: (data: GuaranteeRequest) => request.post<number>('/guarantee/', data),
   deleteGuarantee: (id: string) => request.delete<void>(`/guarantee/${id}/delete`),
+}
+
+const purchaseOrder = {
+  getPurchaseOrders: () => request.get<PurchaseOrder[]>('/purchaseOrders/'),
+  getPurchaseOrder: (id: string) => request.get<PurchaseOrder>(`/purchaseOrders/${id}`),
+  createPurchaseOrder: (data: PurchaseOrderRequest) => request.post<number>('/purchaseOrders/', data),
+  deletePurchaseOrder: (id: string) => request.delete<void>(`/purchaseOrders/${id}/delete`),
+
 }
 const api = {
   auth,
@@ -273,7 +308,8 @@ const api = {
   category,
   branchProduct,
   product,
-  guarantee
+  guarantee,
+  purchaseOrder
 };
 
 export default { api };

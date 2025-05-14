@@ -90,6 +90,15 @@
 
                     </q-list>
                 </q-btn-dropdown>
+                <q-btn-dropdown label="Purchase Orders" stretch flat no-caps>
+                    <q-list style="min-width: 180px">
+                        <q-item to="/admin/purchaseOrders" clickable>
+                            <q-item-section>Purchase Orders</q-item-section>
+                        </q-item>
+
+
+                    </q-list>
+                </q-btn-dropdown>
             </template>
             <q-space />
             <!-- right side -->
