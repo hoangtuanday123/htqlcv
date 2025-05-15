@@ -40,7 +40,7 @@
               <q-card-section class="q-pt-none">
                 <q-input v-model="productAdd.name" label="Name" required />
                 <q-select v-model="productAdd.categoryId" :options="categoryOptions" label="Category" map-options
-                  emit-value>
+                  emit-value >
                   <template v-slot:append>
                     <q-btn round dense flat icon="add" @click="openPopupCategory = true" />
                     <q-popup-edit v-model="newCategoryName" v-model:opened="openPopupCategory" v-slot="scope">
@@ -86,7 +86,7 @@
         <div class="col-1"></div>
         <div class="col-4">
           <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions" label="Supplier" map-options
-            emit-value>
+            emit-value :rules="[val => !!val || 'Supplier is required']">
           </q-select>
           <q-input v-model="purchaseOrder.totalAmount" label="Total Amound" type="number" readonly />
           <q-input v-model="purchaseOrder.totalAmountPaid" label="Total Amound Paid" type="number" />

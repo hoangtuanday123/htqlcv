@@ -60,9 +60,9 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
             purchaseOrders_value.setSupplier(supplier);
             purchaseOrdersRespository.save(purchaseOrders_value);
             for (var item : purchaseOrdersRequestDTO.getPurchaseOrderItemsRequestDTO()) {
-                var poi=purchaseOrderItemsServices.getPurchaseOrderItemsById(id);
-                if (poi!= null) {
-                    purchaseOrderItemsServices.updatePurchaseOrderItems(poi.getId(), item);
+                item.setPurchaseOrdersId(id);
+                if (item.getId()!= null) {
+                    purchaseOrderItemsServices.updatePurchaseOrderItems(item.getId(), item);
                 } else {
                     purchaseOrderItemsServices.createPurchaseOrderItems(item);
                 }

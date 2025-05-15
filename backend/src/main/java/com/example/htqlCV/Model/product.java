@@ -10,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,12 +34,12 @@ public class product extends abstractEntity {
     @Column(name="stock_quantity")
     private Long stockQuantity;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "category_id")
     @JsonManagedReference
     private category category;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "branch_product_id")
     @JsonManagedReference
     private branchProduct branchProduct;
@@ -49,7 +48,7 @@ public class product extends abstractEntity {
     @JsonBackReference
     private List<guarantee> guarantee;
 
-    @OneToOne(mappedBy = "product")
+    @OneToMany(mappedBy = "product")
     @JsonBackReference
-    private purchaseOrderItems purchaseOrderItems;
+    private List<purchaseOrderItems> purchaseOrderItems;
 }

@@ -10,4 +10,5 @@ import com.example.htqlCV.Model.purchaseOrderItems;
 @Repository
 public interface  purchaseOrderItemRespository extends JpaRepository<purchaseOrderItems, Long>{
     List<purchaseOrderItems> findByPurchaseOrders_Id(Long purchaseOrdersId);
+    purchaseOrderItems findByPurchaseOrders_IdAndProduct_Id(Long purchaseOrdersId, Long productId);
 }

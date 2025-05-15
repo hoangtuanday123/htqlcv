@@ -26,7 +26,7 @@ public class guarantee extends abstractEntity{
     @Column(name = "guaranteeTime")
     private Integer guaranteeTime;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "product_id")
     @JsonManagedReference
     private product product;

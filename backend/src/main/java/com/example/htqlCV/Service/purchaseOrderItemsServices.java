@@ -8,6 +8,7 @@ import com.example.htqlCV.Model.purchaseOrderItems;
 public interface purchaseOrderItemsServices {
     List<purchaseOrderItems> getPurchaseOrderItemsByPurchaseOrder(Long purchaseOrdersId);
     purchaseOrderItems getPurchaseOrderItemsById(Long id);
+    purchaseOrderItems getPurchaseOrderItemsByProductIDPurchaseOrder(Long purchaseOrdersId, Long productId);
     Long createPurchaseOrderItems(purchaseOrderItemsRequestDTO purchaseOrderItems);
     void updatePurchaseOrderItems(Long id, purchaseOrderItemsRequestDTO purchaseOrderItems);
     void deletePurchaseOrderItems(Long id);

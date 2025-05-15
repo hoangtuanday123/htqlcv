@@ -27,12 +27,12 @@ public class userHasRole extends abstractEntity{
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private user user;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "role_id")
     @JsonBackReference
     private role role;

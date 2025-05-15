@@ -91,9 +91,9 @@
                 <div class="col-1"></div>
                 <div class="col-4">
                     <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions" label="Supplier" map-options
-                        emit-value>
+                        emit-value :rules="[val => !!val || 'Category is required']">
                     </q-select>
-                    <q-input v-model="purchaseOrder.totalAmount" label="Total Amound" type="number" readonly />
+                    <q-input  :model-value="totalAmountvalue" label="Total Amound" type="number" readonly />
                     <q-input v-model="purchaseOrder.totalAmountPaid" label="Total Amound Paid" type="number" />
                     <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions" label="Sub Status"
                         map-options emit-value>
@@ -107,7 +107,7 @@
             <div class="row">
                 <div class="col q-gutter-md">
                     <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-                    <q-btn label="Close" icon="close" type="button" to="../purchaseOrders" outline color="grey-9" />
+                    <q-btn label="Close" icon="close" type="button" to="../../purchaseOrders" outline color="grey-9" />
                 </div>
             </div>
         </q-form>
@@ -147,6 +147,7 @@ const product = ref(null)
 const productOptions = ref([])
 const purchaseOrderItems = ref([])
 const openDiaglog = ref(false)
+const totalAmountvalue=ref(0)
 let productAdd: ProductRequest = reactive({
     name: '',
     capitalPrice: 0,
@@ -165,15 +166,15 @@ const columns = [
 
 
 const totalAmount = computed(() => {
-    return purchaseOrderItems.value.reduce(
-        (sum, item) => sum + item.unitPrice * item.quantity,
-        0
-    );
+  return purchaseOrderItems.value.reduce(
+    (sum, item) => sum + (item.unitPrice || 0) * (item.quantity || 0),
+    0
+  );
 });
 
-// Watch the computed totalAmount and update purchaseOrder.totalAmount
 watch(totalAmount, (newTotal) => {
-    purchaseOrder.totalAmount = newTotal;
+  purchaseOrder.totalAmount = newTotal;
+  totalAmountvalue.value=newTotal;
 });
 async function fetch() {
     loading.value = true;
@@ -202,6 +203,8 @@ async function fetch() {
 
     const purchaseOrderRes = await api.api.purchaseOrder.getPurchaseOrder(route.params.id as string)
     purchaseOrder = purchaseOrderRes
+    totalAmountvalue.value=purchaseOrder.totalAmount
+    purchaseOrder.supplierId=purchaseOrderRes["supplier"]["id"]
     const purchaseOrderItemsRes = await api.api.purchaseOrderItem.getPurchaseOrderItemsbyPurchaseOrder(route.params.id as string)
     purchaseOrderItems.value = purchaseOrderItemsRes.map((item) => ({
         id: item.id,
@@ -210,7 +213,6 @@ async function fetch() {
         quantity: item.quantity,
         unitPrice: item.unitPrice,
     }))
-    console.log(purchaseOrderItems.value)
     loading.value = false;
 
 }
@@ -223,18 +225,25 @@ async function save() {
         quantity: item.quantity,
         unitPrice: item.unitPrice,
     }))
-    await api.api.purchaseOrder.createPurchaseOrder(purchaseOrder)
+    console.log(purchaseOrder)
+    await api.api.purchaseOrder.updatePurchaseOrder(route.params.id as string,purchaseOrder)
     loading.value = false;
 }
 
 async function deletePurchaseItem(item) {
     loading.value = true
-    await api.api.purchaseOrderItem.deletePurchaseOrderItems(item.id)
-    const index = purchaseOrderItems.value.indexOf(item);
-    if (index > -1) {
-        purchaseOrderItems.value.splice(index, 1);
+    try {
+      await api.api.purchaseOrderItem.deletePurchaseOrderItems(item.id)
+    } catch (error) {
+
     }
-    loading.value = false
+    finally{
+      const index = purchaseOrderItems.value.indexOf(item);
+      if (index > -1) {
+          purchaseOrderItems.value.splice(index, 1);
+      }
+      loading.value = false
+    }
 }
 async function onProductSelect() {
     purchaseOrderItems.value.push({

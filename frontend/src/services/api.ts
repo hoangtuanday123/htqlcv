@@ -304,6 +304,7 @@ const purchaseOrder = {
   getPurchaseOrder: (id: string) => request.get<PurchaseOrder>(`/purchaseOrders/${id}`),
   createPurchaseOrder: (data: PurchaseOrderRequest) => request.post<number>('/purchaseOrders/', data),
   deletePurchaseOrder: (id: string) => request.delete<void>(`/purchaseOrders/${id}/delete`),
+  updatePurchaseOrder: (id: string, data: PurchaseOrderRequest) => request.put<void>(`/purchaseOrders/${id}/update`, data),
 
 }
 

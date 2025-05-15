@@ -26,6 +26,10 @@ public class purchaseOrderItemsServiceImpl implements purchaseOrderItemsServices
     public purchaseOrderItems getPurchaseOrderItemsById(Long id) {
         return purchaseOrderItemRespository.findById(id).orElse(null);
     }
+    @Override
+    public purchaseOrderItems getPurchaseOrderItemsByProductIDPurchaseOrder(Long purchaseOrdersId, Long productId){
+        return purchaseOrderItemRespository.findByPurchaseOrders_IdAndProduct_Id(purchaseOrdersId, productId);
+    }
 
     @Override
     public Long createPurchaseOrderItems(purchaseOrderItemsRequestDTO purchaseOrderItemsRequestDTO) {
@@ -52,6 +56,15 @@ public class purchaseOrderItemsServiceImpl implements purchaseOrderItemsServices
 
     @Override
     public void deletePurchaseOrderItems(Long id) {
-        purchaseOrderItemRespository.deleteById(id);
+        purchaseOrderItems item = purchaseOrderItemRespository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Not found"));
+
+        // Ngắt liên kết để tránh lỗi ràng buộc
+        item.setProduct(null);
+        item.setPurchaseOrders(null);
+
+        purchaseOrderItemRespository.save(item); // cập nhật trước khi xóa
+        purchaseOrderItemRespository.delete(item);
+        // purchaseOrderItemRespository.deleteById(id);
     }
 }
