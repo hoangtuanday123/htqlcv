@@ -6,10 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.purchaseOrderItemsRequestDTO;
 import com.example.htqlCV.Model.purchaseOrderItems;
+import com.example.htqlCV.Respository.productRespository;
 import com.example.htqlCV.Respository.purchaseOrderItemRespository;
 import com.example.htqlCV.Respository.purchaseOrdersRespository;
 import com.example.htqlCV.Service.purchaseOrderItemsServices;
-import com.example.htqlCV.Respository.productRespository;
+
 import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,7 @@ public class purchaseOrderItemsServiceImpl implements purchaseOrderItemsServices
         var purchaseOrders = purchaseOrdersRespository.findById(purchaseOrderItemsRequestDTO.getPurchaseOrdersId()).orElse(null);
         purchaseOrderItems purchaseOrderItems_value = purchaseOrderItems.builder()
                 .purchaseOrders(purchaseOrders)
+                .product(product)
                 .quantity(purchaseOrderItemsRequestDTO.getQuantity())
                 .unitPrice(purchaseOrderItemsRequestDTO.getUnitPrice())
                 .build();

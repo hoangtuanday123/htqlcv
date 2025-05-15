@@ -1,24 +1,24 @@
 <template>
   <q-page class="q-pa-md">
-      <h1>Purchase Orders</h1>
-      <div class="row q-gutter-md q-mb-md">
-          <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
-              <template v-slot:append>
-                  <q-icon name="search" />
-              </template>
-          </q-input>
-          <q-space></q-space>
-          <q-btn color="accent" icon="add" to="./purchaseOrders/create" label="Create Purchase Orders" />
-      </div>
-      <q-table :rows="purchaseOrders" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
-          row-key="id">
-          <template v-slot:body-cell-actions="props">
-              <q-td :props="props" auto-width style="min-width: 120px;">
-                  <q-btn icon="edit" :to="'./purchaseOrders/' + props.row.id + '/edit'" round text-color="grey-7" />
-                  <!-- <q-btn icon="delete" @click="deleteRole(props.row)" round class="q-ml-sm" text-color="grey-7"/> -->
-              </q-td>
-          </template>
-      </q-table>
+    <h1>Purchase Orders</h1>
+    <div class="row q-gutter-md q-mb-md">
+      <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+      <q-space></q-space>
+      <q-btn color="accent" icon="add" to="./purchaseOrders/create" label="Create Purchase Orders" />
+    </div>
+    <q-table :rows="purchaseOrders" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
+      row-key="id">
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props" auto-width style="min-width: 120px;">
+          <q-btn icon="edit" :to="'./purchaseOrders/' + props.row.id + '/edit'" round text-color="grey-7" />
+          <q-btn icon="delete" @click="deletepurchaseOrder(props.row)" round class="q-ml-sm" text-color="grey-7" />
+        </q-td>
+      </template>
+    </q-table>
   </q-page>
 </template>
 <script setup lang="ts">
@@ -44,6 +44,12 @@ async function fetchPurchaseOrders() {
   loading.value = true;
   const res = await api.api.purchaseOrder.getPurchaseOrders();
   purchaseOrders.value = res;
+  loading.value = false;
+}
+async function deletepurchaseOrder(purchaseOrder) {
+  loading.value = true;
+  await api.api.purchaseOrder.deletePurchaseOrder(purchaseOrder.id);
+  fetchPurchaseOrders();
   loading.value = false;
 }
 onMounted(async () => {

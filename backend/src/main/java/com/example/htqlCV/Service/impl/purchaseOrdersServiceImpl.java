@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.purchaseOrdersRequestDTO;
 import com.example.htqlCV.Model.purchaseOrders;
+import com.example.htqlCV.Respository.purchaseOrderItemRespository;
 import com.example.htqlCV.Respository.purchaseOrdersRespository;
 import com.example.htqlCV.Respository.supplierRespository;
 import com.example.htqlCV.Service.purchaseOrderItemsServices;
@@ -19,6 +20,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
    private final purchaseOrdersRespository purchaseOrdersRespository;
    private final supplierRespository supplierRespository;
    private final purchaseOrderItemsServices purchaseOrderItemsServices;
+   private final purchaseOrderItemRespository purchaseOrderItemRespository;
     @Override
     public List<purchaseOrders> getAllPurchaseOrders() {
         return purchaseOrdersRespository.findAll();
@@ -40,6 +42,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         purchaseOrdersRespository.save(purchaseOrders_value);
         var purchaseOrdersId = purchaseOrders_value.getId();
         for (var item : purchaseOrdersRequestDTO.getPurchaseOrderItemsRequestDTO()) {
+            item.setPurchaseOrdersId(purchaseOrdersId);
             purchaseOrderItemsServices.createPurchaseOrderItems(item);
         }
         return purchaseOrdersId;
@@ -68,6 +71,10 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
     }
     @Override
     public void deletePurchaseOrders(Long id) {
+        purchaseOrders purchaseOrders_value = purchaseOrdersRespository.findById(id).orElse(null);
+        for(var item:purchaseOrders_value.getPurchaseOrderItems()){
+            purchaseOrderItemRespository.deleteById(item.getId());
+        }
         purchaseOrdersRespository.deleteById(id);
     }
 }

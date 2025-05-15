@@ -146,13 +146,20 @@ export interface PurchaseOrderItem {
   quantity: number;
   unitPrice: number;
 }
+
+export interface PurchaseOrderItemRequest {
+  productId: number;
+  purchaseOrdersId: number;
+  quantity: number;
+  unitPrice: number;
+}
 export interface PurchaseOrder {
   id: number;
   totalAmount: number;
   totalAmountPaid: number;
   supplierId: number;
-  subStatus:string;
-  status:string;
+  subStatus: string;
+  status: string;
   purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
 
 }
@@ -161,8 +168,8 @@ export interface PurchaseOrderRequest {
   totalAmount: number;
   totalAmountPaid: number;
   supplierId: number;
-  subStatus:string;
-  status:string;
+  subStatus: string;
+  status: string;
   purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
 }
 
@@ -299,6 +306,14 @@ const purchaseOrder = {
   deletePurchaseOrder: (id: string) => request.delete<void>(`/purchaseOrders/${id}/delete`),
 
 }
+
+const purchaseOrderItem = {
+  getPurchaseOrderItemsbyPurchaseOrder: (purchase_order_id: string) => request.get<PurchaseOrderItem[]>(`/purchaseOrderItems/${purchase_order_id}/purchaseOrder`),
+  createPurchaseOrderItems: (data: PurchaseOrderItemRequest) => request.post<number>('/purchaseOrderItems/', data),
+  updatePurchaseOrderItems: (id: string, data: PurchaseOrderItemRequest) => request.put<void>(`/purchaseOrderItems/${id}/update`, data),
+  deletePurchaseOrderItems: (id: string) => request.delete<void>(`/purchaseOrderItems/${id}/delete`),
+
+}
 const api = {
   auth,
   user,
@@ -309,7 +324,8 @@ const api = {
   branchProduct,
   product,
   guarantee,
-  purchaseOrder
+  purchaseOrder,
+  purchaseOrderItem
 };
 
 export default { api };

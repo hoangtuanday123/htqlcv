@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +34,7 @@ public class purchaseOrders extends abstractEntity{
     @Column(name="Sub_status")
     private String SubStatus;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "supplier_id")
     @JsonManagedReference
     private supplier supplier;
