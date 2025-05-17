@@ -145,6 +145,7 @@ export interface PurchaseOrderItem {
   purchaseOrdersId: number;
   quantity: number;
   unitPrice: number;
+  note:string;
 }
 
 export interface PurchaseOrderItemRequest {
@@ -152,6 +153,7 @@ export interface PurchaseOrderItemRequest {
   purchaseOrdersId: number;
   quantity: number;
   unitPrice: number;
+  note:string;
 }
 export interface PurchaseOrder {
   id: number;

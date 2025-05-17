@@ -40,6 +40,7 @@ public class purchaseOrderItemsServiceImpl implements purchaseOrderItemsServices
                 .product(product)
                 .quantity(purchaseOrderItemsRequestDTO.getQuantity())
                 .unitPrice(purchaseOrderItemsRequestDTO.getUnitPrice())
+                .note(purchaseOrderItemsRequestDTO.getNote())
                 .build();
         purchaseOrderItemRespository.save(purchaseOrderItems_value);
         return purchaseOrderItems_value.getId();
@@ -50,6 +51,7 @@ public class purchaseOrderItemsServiceImpl implements purchaseOrderItemsServices
         if (purchaseOrderItems_value != null) {
             purchaseOrderItems_value.setQuantity(purchaseOrderItemsRequestDTO.getQuantity());
             purchaseOrderItems_value.setUnitPrice(purchaseOrderItemsRequestDTO.getUnitPrice());
+            purchaseOrderItems_value.setNote(purchaseOrderItemsRequestDTO.getNote());
             purchaseOrderItemRespository.save(purchaseOrderItems_value);
         }
     }

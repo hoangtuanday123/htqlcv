@@ -25,9 +25,9 @@
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import api, { User } from '../../../services/api';
-const route = useRoute()
+const router = useRouter()
 const loading = ref(false)
 
 const options = ref([])
@@ -53,6 +53,7 @@ async function save() {
 
     await api.api.user.createUser(user)
     loading.value = false
+    router.push({path:'../users'})
 }
 
 onMounted(async () => {

@@ -19,12 +19,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tbl_purchase_order_items")
-public class purchaseOrderItems extends abstractEntity{
+@Table(name="tbl_sale_order_items")
+public class saleOrderItems extends abstractEntity{
     @ManyToOne
-    @JoinColumn(name = "purchase_orders_id")
+    @JoinColumn(name = "sale_orders_id")
     @JsonManagedReference
-    private purchaseOrders purchaseOrders;
+    private saleOrders saleOrders;
     
 
     @ManyToOne

@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-7">
           <q-select v-model="product" :options="productOptions" label="Product" map-options emit-value
-            @update:model-value="onProductSelect">
+            @update:model-value="onProductSelect" :disable="isDisabled">
             <template v-slot:append>
               <q-btn round dense flat icon="add" @click="openDiaglog = true" />
             </template>
@@ -27,6 +27,12 @@
             <template v-slot:body-cell-totalPrice="props">
               <q-td :props="props">
                 {{ props.row.unitPrice * props.row.quantity }}
+              </q-td>
+            </template>
+            <template v-slot:body-cell-note="props">
+              <q-td :props="props">
+                <q-input v-model.string="props.row.note" dense borderless autogrow
+                  class="bg-blue-1 border-primary" />
               </q-td>
             </template>
             <template v-slot:body-cell-actions="props">
@@ -90,10 +96,12 @@
           </q-select>
           <q-input v-model="purchaseOrder.totalAmount" label="Total Amound" type="number" readonly />
           <q-input v-model="purchaseOrder.totalAmountPaid" label="Total Amound Paid" type="number" />
+          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid" label="Dept" type="number"
+            readonly />
           <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions" label="Sub Status" map-options
             emit-value>
           </q-select>
-          <q-select v-model="purchaseOrder.status" :options="statusOptions" label="Status" map-options emit-value>
+          <q-select v-model="purchaseOrder.status" :options="statusOptions" label="Status" map-options emit-value :disable="isDisabled">
           </q-select>
         </div>
       </div>
@@ -122,6 +130,7 @@ const openPopupCategory = ref(false)
 const newCategoryName = ref('')
 const openPopupBranchProduct = ref(false)
 const newBranchProductName = ref('')
+const isDisabled=ref(false)
 let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
@@ -134,6 +143,7 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
     purchaseOrdersId: null,
     quantity: 0,
     unitPrice: 0,
+    note:null
   }]
 });
 const product = ref(null)
@@ -153,6 +163,7 @@ const columns = [
   { name: 'quantity', label: 'Quantity', align: 'left' as const, field: 'quantity', sortable: true },
   { name: 'unitPrice', label: 'Unit Price', align: 'left' as const, field: 'unitPrice', sortable: true },
   { name: 'totalPrice', label: 'Total Price', align: 'left' as const, field: 'totalPrice', sortable: true },
+  { name: 'note', label: 'Note', align: 'left' as const, field: 'note', sortable: true },
   { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
 ];
 
@@ -180,7 +191,6 @@ async function fetch() {
     label: item.name,
     value: item.id,
   }))
-  supplierOptions.value.push({ label: "", value: null })
   const categoryRes = await api.api.category.getCategories()
   categoryOptions.value = categoryRes.map((item) => ({
     label: item.name,
@@ -202,9 +212,22 @@ async function save() {
     purchaseOrdersId: null,
     quantity: item.quantity,
     unitPrice: item.unitPrice,
+    note:item.note
   }))
   console.log(purchaseOrder)
   await api.api.purchaseOrder.createPurchaseOrder(purchaseOrder)
+  if (purchaseOrder.status == "Completed") {
+    purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
+      const product_value = await api.api.product.getProduct(String(item.productId))
+      const increase_quantity = product_value['stockQuantity'] + item.quantity
+      await api.api.product.updateProduct(String(item.productId), {
+        name: product_value['name'],
+        capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
+        categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id']
+      })
+    })
+    isDisabled.value = true
+  }
   route.push({ path: '../purchaseOrders' })
   loading.value = false;
 }
@@ -214,15 +237,33 @@ async function deletePurchaseItem(item) {
   if (index > -1) {
     purchaseOrderItems.value.splice(index, 1);
   }
+  if (!productOptions.value.some(p => p.value === item.productId)) {
+            productOptions.value.push({
+                label: item.name,
+                value: item.productId,
+            });
+        }
 }
 async function onProductSelect() {
-  purchaseOrderItems.value.push({
-    productId: product.value,
-    name: productOptions.value.find((item) => item.value === product.value)?.label,
-    quantity: 0,
-    unitPrice: 0,
-  })
-  product.value = null
+  if (!product.value) return;
+
+    const selectedProduct = productOptions.value.find((item) => item.value === product.value);
+    if (!selectedProduct) return;
+
+    // Thêm vào danh sách purchaseOrderItems
+    purchaseOrderItems.value.push({
+        productId: product.value,
+        name: selectedProduct.label,
+        quantity: 0,
+        unitPrice: 0,
+        note: null,
+    });
+
+    // Loại bỏ sản phẩm vừa chọn khỏi productOptions
+    productOptions.value = productOptions.value.filter(item => item.value !== product.value);
+
+    // Reset product selection
+    product.value = null;
 }
 
 async function addCategory(scope) {

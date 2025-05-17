@@ -44,9 +44,9 @@
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import api, { CustomerRequest } from '../../../services/api'
-const route = useRoute()
+const router = useRouter()
 const loading = ref(false)
 
 let customer: CustomerRequest = reactive({
@@ -68,5 +68,6 @@ async function save() {
 
     await api.api.customer.createCustomer(customer)
     loading.value = false
+    router.push({ path: '../customers' })
 }
 </script>

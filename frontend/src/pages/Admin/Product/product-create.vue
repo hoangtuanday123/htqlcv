@@ -54,9 +54,9 @@
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import api, { ProductRequest } from '../../../services/api'
-const route = useRoute()
+const router = useRouter()
 const loading = ref(false)
 const categoryOptions = ref([])
 const branchProductOptions = ref([])
@@ -79,6 +79,7 @@ async function save() {
 
     await api.api.product.createProduct(product)
     loading.value = false
+    router.push({ path: '../products' })
 }
 async function fetch() {
     loading.value = true
