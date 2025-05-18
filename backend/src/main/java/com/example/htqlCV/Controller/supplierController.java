@@ -1,6 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +17,6 @@ import com.example.htqlCV.Model.supplier;
 import com.example.htqlCV.Service.supplierServices;
 
 import lombok.RequiredArgsConstructor;
-
-
-
 @RestController
 @RequestMapping("/supplier")
 @RequiredArgsConstructor
@@ -31,22 +29,22 @@ public class supplierController {
     }
 
     @GetMapping("/{id}")
-    public supplier getSupplier(@PathVariable Long id) {
+    public supplier getSupplier(@PathVariable UUID id) {
         return supplierServices.getSupplierById(id);
     }
 
     @PostMapping("/")
-    public Long createSupplier(@RequestBody supplierRequestDTO supplierRequestDTO) {
+    public UUID createSupplier(@RequestBody supplierRequestDTO supplierRequestDTO) {
         return supplierServices.createSupplier(supplierRequestDTO);
     }
 
     @PutMapping("{id}/update")
-    public void updateSupplier(@PathVariable Long id, @RequestBody supplierRequestDTO supplierRequestDTO) {
+    public void updateSupplier(@PathVariable UUID id, @RequestBody supplierRequestDTO supplierRequestDTO) {
        supplierServices.updateSupplier(id, supplierRequestDTO);
     }
 
     @DeleteMapping("/{id}/delete")
-    public void deleteSupplier(@PathVariable Long id) {
+    public void deleteSupplier(@PathVariable UUID id) {
         supplierServices.deleteSupplier(id);
     }
     

@@ -175,6 +175,43 @@ export interface PurchaseOrderRequest {
   purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
 }
 
+export interface SaleOrderItem {
+  id: number;
+  productId: number;
+  SaleOrdersId: number;
+  quantity: number;
+  unitPrice: number;
+  note:string;
+}
+
+export interface SaleOrderItemRequest {
+  productId: number;
+  SaleOrdersId: number;
+  quantity: number;
+  unitPrice: number;
+  note:string;
+}
+
+export interface SaleOrder {
+  id: number;
+  totalAmount: number;
+  totalAmountPaid: number;
+  customerId: number;
+  subStatus: string;
+  status: string;
+  saleOrderItemsRequestDTO: SaleOrderItem[];
+
+}
+
+export interface SaleOrderRequest {
+  totalAmount: number;
+  totalAmountPaid: number;
+  customerId: number;
+  subStatus: string;
+  status: string;
+  saleOrderItemsRequestDTO: SaleOrderItem[];
+}
+
 axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
@@ -317,18 +354,37 @@ const purchaseOrderItem = {
   deletePurchaseOrderItems: (id: string) => request.delete<void>(`/purchaseOrderItems/${id}/delete`),
 
 }
+
+const saleOrderItem = {
+  getSaleItemsbySaleOrder: (sale_order_id: string) => request.get<SaleOrderItem[]>(`/saleOrderItems/${sale_order_id}/saleOrder`),
+  createSaleOrderItems: (data: SaleOrderItemRequest) => request.post<number>('/saleOrderItems/', data),
+  updateSaleOrderItems: (id: string, data: SaleOrderItemRequest) => request.put<void>(`/saleOrderItems/${id}/update`, data),
+  deleteSaleOrderItems: (id: string) => request.delete<void>(`/saleOrderItems/${id}/delete`),
+
+}
+
+const saleOrder = {
+  getSaleOrders: () => request.get<SaleOrder[]>('/saleOrders/'),
+  getSaleOrder: (id: string) => request.get<SaleOrder>(`/saleOrders/${id}`),
+  createSaleOrder: (data: SaleOrderRequest) => request.post<number>('/saleOrders/', data),
+  deleteSaleOrder: (id: string) => request.delete<void>(`/saleOrders/${id}/delete`),
+  updateSaleOrder: (id: string, data: SaleOrderRequest) => request.put<void>(`/saleOrders/${id}/update`, data),
+
+}
 const api = {
   auth,
   user,
   role,
   customer,
-  supplier,
+  supplier ,
   category,
   branchProduct,
   product,
   guarantee,
   purchaseOrder,
-  purchaseOrderItem
+  purchaseOrderItem,
+  saleOrderItem,
+  saleOrder
 };
 
 export default { api };

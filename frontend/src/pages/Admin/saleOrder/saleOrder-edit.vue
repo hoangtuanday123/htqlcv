@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>Create Purchase Order</h1>
+    <h1>Update Sale Order</h1>
     <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
       spellcheck="false">
       <div class="row">
@@ -11,17 +11,17 @@
               <q-btn round dense flat icon="add" @click="openDiaglog = true" />
             </template>
           </q-select>
-          <q-table :rows="purchaseOrderItems" :columns="columns" :loading="loading" row-key="id">
+          <q-table :rows="saleOrderItems" :columns="columns" :loading="loading" row-key="id">
             <template v-slot:body-cell-quantity="props">
-              <q-td :props="props">
+              <q-td :props="props" >
                 <q-input v-model.number="props.row.quantity" type="number" dense borderless
-                  class="bg-blue-1 border-primary" />
+                  class="bg-blue-1 border-primary" :disable="isDisabled" />
               </q-td>
             </template>
             <template v-slot:body-cell-unitPrice="props">
               <q-td :props="props">
                 <q-input v-model.number="props.row.unitPrice" type="number" dense borderless
-                  class="bg-blue-1 border-primary" />
+                  class="bg-blue-1 border-primary" :disable="isDisabled"/>
               </q-td>
             </template>
             <template v-slot:body-cell-totalPrice="props">
@@ -31,13 +31,12 @@
             </template>
             <template v-slot:body-cell-note="props">
               <q-td :props="props">
-                <q-input v-model.string="props.row.note" dense borderless autogrow
-                  class="bg-blue-1 border-primary" />
+                <q-input v-model.string="props.row.note" dense borderless autogrow class="bg-blue-1 border-primary" :disable="isDisabled"/>
               </q-td>
             </template>
             <template v-slot:body-cell-actions="props">
               <q-td :props="props" auto-width style="min-width: 120px;">
-                <q-btn icon="delete" @click="deletePurchaseItem(props.row)" round class="q-ml-sm" text-color="grey-7" />
+                <q-btn icon="delete" @click="deleteSaleItem(props.row)" round class="q-ml-sm" text-color="grey-7" :disable="isDisabled"/>
               </q-td>
             </template>
           </q-table>
@@ -46,7 +45,7 @@
               <q-card-section class="q-pt-none">
                 <q-input v-model="productAdd.name" label="Name" required />
                 <q-select v-model="productAdd.categoryId" :options="categoryOptions" label="Category" map-options
-                  emit-value >
+                  emit-value>
                   <template v-slot:append>
                     <q-btn round dense flat icon="add" @click="openPopupCategory = true" />
                     <q-popup-edit v-model="newCategoryName" v-model:opened="openPopupCategory" v-slot="scope">
@@ -91,18 +90,18 @@
         </div>
         <div class="col-1"></div>
         <div class="col-4">
-          <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions" label="Supplier" map-options
+          <q-select v-model="saleOrder.customerId" :options="customerOptions" label="Customer" map-options
             emit-value use-input :filter="customFilter"
             input-debounce="300" :rules="[val => !!val || 'Category is required']">
           </q-select>
-          <q-input v-model="purchaseOrder.totalAmount" label="Total Amound" type="number" readonly />
-          <q-input v-model="purchaseOrder.totalAmountPaid" label="Total Amound Paid" type="number" />
-          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid" label="Dept" type="number"
+          <q-input v-model="saleOrder.totalAmount" label="Total Amound" type="number" readonly />
+          <q-input v-model="saleOrder.totalAmountPaid" label="Total Amound Paid" type="number" />
+          <q-input :model-value="saleOrder.totalAmount - saleOrder.totalAmountPaid" label="Dept" type="number"
             readonly />
-          <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions" label="Sub Status" map-options
-            emit-value>
+          <q-select v-model="saleOrder.subStatus" :options="subStatusOptions" label="Sub Status">
           </q-select>
-          <q-select v-model="purchaseOrder.status" :options="statusOptions" label="Status" map-options emit-value :disable="isDisabled">
+          <q-select v-model="saleOrder.status" :options="statusOptions" label="Status" map-options emit-value
+            :disable="isDisabled">
           </q-select>
         </div>
       </div>
@@ -110,19 +109,20 @@
       <div class="row">
         <div class="col q-gutter-md">
           <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-          <q-btn label="Close" icon="close" type="button" to="../purchaseOrders" outline color="grey-9" />
+          <q-btn label="Close" icon="close" type="button" to="../../saleOrders" outline color="grey-9" />
         </div>
       </div>
     </q-form>
   </q-page>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import api, { PurchaseOrderRequest, Product, ProductRequest } from '../../../services/api';
-const route = useRouter();
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import api, { SaleOrderRequest, ProductRequest } from '../../../services/api';
+const router = useRouter();
+const route = useRoute();
 const loading = ref(false);
-const supplierOptions = ref([])
+const customerOptions = ref([])
 const subStatusOptions = ["None", "Not Paid"]
 const statusOptions = ["None", "Processing", "Completed", "Cancelled"]
 const categoryOptions = ref([])
@@ -131,26 +131,25 @@ const openPopupCategory = ref(false)
 const newCategoryName = ref('')
 const openPopupBranchProduct = ref(false)
 const newBranchProductName = ref('')
-const isDisabled=ref(false)
-
-let purchaseOrder: PurchaseOrderRequest = reactive({
+const isDisabled = ref(false)
+let saleOrder: SaleOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
-  supplierId: null,
+  customerId: null,
   subStatus: "None",
   status: "None",
-  purchaseOrderItemsRequestDTO: [{
+  saleOrderItemsRequestDTO: [{
     id: null,
     productId: null,
-    purchaseOrdersId: null,
+    SaleOrdersId: null,
     quantity: 0,
     unitPrice: 0,
-    note:null
+    note: null
   }]
 });
 const product = ref(null)
 const productOptions = ref([])
-const purchaseOrderItems = ref([])
+const saleOrderItems = ref([])
 const openDiaglog = ref(false)
 let productAdd: ProductRequest = reactive({
   name: '',
@@ -177,30 +176,25 @@ const customFilter = (option, search) => {
   );
 };
 const totalAmount = computed(() => {
-  return purchaseOrderItems.value.reduce(
-    (sum, item) => sum + item.unitPrice * item.quantity,
+  return saleOrderItems.value.reduce(
+    (sum, item) => sum + (item.unitPrice || 0) * (item.quantity || 0),
     0
   );
 });
 
-// Watch the computed totalAmount and update purchaseOrder.totalAmount
 watch(totalAmount, (newTotal) => {
-  purchaseOrder.totalAmount = newTotal;
+  saleOrder.totalAmount = newTotal;
+
 });
 async function fetch() {
   loading.value = true;
-  const SupplierRes = await api.api.supplier.getSuppiers();
-  supplierOptions.value = SupplierRes.map((item) => ({
-    value: item.id,
+  const CustomerRes = await api.api.customer.getCustomers();
+  customerOptions.value = CustomerRes.map((item) => ({
     label: `${item.name} (${item.phone})`,
+    value: item.id,
     name: item.name,   // giữ lại để filter
     phone: item.phone, // giữ lại để filter
   }));
-  const productRes = await api.api.product.getProducts();
-  productOptions.value = productRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }))
   const categoryRes = await api.api.category.getCategories()
   categoryOptions.value = categoryRes.map((item) => ({
     label: item.name,
@@ -212,22 +206,53 @@ async function fetch() {
     label: item.name,
     value: item.id,
   }))
+
+  const saleOrderRes = await api.api.saleOrder.getSaleOrder(route.params.id as string)
+  Object.assign(saleOrder, saleOrderRes)
+  if (["Completed", "Cancelled"].includes(saleOrder.status)) {
+    isDisabled.value = true
+  }
+  saleOrder.customerId = saleOrderRes["customer"]["id"]
+  const saleOrderItemsRes = await api.api.saleOrderItem.getSaleItemsbySaleOrder(route.params.id as string)
+  saleOrderItems.value = saleOrderItemsRes.map((item) => ({
+    id: item.id,
+    productId: item['product']['id'],
+    // name: productOptions.value.find((item1) => item1.value === item['product']['id'])?.label,
+    name: '',
+    quantity: item.quantity,
+    unitPrice: item.unitPrice,
+    note: item.note
+  }))
+  const existingProductIds = new Set(saleOrderItems.value.map(item => item.productId));
+  const productRes = await api.api.product.getProducts();
+  productOptions.value = productRes
+    .filter(item => !existingProductIds.has(item.id)) // loại trừ những sản phẩm đã có
+    .map(item => ({
+      label: item.name,
+      value: item.id,
+    }));
+
+  // Cập nhật lại name trong saleOrderItems sau khi đã có productOptions (nếu cần giữ lại name ban đầu)
+  saleOrderItems.value.forEach(item => {
+    item.name = productRes.find(product => product.id === item.productId)?.name || '';
+  });
   loading.value = false;
+
 }
 async function save() {
   loading.value = true;
-  purchaseOrder.purchaseOrderItemsRequestDTO = purchaseOrderItems.value.map((item) => ({
+  saleOrder.saleOrderItemsRequestDTO = saleOrderItems.value.map((item) => ({
     id: item.id,
     productId: item.productId,
-    purchaseOrdersId: null,
+    SaleOrdersId: null,
     quantity: item.quantity,
     unitPrice: item.unitPrice,
-    note:item.note
+    note: item.note
   }))
-  console.log(purchaseOrder)
-  await api.api.purchaseOrder.createPurchaseOrder(purchaseOrder)
-  if (purchaseOrder.status == "Completed") {
-    purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
+
+  await api.api.saleOrder.updateSaleOrder(route.params.id as string, saleOrder)
+  if (saleOrder.status == "Completed") {
+    saleOrder.saleOrderItemsRequestDTO.forEach(async (item) => {
       const product_value = await api.api.product.getProduct(String(item.productId))
       const increase_quantity = product_value['stockQuantity'] + item.quantity
       await api.api.product.updateProduct(String(item.productId), {
@@ -238,42 +263,55 @@ async function save() {
     })
     isDisabled.value = true
   }
-  route.push({ path: '../purchaseOrders' })
+  if (saleOrder.status == "Cancelled") {
+    isDisabled.value = false
+  }
   loading.value = false;
 }
 
-async function deletePurchaseItem(item) {
-  const index = purchaseOrderItems.value.indexOf(item);
-  if (index > -1) {
-    purchaseOrderItems.value.splice(index, 1);
+async function deleteSaleItem(item) {
+  loading.value = true
+  try {
+    await api.api.saleOrderItem.deleteSaleOrderItems(item.id)
+  } catch (error) {
+
   }
-  if (!productOptions.value.some(p => p.value === item.productId)) {
-            productOptions.value.push({
-                label: item.name,
-                value: item.productId,
-            });
-        }
+  finally {
+    const index = saleOrderItems.value.indexOf(item);
+    if (index > -1) {
+      saleOrderItems.value.splice(index, 1);
+      await nextTick();
+    }
+    if (!productOptions.value.some(p => p.value === item.productId)) {
+      productOptions.value.push({
+        label: item.name,
+        value: item.productId,
+      });
+    }
+    await save()
+    loading.value = false
+  }
 }
 async function onProductSelect() {
   if (!product.value) return;
 
-    const selectedProduct = productOptions.value.find((item) => item.value === product.value);
-    if (!selectedProduct) return;
-    var p=api.api.product.getProduct(product.value)
-    // Thêm vào danh sách purchaseOrderItems
-    purchaseOrderItems.value.push({
-        productId: product.value,
-        name: selectedProduct.label,
-        quantity: 0,
-        unitPrice: (await p).capitalPrice,
-        note: null,
-    });
+  const selectedProduct = productOptions.value.find((item) => item.value === product.value);
+  if (!selectedProduct) return;
 
-    // Loại bỏ sản phẩm vừa chọn khỏi productOptions
-    productOptions.value = productOptions.value.filter(item => item.value !== product.value);
+  // Thêm vào danh sách saleOrderItems
+  saleOrderItems.value.push({
+    productId: product.value,
+    name: selectedProduct.label,
+    quantity: 0,
+    unitPrice: 0,
+    note: null,
+  });
 
-    // Reset product selection
-    product.value = null;
+  // Loại bỏ sản phẩm vừa chọn khỏi productOptions
+  productOptions.value = productOptions.value.filter(item => item.value !== product.value);
+
+  // Reset product selection
+  product.value = null;
 }
 
 async function addCategory(scope) {
@@ -309,7 +347,7 @@ async function AddProduct() {
     label: item.name,
     value: item.id,
   }))
-  purchaseOrderItems.value.push({
+  saleOrderItems.value.push({
     productId: productId,
     name: productOptions.value.find((item) => item.value === productId)?.label,
     quantity: 0,

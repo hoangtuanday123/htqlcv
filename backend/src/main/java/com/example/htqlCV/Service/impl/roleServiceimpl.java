@@ -1,6 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,6 @@ import com.example.htqlCV.Respository.roleRespository;
 import com.example.htqlCV.Service.roleServices;
 
 import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
 public class roleServiceimpl implements roleServices {
@@ -25,7 +25,7 @@ public class roleServiceimpl implements roleServices {
     }
 
     @Override
-    public role getRoleById(Long id) {
+    public role getRoleById(UUID id) {
         return roleRespository.findById(id).orElse(null);
     }
 
@@ -35,7 +35,7 @@ public class roleServiceimpl implements roleServices {
     }
 
     @Override
-    public role updateRole(Long id, roleRequestDTO roleRequestDTO) {
+    public role updateRole(UUID id, roleRequestDTO roleRequestDTO) {
         role role_value = roleRespository.findById(id).orElse(null);
         if (role_value != null) {
             role_value.setName(roleRequestDTO.getName());
@@ -45,7 +45,7 @@ public class roleServiceimpl implements roleServices {
     }
 
     @Override
-    public void deleteRole(Long id) {
+    public void deleteRole(UUID id) {
         roleRespository.deleteById(id);
     }
     

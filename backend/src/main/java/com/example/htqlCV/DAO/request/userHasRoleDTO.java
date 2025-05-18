@@ -1,12 +1,12 @@
 package com.example.htqlCV.DAO.request;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import lombok.Data;
-
 @Data
 public class userHasRoleDTO implements Serializable {
-    private long userId;
-    private long roleId;
+    private UUID userId;
+    private UUID roleId;
     
 }

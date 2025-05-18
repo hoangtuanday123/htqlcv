@@ -1,12 +1,13 @@
 package com.example.htqlCV.DAO.request;
 
-import lombok.Data;
+import java.util.UUID;
 
+import lombok.Data;
 @Data
 public class saleOrderItemsRequestDTO {
-    private Long id;
-    private Long saleOrdersId;
-    private Long productId;
+    private UUID id;
+    private UUID saleOrdersId;
+    private UUID productId;
     private Integer quantity;
     private Long unitPrice;
     private String note;

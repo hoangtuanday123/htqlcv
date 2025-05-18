@@ -2,9 +2,9 @@ package com.example.htqlCV.DAO.request;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 import lombok.Data;
-
 @Data
 public class userRequestDTO implements Serializable {
     private String username;
@@ -12,6 +12,6 @@ public class userRequestDTO implements Serializable {
     private String email;
     private String phoneNumber;
     private String address;
-    private List<Long> roles;
+    private List<UUID> roles;
 }
 

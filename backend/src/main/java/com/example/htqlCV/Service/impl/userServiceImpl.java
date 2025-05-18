@@ -17,7 +17,7 @@ import com.example.htqlCV.Respository.userRepository;
 import com.example.htqlCV.Service.roleServices;
 import com.example.htqlCV.Service.userHasRoleServices;
 import com.example.htqlCV.Service.userSevices;
-
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
@@ -36,7 +36,7 @@ public class userServiceImpl implements userSevices {
                 .email(userRequestDTO.getEmail())
                 .build(); 
             userRepository.save(user_value);
-            for(Long role:userRequestDTO.getRoles()){
+            for(UUID role:userRequestDTO.getRoles()){
                 role role_value=roleServices.getRoleById(role);
                 userHasRoleServices.createUserHasRole(user_value,role_value);
             }
@@ -59,7 +59,7 @@ public class userServiceImpl implements userSevices {
             userResponse.setEmail(user.getEmail());
             userResponse.setPhoneNumber(user.getPhoneNumber());
             userResponse.setAddress(user.getAddress());
-            List<Long> roles = new ArrayList<>();
+            List<UUID> roles = new ArrayList<>();
             if (!CollectionUtils.isEmpty(user.getUserRoles())) {
                 user.getUserRoles().forEach(userHasRole -> {
                     roles.add(userHasRole.getRole().getId());
@@ -72,7 +72,7 @@ public class userServiceImpl implements userSevices {
     }
 
     @Override
-    public userResponse getUserById(Long id) {
+    public userResponse getUserById(UUID id) {
         var user= userRepository.findById(id).orElse(null);
         userResponse userResponse = new userResponse();
         userResponse.setId(user.getId());
@@ -80,7 +80,7 @@ public class userServiceImpl implements userSevices {
         userResponse.setEmail(user.getEmail());
         userResponse.setPhoneNumber(user.getPhoneNumber());
         userResponse.setAddress(user.getAddress());
-        List<Long> roles = new ArrayList<>();
+        List<UUID> roles = new ArrayList<>();
         if (!CollectionUtils.isEmpty(user.getUserRoles())) {
             user.getUserRoles().forEach(userHasRole -> {
                 roles.add(userHasRole.getRole().getId());
@@ -91,7 +91,7 @@ public class userServiceImpl implements userSevices {
     }
 
     @Override
-    public void updateUser(Long id, userRequestDTO userRequestDTO) {
+    public void updateUser(UUID id, userRequestDTO userRequestDTO) {
         user user_value = userRepository.findById(id).orElse(null);
         if (user_value != null) {
             user_value.setUsername(userRequestDTO.getUsername());
@@ -103,7 +103,7 @@ public class userServiceImpl implements userSevices {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }
 

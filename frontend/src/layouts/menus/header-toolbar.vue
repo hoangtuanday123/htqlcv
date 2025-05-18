@@ -90,10 +90,13 @@
 
                     </q-list>
                 </q-btn-dropdown>
-                <q-btn-dropdown label="Purchase Orders" stretch flat no-caps>
+                <q-btn-dropdown label="Transactions" stretch flat no-caps>
                     <q-list style="min-width: 180px">
                         <q-item to="/admin/purchaseOrders" clickable>
                             <q-item-section>Purchase Orders</q-item-section>
+                        </q-item>
+                        <q-item to="/admin/saleOrders" clickable>
+                            <q-item-section>Sale Orders</q-item-section>
                         </q-item>
 
 

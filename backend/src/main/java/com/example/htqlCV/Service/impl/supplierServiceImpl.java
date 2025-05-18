@@ -1,6 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -22,12 +23,12 @@ public class supplierServiceImpl implements supplierServices {
     }
 
     @Override
-    public supplier getSupplierById(Long id) {
+    public supplier getSupplierById(UUID id) {
         return supplierRespository.findById(id).orElse(null);
     }
 
     @Override
-    public Long createSupplier(supplierRequestDTO supplierRequestDTO) {
+    public UUID createSupplier(supplierRequestDTO supplierRequestDTO) {
         supplier supplier_value = supplier.builder()
                 .name(supplierRequestDTO.getName())
                 .address(supplierRequestDTO.getAddress())
@@ -42,7 +43,7 @@ public class supplierServiceImpl implements supplierServices {
     }
 
     @Override
-    public void updateSupplier(Long id, supplierRequestDTO supplierRequestDTO) {
+    public void updateSupplier(UUID id, supplierRequestDTO supplierRequestDTO) {
         supplier supplier_value=supplierRespository.findById(id).orElse(null);
         if (supplier_value != null) {
             supplier_value.setName(supplierRequestDTO.getName());
@@ -57,7 +58,7 @@ public class supplierServiceImpl implements supplierServices {
     }
 
     @Override
-    public void deleteSupplier(Long id) {
+    public void deleteSupplier(UUID id) {
         supplierRespository.deleteById(id);
     }
     

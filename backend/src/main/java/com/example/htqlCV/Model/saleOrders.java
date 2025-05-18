@@ -39,7 +39,7 @@ public class saleOrders extends abstractEntity{
     @JsonManagedReference
     private customer customer;
 
-    @OneToMany(mappedBy = "saleOrderItems")
+    @OneToMany(mappedBy = "saleOrders")
     @JsonBackReference
     private List<saleOrderItems> saleOrderItems;
 }

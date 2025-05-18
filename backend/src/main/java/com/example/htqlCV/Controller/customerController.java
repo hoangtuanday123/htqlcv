@@ -1,6 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,6 @@ import com.example.htqlCV.Service.customerServices;
 import lombok.RequiredArgsConstructor;
 
 
-
 @RestController
 @RequestMapping("/customer")
 @RequiredArgsConstructor
@@ -31,24 +31,24 @@ public class customerController {
     }
 
     @GetMapping("/{id}")
-    public customer getcustomer(@PathVariable Long id){
+    public customer getcustomer(@PathVariable UUID id){
         return customerServices.getCustomer(id);
     }
 
     @PostMapping("/")
-    public Long createCustomer(@RequestBody customerRequestDTO customerRequestDTO) {
+    public UUID createCustomer(@RequestBody customerRequestDTO customerRequestDTO) {
     
         return customerServices.createCustomer(customerRequestDTO);
     }
 
     @PutMapping("{id}/update")
-    public void updateCustomer(@PathVariable Long id, @RequestBody customerRequestDTO customerRequestDTO) {
+    public void updateCustomer(@PathVariable UUID id, @RequestBody customerRequestDTO customerRequestDTO) {
         customerServices.updateCustomer(id, customerRequestDTO);
         
     }
 
     @DeleteMapping("/{id}/delete")
-    public void deleteCustomer(@PathVariable Long id){
+    public void deleteCustomer(@PathVariable UUID id){
         customerServices.deleteCustomer(id);
     }
     

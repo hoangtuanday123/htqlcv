@@ -1,6 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,12 @@ public class branchProductServiceImpl implements  branchProductServices {
     }
 
     @Override
-    public branchProduct getBranchProductById(Long id) {
+    public branchProduct getBranchProductById(UUID id) {
         return branchProductRespository.findById(id).orElse(null);
     }
 
     @Override
-    public Long createBranchProduct(branchProductRequestDTO branchProductRequestDTO) {
+    public UUID createBranchProduct(branchProductRequestDTO branchProductRequestDTO) {
         branchProduct branchProduct_value = branchProduct.builder()
                 .name(branchProductRequestDTO.getName())
                 .build();
@@ -34,7 +35,7 @@ public class branchProductServiceImpl implements  branchProductServices {
     }
 
     @Override
-    public void deleteBranchProduct(Long id) {
+    public void deleteBranchProduct(UUID id) {
         
         branchProductRespository.deleteById(id);
         

@@ -1,6 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,6 @@ import com.example.htqlCV.Service.productServices;
 import lombok.RequiredArgsConstructor;
 
 
-
-
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
@@ -31,23 +30,23 @@ public class productController {
     }
 
     @GetMapping("/{id}")
-    public product getproduct(@PathVariable Long id) {
+    public product getproduct(@PathVariable UUID id) {
         var product= productService.getProductById(id);
         return product;
     }
     
     @PostMapping("/")
-    public Long createProduct(@RequestBody productRequestDTO productRequestDTO) {
+    public UUID createProduct(@RequestBody productRequestDTO productRequestDTO) {
         return productService.createProduct(productRequestDTO);
     }
     
     @PutMapping("/{id}/update")
-    public void updateProduct(@PathVariable Long id, @RequestBody productRequestDTO productRequestDTO) {
+    public void updateProduct(@PathVariable UUID id, @RequestBody productRequestDTO productRequestDTO) {
         productService.updateProduct(id, productRequestDTO);
     }
 
     @DeleteMapping("/{id}/delete")
-    public void deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable UUID id) {
         productService.deleteProduct(id);
     }
     

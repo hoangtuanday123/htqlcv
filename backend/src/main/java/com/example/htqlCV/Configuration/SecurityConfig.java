@@ -47,7 +47,7 @@ public class SecurityConfig {
     private final String[] ADMIN_ENDPOINTS = {
         "/role/**","/user/{id}","/user/update/{id}","/user/delete/{id}","/customer/**","/supplier/**",
         "/category/**","/branchProduct/**","/product/**","/purchaseOrders/**","/purchaseOrderItems/**",
-        "/saleOrderItems/**"
+        "/saleOrderItems/**","/saleOrders/**"
 
     };
     @Bean

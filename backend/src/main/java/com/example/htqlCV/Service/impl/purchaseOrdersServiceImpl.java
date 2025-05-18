@@ -1,6 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,6 @@ import com.example.htqlCV.Service.purchaseOrderItemsServices;
 import com.example.htqlCV.Service.purchaseOrdersServices;
 
 import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
 public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
@@ -26,11 +26,11 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         return purchaseOrdersRespository.findAll();
     }
     @Override
-    public purchaseOrders getPurchaseOrdersById(Long id) {
+    public purchaseOrders getPurchaseOrdersById(UUID id) {
         return purchaseOrdersRespository.findById(id).orElse(null);
     }
     @Override
-    public Long createPurchaseOrders(purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
+    public UUID createPurchaseOrders(purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
         var supplier = supplierRespository.findById(purchaseOrdersRequestDTO.getSupplierId()).orElse(null);
         purchaseOrders purchaseOrders_value = purchaseOrders.builder()
                 .totalAmount(purchaseOrdersRequestDTO.getTotalAmount())
@@ -49,7 +49,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
     }
 
     @Override
-    public void updatePurchaseOrders(Long id, purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
+    public void updatePurchaseOrders(UUID id, purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
         purchaseOrders purchaseOrders_value = purchaseOrdersRespository.findById(id).orElse(null);
         if (purchaseOrders_value != null) {
             var supplier = supplierRespository.findById(purchaseOrdersRequestDTO.getSupplierId()).orElse(null);
@@ -70,7 +70,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         }
     }
     @Override
-    public void deletePurchaseOrders(Long id) {
+    public void deletePurchaseOrders(UUID id) {
         purchaseOrders purchaseOrders_value = purchaseOrdersRespository.findById(id).orElse(null);
         for(var item:purchaseOrders_value.getPurchaseOrderItems()){
             purchaseOrderItemRespository.deleteById(item.getId());

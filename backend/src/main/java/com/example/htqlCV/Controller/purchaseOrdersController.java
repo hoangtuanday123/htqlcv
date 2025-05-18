@@ -1,6 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,6 @@ import com.example.htqlCV.Service.purchaseOrdersServices;
 import lombok.RequiredArgsConstructor;
 
 
-
-
 @RestController
 @RequestMapping("/purchaseOrders")
 @RequiredArgsConstructor
@@ -30,19 +29,19 @@ public class purchaseOrdersController {
         return purchaseOrdersServices.getAllPurchaseOrders();
     }
     @GetMapping("/{id}")
-    public purchaseOrders getPurchaseOrders(@PathVariable Long id) {
+    public purchaseOrders getPurchaseOrders(@PathVariable UUID id) {
         return purchaseOrdersServices.getPurchaseOrdersById(id);
     }
     @PostMapping("/")
-    public Long createPurchaseOrders(@RequestBody purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
+    public UUID createPurchaseOrders(@RequestBody purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
         return purchaseOrdersServices.createPurchaseOrders(purchaseOrdersRequestDTO);
     }
     @DeleteMapping("/{id}/delete")
-    public void deletePurchaseOrders(@PathVariable Long id) {
+    public void deletePurchaseOrders(@PathVariable UUID id) {
         purchaseOrdersServices.deletePurchaseOrders(id);
     }
     @PutMapping("/{id}/update")
-    public void updatePurchaseOrders(@PathVariable Long id, @RequestBody purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
+    public void updatePurchaseOrders(@PathVariable UUID id, @RequestBody purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
         purchaseOrdersServices.updatePurchaseOrders(id, purchaseOrdersRequestDTO);
     }
     

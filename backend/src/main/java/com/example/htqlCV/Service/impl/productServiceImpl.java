@@ -1,6 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,11 @@ public class productServiceImpl implements productServices {
         return productRespository.findAll();
     }
     @Override
-    public product getProductById(Long id) {
+    public product getProductById(UUID id) {
         return productRespository.findById(id).orElse(null);
     }
     @Override
-    public Long createProduct(productRequestDTO productRequestDTO) {
+    public UUID createProduct(productRequestDTO productRequestDTO) {
         branchProduct branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
         category category=categoryServices.getCategoryById(productRequestDTO.getCategoryId());
         product product_value;
@@ -45,7 +46,7 @@ public class productServiceImpl implements productServices {
         return product_value.getId();
     }
     @Override
-    public void updateProduct(Long id, productRequestDTO productRequestDTO) {
+    public void updateProduct(UUID id, productRequestDTO productRequestDTO) {
         product product_value=productRespository.findById(id).orElse(null);
         if (product_value != null) {
             branchProduct branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
@@ -60,7 +61,7 @@ public class productServiceImpl implements productServices {
         }
     }
     @Override
-    public void deleteProduct(Long id) {
+    public void deleteProduct(UUID id) {
         productRespository.deleteById(id);
     }
 }

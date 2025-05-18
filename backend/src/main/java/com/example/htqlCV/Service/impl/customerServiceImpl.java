@@ -1,6 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,6 @@ import com.example.htqlCV.Respository.customerRespository;
 import com.example.htqlCV.Service.customerServices;
 
 import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
 public class customerServiceImpl implements customerServices {
@@ -21,12 +21,12 @@ public class customerServiceImpl implements customerServices {
     }
 
     @Override
-    public customer getCustomer(Long id){
+    public customer getCustomer(UUID id){
         return customerRespository.findById(id).orElse(null);
     }
 
     @Override
-    public Long createCustomer(customerRequestDTO customerRequestDTO){
+    public UUID createCustomer(customerRequestDTO customerRequestDTO){
         customer customer_value=customer.builder()
         .name(customerRequestDTO.getName())
         .phone(customerRequestDTO.getPhone())
@@ -45,7 +45,7 @@ public class customerServiceImpl implements customerServices {
     }
 
     @Override
-    public void updateCustomer(Long id,customerRequestDTO customerRequestDTO){
+    public void updateCustomer(UUID id,customerRequestDTO customerRequestDTO){
         customer customer_value=customerRespository.findById(id).orElse(null);
         if(customer_value!=null){
             customer_value.setName(customerRequestDTO.getName());
@@ -64,7 +64,7 @@ public class customerServiceImpl implements customerServices {
     }
 
     @Override
-    public void deleteCustomer(Long id){
+    public void deleteCustomer(UUID id){
         customerRespository.deleteById(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class userHasRoleServiceimpl implements userHasRoleServices {
     private final userHasRoleRespository userHasRoleRespository;
 
     @Override
-    public long createUserHasRole(user userValue,role roleValue) {
+    public UUID createUserHasRole(user userValue,role roleValue) {
         userHasRole userHasRole_value = userHasRole.builder()
                 .user(userValue)
                 .role(roleValue)

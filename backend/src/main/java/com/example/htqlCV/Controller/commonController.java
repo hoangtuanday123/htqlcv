@@ -18,7 +18,6 @@ import com.example.htqlCV.Service.userSevices;
 import lombok.RequiredArgsConstructor;
 
 
-
 @RestController
 @RequestMapping("/common")
 @RequiredArgsConstructor

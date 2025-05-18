@@ -1,6 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,6 @@ import com.example.htqlCV.Model.branchProduct;
 import com.example.htqlCV.Service.branchProductServices;
 
 import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequestMapping("/branchProduct")
 @RequiredArgsConstructor
@@ -26,16 +26,16 @@ public class branchProductController {
         return branchProductServices.getAllBranchProduct();
     }
     @GetMapping("/{id}")
-    public branchProduct getBranchProductById(@PathVariable Long id) {
+    public branchProduct getBranchProductById(@PathVariable UUID id) {
         return branchProductServices.getBranchProductById(id);
     }
     @PostMapping("/")
-    public Long createBranchProduct(@RequestBody branchProductRequestDTO branchProduct) {
+    public UUID createBranchProduct(@RequestBody branchProductRequestDTO branchProduct) {
         System.out.println("branchProduct: " + branchProduct.toString());
         return branchProductServices.createBranchProduct(branchProduct);
     }
     @DeleteMapping("/{id}/delete")
-    public void deleteBranchProduct(@PathVariable Long id) {
+    public void deleteBranchProduct(@PathVariable UUID id) {
         branchProductServices.deleteBranchProduct(id);
     }
 }

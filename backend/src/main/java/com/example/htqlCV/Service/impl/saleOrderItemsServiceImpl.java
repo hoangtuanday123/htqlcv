@@ -1,6 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -12,30 +13,29 @@ import com.example.htqlCV.Respository.saleOrdersRespository;
 import com.example.htqlCV.Service.saleOrderItemsServices;
 
 import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
 public class saleOrderItemsServiceImpl implements saleOrderItemsServices{
-    private saleOrderItemsRespository saleOrderItemsRespository;
-    private productRespository productRespository;
-    private saleOrdersRespository saleOrdersRespository;
+    private final saleOrderItemsRespository saleOrderItemsRespository;
+    private final productRespository productRespository;
+    private final saleOrdersRespository saleOrdersRespository;
     @Override
-    public List<saleOrderItems> getSaleOrderItemsBySaleOrder(Long saleOrdersId) {
+    public List<saleOrderItems> getSaleOrderItemsBySaleOrder(UUID saleOrdersId) {
         return saleOrderItemsRespository.findBySaleOrders_Id(saleOrdersId);
     }
 
     @Override
-    public  saleOrderItems getSaleOrderItemsById(Long id){
+    public  saleOrderItems getSaleOrderItemsById(UUID id){
         return saleOrderItemsRespository.findById(id).orElse(null);
     }
 
     @Override
-    public saleOrderItems getSaleOrderItemsByProductIDSaleOrder(Long saleOrdersId, Long productId){
+    public saleOrderItems getSaleOrderItemsByProductIDSaleOrder(UUID saleOrdersId, UUID productId){
         return saleOrderItemsRespository.findBySaleOrders_IdAndProduct_Id(saleOrdersId, productId);
     }
 
     @Override
-    public Long createSaleOrderItems(saleOrderItemsRequestDTO saleOrderItemsRequestDTO){
+    public UUID createSaleOrderItems(saleOrderItemsRequestDTO saleOrderItemsRequestDTO){
         var product=productRespository.findById(saleOrderItemsRequestDTO.getProductId()).orElse(null);
         var saleOrders=saleOrdersRespository.findById(saleOrderItemsRequestDTO.getSaleOrdersId()).orElse(null);
         saleOrderItems saleOrderItems_value=saleOrderItems.builder()
@@ -50,7 +50,7 @@ public class saleOrderItemsServiceImpl implements saleOrderItemsServices{
     }
 
     @Override
-    public void updateSaleOrderItems(Long id, saleOrderItemsRequestDTO saleOrderItemsRequestDTO){
+    public void updateSaleOrderItems(UUID id, saleOrderItemsRequestDTO saleOrderItemsRequestDTO){
         saleOrderItems saleOrderItems_value=saleOrderItemsRespository.findById(id).orElse(null);
         if (saleOrderItems_value != null) {
             saleOrderItems_value.setQuantity(saleOrderItemsRequestDTO.getQuantity());
@@ -60,7 +60,7 @@ public class saleOrderItemsServiceImpl implements saleOrderItemsServices{
         }
     }
     @Override
-    public void deleteSaleOrderItems(Long id){
+    public void deleteSaleOrderItems(UUID id){
         saleOrderItems item = saleOrderItemsRespository.findById(id)
         .orElseThrow(() -> new RuntimeException("Not found"));
 

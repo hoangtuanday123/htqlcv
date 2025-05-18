@@ -91,7 +91,8 @@
         <div class="col-1"></div>
         <div class="col-4">
           <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions" label="Supplier" map-options
-            emit-value :rules="[val => !!val || 'Category is required']">
+            emit-value use-input :filter="customFilter"
+            input-debounce="300" :rules="[val => !!val || 'Category is required']">
           </q-select>
           <q-input v-model="purchaseOrder.totalAmount" label="Total Amound" type="number" readonly />
           <q-input v-model="purchaseOrder.totalAmountPaid" label="Total Amound Paid" type="number" />
@@ -115,7 +116,7 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import api, { PurchaseOrderRequest, ProductRequest } from '../../../services/api';
 const router = useRouter();
@@ -167,7 +168,13 @@ const columns = [
   { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
 ];
 
-
+const customFilter = (option, search) => {
+  const keyword = search.toLowerCase();
+  return (
+    option.name.toLowerCase().includes(keyword) ||
+    option.phone.toLowerCase().includes(keyword)
+  );
+};
 const totalAmount = computed(() => {
   return purchaseOrderItems.value.reduce(
     (sum, item) => sum + (item.unitPrice || 0) * (item.quantity || 0),
@@ -177,13 +184,16 @@ const totalAmount = computed(() => {
 
 watch(totalAmount, (newTotal) => {
   purchaseOrder.totalAmount = newTotal;
+
 });
 async function fetch() {
   loading.value = true;
   const SupplierRes = await api.api.supplier.getSuppiers();
   supplierOptions.value = SupplierRes.map((item) => ({
-    label: item.name,
+    label: `${item.name} (${item.phone})`,
     value: item.id,
+    name: item.name,   // giữ lại để filter
+    phone: item.phone, // giữ lại để filter
   }));
   const categoryRes = await api.api.category.getCategories()
   categoryOptions.value = categoryRes.map((item) => ({
@@ -239,7 +249,7 @@ async function save() {
     unitPrice: item.unitPrice,
     note: item.note
   }))
-  console.log(purchaseOrder)
+
   await api.api.purchaseOrder.updatePurchaseOrder(route.params.id as string, purchaseOrder)
   if (purchaseOrder.status == "Completed") {
     purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
@@ -270,6 +280,7 @@ async function deletePurchaseItem(item) {
     const index = purchaseOrderItems.value.indexOf(item);
     if (index > -1) {
       purchaseOrderItems.value.splice(index, 1);
+      await nextTick();
     }
     if (!productOptions.value.some(p => p.value === item.productId)) {
       productOptions.value.push({
@@ -277,6 +288,7 @@ async function deletePurchaseItem(item) {
         value: item.productId,
       });
     }
+    await save()
     loading.value = false
   }
 }

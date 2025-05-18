@@ -1,10 +1,11 @@
 package com.example.htqlCV.DAO.request;
 
-import lombok.Data;
+import java.util.UUID;
 
+import lombok.Data;
 @Data
 public class guaranteeRequestDTO {
     private String name;
     private Integer guaranteeTime;
-    private Long productId;
+    private UUID productId;
 }
