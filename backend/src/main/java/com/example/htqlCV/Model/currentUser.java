@@ -17,4 +17,5 @@ public class currentUser {
     private String username;
     private String phoneNumber;
     private List<String> roles;
+    private UUID businessId;
 }

@@ -36,6 +36,7 @@ export interface User {
   phoneNumber: string;
   roles: string[];
   password: string;
+  business_id:number
 }
 export interface refreshTokenDTO {
   token: string
@@ -212,6 +213,21 @@ export interface SaleOrderRequest {
   saleOrderItemsRequestDTO: SaleOrderItem[];
 }
 
+export interface Business{
+  id:number
+  name:string;
+  mst:string;
+  email:string;
+  phone:string;
+}
+
+export interface BusinessRequest{
+  name:string;
+  mst:string;
+  email:string;
+  phone:string;
+}
+
 axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
@@ -275,7 +291,7 @@ const auth = {
 const user = {
   getUsers: () => request.get<User[]>('/user/'),
   getUser: (id: string) => request.get<User>(`/user/${id}`),
-  createUser: (data: User) => request.post<User>('/user/', data),
+  createUser: (data: User) => request.post<void>('/user/', data),
   updateUser: (id: string, data: User) => request.put<void>(`/user/${id}/update`, data),
   deleteUser: (id: string) => request.delete<void>(`/user/${id}/delete`),
   getCurrentUser: () => request.get<string>('/user/current_user'),
@@ -371,6 +387,15 @@ const saleOrder = {
   updateSaleOrder: (id: string, data: SaleOrderRequest) => request.put<void>(`/saleOrders/${id}/update`, data),
 
 }
+
+const business = {
+  getBusinesses: () => request.get<Business[]>('/businesses/'),
+  getBusiness: (id: string) => request.get<Business>(`/businesses/${id}`),
+  createBusiness: (data: BusinessRequest) => request.post<number>('/businesses/', data),
+  updateBusiness: (id: string, data: BusinessRequest) => request.put<void>(`/businesses/${id}/update`, data),
+  blockBusiness:(id:string)=>request.put<void>(`/businesses/${id}/block`, {}),
+  openBlockBusiness:(id:string)=>request.put<void>(`/businesses/${id}/open`, {}),
+}
 const api = {
   auth,
   user,
@@ -384,7 +409,8 @@ const api = {
   purchaseOrder,
   purchaseOrderItem,
   saleOrderItem,
-  saleOrder
+  saleOrder,
+  business
 };
 
 export default { api };

@@ -28,6 +28,10 @@ public class roleServiceimpl implements roleServices {
     public role getRoleById(UUID id) {
         return roleRespository.findById(id).orElse(null);
     }
+    @Override
+    public role getRoleByName(String Name){
+        return roleRespository.findByName(Name);
+    }
 
     @Override
     public List<role> getAllRole() {

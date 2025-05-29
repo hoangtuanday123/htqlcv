@@ -13,5 +13,6 @@ public class userRequestDTO implements Serializable {
     private String phoneNumber;
     private String address;
     private List<UUID> roles;
+    private UUID business_id;
 }
 

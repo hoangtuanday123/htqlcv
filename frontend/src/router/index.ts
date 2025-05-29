@@ -67,6 +67,7 @@ router.beforeEach(async (to, from, next) => {
       }
     }
     if (to.path === '/') next()
+    if (to.path === '/register') next()
     if (to.path !== '/login' && !authToken.value) next({ path: '/login', query: { return_url: encodeURIComponent(to.fullPath) }})
     else next()
     next()

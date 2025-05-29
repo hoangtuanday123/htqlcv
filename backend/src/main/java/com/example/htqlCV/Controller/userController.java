@@ -32,9 +32,9 @@ public class userController {
 
 
     @PostMapping("/")
-    public String createUser(@RequestBody userRequestDTO userRequestDTO) {
+    public void createUser(@RequestBody userRequestDTO userRequestDTO) {
         user id=userSevices.createUser(userRequestDTO);
-        return String.valueOf(id);
+        
     }
     @GetMapping("/")
     public List<userResponse> getAllUser() {

@@ -39,7 +39,7 @@ public class SecurityConfig {
     private customJwtDecoder CustomJwtDecoder;
     
     private final String[] PUBLIC_ENDPOINTS = {
-        "/auth/**", "/swagger-ui/**", "/v3/api-docs/**","/common/**"
+        "/auth/**", "/swagger-ui/**", "/v3/api-docs/**","/common/**","/businesses/","/user/"
     };
     private final String[] AUTH_ENDPOINTS = {
         "/user/current_user",
@@ -55,7 +55,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(request -> request
                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                .requestMatchers(AUTH_ENDPOINTS).hasAnyAuthority( "SCOPE_admin", "SCOPE_user")
+                .requestMatchers(AUTH_ENDPOINTS).hasAnyAuthority( "SCOPE_admin", "SCOPE_owner","SCOPE_user")
                 .requestMatchers(ADMIN_ENDPOINTS).hasAuthority( "SCOPE_admin")
                 .anyRequest().authenticated()
             )

@@ -19,4 +19,5 @@ public class userResponse {
     private String phoneNumber;
     private String address;
     private List<UUID> roles;
+    private UUID businessId;
 }

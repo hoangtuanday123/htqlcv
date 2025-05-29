@@ -117,9 +117,9 @@
 </template>
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import {  useRoute } from 'vue-router';
 import api, { PurchaseOrderRequest, ProductRequest } from '../../../services/api';
-const router = useRouter();
+
 const route = useRoute();
 const loading = ref(false);
 const supplierOptions = ref([])

@@ -18,6 +18,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/homepage.vue')
       },
       {
+        path:'/register',
+        component: () => import('pages/RegisterPage.vue')
+      },
+      {
         path: '/admin',
         meta: { requiresAuth: true },
         children: [
@@ -139,6 +143,24 @@ const routes: RouteRecordRaw[] = [
               {
                 path:':id/edit',
                 component:()=>import('pages/Admin/SaleOrder/saleOrder-edit.vue')
+              }
+            ]
+          },
+          {
+            path:"branchProduct",
+            children:[
+              {
+                path:'',
+                component:()=>import('pages/Admin/BranchProduct/branchProduct-list.vue')
+              }
+            ]
+          },
+          {
+            path:"categories",
+            children:[
+              {
+                path:'',
+                component:()=>import('pages/Admin/Category/category-list.vue')
               }
             ]
           }

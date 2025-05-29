@@ -27,7 +27,7 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import {  onMounted, ref } from 'vue';
 import api, { PurchaseOrder } from '../../../services/api';
 const loading = ref(false)
 const purchaseOrders = ref<PurchaseOrder[]>([])

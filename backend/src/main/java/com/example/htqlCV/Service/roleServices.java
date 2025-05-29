@@ -9,6 +9,7 @@ public interface roleServices {
     role createRole(roleRequestDTO role);
     List<role> getAllRole();
     role getRoleById(UUID id);
+    role getRoleByName(String Name);
     role updateRole(UUID id, roleRequestDTO role);
     void deleteRole(UUID id);
 } 

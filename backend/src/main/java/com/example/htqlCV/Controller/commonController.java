@@ -36,6 +36,10 @@ public class commonController {
                 roleRequestDTO UserRole=new roleRequestDTO();
                 UserRole.setName("user");
                 role userRoleId=roleServices.createRole(UserRole);
+                roleRequestDTO OwneRole=new roleRequestDTO();
+                OwneRole.setName("owner");
+                role OwneRoleId=roleServices.createRole(OwneRole);
+
                 userRequestDTO admin = new userRequestDTO();
                 admin.setUsername("admin");
                 admin.setPassword("admin");

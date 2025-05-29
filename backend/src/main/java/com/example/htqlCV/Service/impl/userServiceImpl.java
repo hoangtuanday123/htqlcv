@@ -17,7 +17,12 @@ import com.example.htqlCV.Respository.userRepository;
 import com.example.htqlCV.Service.roleServices;
 import com.example.htqlCV.Service.userHasRoleServices;
 import com.example.htqlCV.Service.userSevices;
+import com.example.htqlCV.Model.business;
 import java.util.UUID;
+
+
+import com.example.htqlCV.Respository.businessRespository;
+
 import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
@@ -25,17 +30,25 @@ public class userServiceImpl implements userSevices {
     private final userRepository userRepository;
     private final userHasRoleServices userHasRoleServices;
     private final roleServices roleServices;
+    private final businessRespository businessRespository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
     public user createUser(userRequestDTO userRequestDTO) {
         try {
+            business business_value=businessRespository.findById(userRequestDTO.getBusiness_id()).orElse(null);
             user user_value = user.builder()
                 .username(userRequestDTO.getUsername())
                 .password(passwordEncoder.encode(userRequestDTO.getPassword()))
                 .email(userRequestDTO.getEmail())
+                .business(business_value)
                 .build(); 
             userRepository.save(user_value);
+            
+            if (userRequestDTO.getRoles().isEmpty()){
+                role role_value=roleServices.getRoleByName("owner");
+                userHasRoleServices.createUserHasRole(user_value,role_value);
+            }
             for(UUID role:userRequestDTO.getRoles()){
                 role role_value=roleServices.getRoleById(role);
                 userHasRoleServices.createUserHasRole(user_value,role_value);
@@ -59,6 +72,11 @@ public class userServiceImpl implements userSevices {
             userResponse.setEmail(user.getEmail());
             userResponse.setPhoneNumber(user.getPhoneNumber());
             userResponse.setAddress(user.getAddress());
+            if (user.getBusiness() != null) {
+                userResponse.setBusinessId(user.getBusiness().getId());
+            } else {
+                userResponse.setBusinessId(null); // hoặc không set gì tùy yêu cầu
+            }
             List<UUID> roles = new ArrayList<>();
             if (!CollectionUtils.isEmpty(user.getUserRoles())) {
                 user.getUserRoles().forEach(userHasRole -> {
@@ -80,6 +98,11 @@ public class userServiceImpl implements userSevices {
         userResponse.setEmail(user.getEmail());
         userResponse.setPhoneNumber(user.getPhoneNumber());
         userResponse.setAddress(user.getAddress());
+        if (user.getBusiness() != null) {
+            userResponse.setBusinessId(user.getBusiness().getId());
+        } else {
+            userResponse.setBusinessId(null); // hoặc không set gì tùy yêu cầu
+        }
         List<UUID> roles = new ArrayList<>();
         if (!CollectionUtils.isEmpty(user.getUserRoles())) {
             user.getUserRoles().forEach(userHasRole -> {
@@ -115,6 +138,11 @@ public class userServiceImpl implements userSevices {
         currentuser.setEmail(user_value.getEmail());
         currentuser.setUsername(user_value.getUsername());
         currentuser.setPhoneNumber(user_value.getPhoneNumber());
+        if (user_value.getBusiness() != null) {
+            currentuser.setBusinessId(user_value.getBusiness().getId());
+        } else {
+            currentuser.setBusinessId(null); // hoặc không set gì tùy yêu cầu
+        }
        List<String> roles = new ArrayList<>();
         if (!CollectionUtils.isEmpty(user_value.getUserRoles())) {
             user_value.getUserRoles().forEach(userHasRole -> {

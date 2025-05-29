@@ -75,8 +75,12 @@
                         <q-item to="/admin/products" clickable>
                             <q-item-section>Products</q-item-section>
                         </q-item>
-
-
+                        <q-item to="/admin/branchProduct" clickable>
+                            <q-item-section>Branch Product</q-item-section>
+                        </q-item>
+                        <q-item to="/admin/categories" clickable>
+                            <q-item-section>Categories</q-item-section>
+                        </q-item>
                     </q-list>
                 </q-btn-dropdown>
                 <q-btn-dropdown label="Partner" stretch flat no-caps>

@@ -38,7 +38,8 @@ let user: User = reactive({
     password: '',
     email: '',
     phoneNumber: '',
-    roles: []
+    roles: [],
+    business_id:null
 })
 
 

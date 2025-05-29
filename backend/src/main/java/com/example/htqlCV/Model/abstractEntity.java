@@ -34,4 +34,10 @@ public abstract  class abstractEntity {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+
+    @Column(name="is_deleted")
+    private Boolean isDeleted=false;
+
+    @Column(name="is_blocked")
+    private Boolean isBlocked=false;
 }
