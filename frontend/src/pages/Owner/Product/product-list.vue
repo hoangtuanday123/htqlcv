@@ -24,6 +24,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import api, { Product } from '../../../services/api';
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
 const loading = ref(false)
 const products = ref<Product[]>([])
 const keyword = ref('')
@@ -41,7 +44,7 @@ function search(rows, terms) {
 }
 async function fetchProducts() {
     loading.value = true;
-    const res = await api.api.product.getProducts();
+    const res = await api.api.product.getProducts(userInfo.value.businessId);
     console.log(res)
     products.value = res;
     loading.value = false;

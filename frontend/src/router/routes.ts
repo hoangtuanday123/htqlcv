@@ -18,8 +18,132 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/homepage.vue')
       },
       {
-        path:'/register',
+        path: '/register',
         component: () => import('pages/RegisterPage.vue')
+      },
+      {
+        path: '/account',
+        meta: { requiresAuth: true },
+        children: [
+          {
+            path: '',
+            component: () => import('pages/Account/account-setting.vue')
+          },
+          {
+            path: 'password',
+            component: () => import('pages/Account/change-password.vue')
+          }
+        ]
+
+      },
+      {
+        path: '/owner',
+        meta: { requiresAuth: true },
+        children: [
+          {
+            path: "categories",
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/Category/category-list.vue')
+              }
+            ]
+          },
+          {
+            path: "branchProduct",
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/BranchProduct/branchProduct-list.vue')
+              }
+            ]
+          },
+          {
+            path: 'suppliers',
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/Supplier/supplier-list.vue')
+              },
+              {
+                path: 'create',
+                component: () => import('pages/Owner/Supplier/supplier-create.vue')
+              },
+              {
+                path: ':id/edit',
+                component: () => import('pages/Owner/Supplier/supplier-edit.vue')
+              }
+            ]
+          },
+          {
+            path: "customers",
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/Customer/customer-list.vue')
+              },
+              {
+                path: 'create',
+                component: () => import('pages/Owner/Customer/customer-create.vue')
+              },
+              {
+                path: ':id/edit',
+                component: () => import('pages/Owner/Customer/customer-edit.vue')
+              }
+            ]
+          },
+          {
+            path: 'products',
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/Product/product-list.vue')
+              },
+              {
+                path: 'create',
+                component: () => import('pages/Owner/Product/product-create.vue')
+              },
+              {
+                path: ':id/edit',
+                component: () => import('pages/Owner/Product/product-edit.vue')
+              }
+            ]
+          },
+          {
+            path: "saleOrders",
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/SaleOrder/saleOrder-list.vue')
+              },
+              {
+                path: 'create',
+                component: () => import('pages/Owner/SaleOrder/saleOrder-create.vue')
+              },
+              {
+                path: ':id/edit',
+                component: () => import('pages/Owner/SaleOrder/saleOrder-edit.vue')
+              }
+            ]
+          },
+          {
+            path: "purchaseOrders",
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/PurchaseOrder/purchaseOrder-list.vue')
+              },
+              {
+                path: 'create',
+                component: () => import('pages/Owner/PurchaseOrder/purchaseOrder-create.vue')
+              },
+              {
+                path: ':id/edit',
+                component: () => import('pages/Owner/PurchaseOrder/purchaseOrder-edit.vue')
+              }
+            ]
+          }
+        ]
       },
       {
         path: '/admin',
@@ -60,109 +184,6 @@ const routes: RouteRecordRaw[] = [
               }
             ]
 
-          },
-          {
-            path: "customers",
-            children: [
-              {
-                path: '',
-                component: () => import('pages/Admin/Customer/customer-list.vue')
-              },
-              {
-                path: 'create',
-                component: () => import('pages/Admin/Customer/customer-create.vue')
-              },
-              {
-                path: ':id/edit',
-                component: () => import('pages/Admin/Customer/customer-edit.vue')
-              }
-            ]
-          },
-          {
-            path: 'suppliers',
-            children: [
-              {
-                path: '',
-                component: () => import('pages/Admin/Supplier/supplier-list.vue')
-              },
-              {
-                path: 'create',
-                component: () => import('pages/Admin/Supplier/supplier-create.vue')
-              },
-              {
-                path: ':id/edit',
-                component: () => import('pages/Admin/Supplier/supplier-edit.vue')
-              }
-            ]
-          },
-          {
-            path: 'products',
-            children: [
-              {
-                path: '',
-                component: () => import('pages/Admin/Product/product-list.vue')
-              },
-              {
-                path: 'create',
-                component: () => import('pages/Admin/Product/product-create.vue')
-              },
-              {
-                path: ':id/edit',
-                component: () => import('pages/Admin/Product/product-edit.vue')
-              }
-            ]
-          },
-          {
-            path: "purchaseOrders",
-            children: [
-              {
-                path: '',
-                component: () => import('pages/Admin/PurchaseOrder/purchaseOrder-list.vue')
-              },
-              {
-                path: 'create',
-                component: () => import('pages/Admin/PurchaseOrder/purchaseOrder-create.vue')
-              },
-              {
-                path: ':id/edit',
-                component: () => import('pages/Admin/PurchaseOrder/purchaseOrder-edit.vue')
-              }
-            ]
-          },
-          {
-            path:"saleOrders",
-            children:[
-              {
-                path:'',
-                component:()=> import('pages/Admin/SaleOrder/saleOrder-list.vue')
-              },
-              {
-                path:'create',
-                component:()=>import('pages/Admin/SaleOrder/saleOrder-create.vue')
-              },
-              {
-                path:':id/edit',
-                component:()=>import('pages/Admin/SaleOrder/saleOrder-edit.vue')
-              }
-            ]
-          },
-          {
-            path:"branchProduct",
-            children:[
-              {
-                path:'',
-                component:()=>import('pages/Admin/BranchProduct/branchProduct-list.vue')
-              }
-            ]
-          },
-          {
-            path:"categories",
-            children:[
-              {
-                path:'',
-                component:()=>import('pages/Admin/Category/category-list.vue')
-              }
-            ]
           }
         ]
       }

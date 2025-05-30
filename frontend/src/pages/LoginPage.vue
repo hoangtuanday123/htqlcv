@@ -57,7 +57,7 @@ async function onSubmit() {
             _userStore.saveToken(token)
             const user = await api.api.user.getCurrentUser()
 
-            _userStore.saveUserInfo({ id: user['id'], username: user['username'], email: user['email'], phoneNumber: user['phoneNumber'], roles: user['roles'] })
+            _userStore.saveUserInfo({ id: user['id'], username: user['username'], email: user['email'], phoneNumber: user['phoneNumber'], roles: user['roles'], businessId: user['businessId'] })
             router.push({ path: '/home' })
         }
     }

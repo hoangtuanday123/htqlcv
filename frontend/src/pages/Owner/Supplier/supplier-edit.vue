@@ -35,7 +35,8 @@ let supplier: SupplierRequest = reactive({
     note: '',
     branch: '',
     mst: '',
-    company: ''
+    company: '',
+    businessId: null
 })
 
 async function fetch() {

@@ -70,25 +70,25 @@
 
                     </q-list>
                 </q-btn-dropdown>
-                <q-btn-dropdown label="Products" stretch flat no-caps>
+                <!-- <q-btn-dropdown label="Products" stretch flat no-caps>
                     <q-list style="min-width: 180px">
-                        <q-item to="/admin/products" clickable>
+                        <q-item to="/owner/products" clickable>
                             <q-item-section>Products</q-item-section>
                         </q-item>
-                        <q-item to="/admin/branchProduct" clickable>
+                        <q-item to="/owner/branchProduct" clickable>
                             <q-item-section>Branch Product</q-item-section>
                         </q-item>
-                        <q-item to="/admin/categories" clickable>
+                        <q-item to="/owner/categories" clickable>
                             <q-item-section>Categories</q-item-section>
                         </q-item>
                     </q-list>
                 </q-btn-dropdown>
                 <q-btn-dropdown label="Partner" stretch flat no-caps>
                     <q-list style="min-width: 180px">
-                        <q-item to="/admin/customers" clickable>
+                        <q-item to="/owner/customers" clickable>
                             <q-item-section>Customer</q-item-section>
                         </q-item>
-                        <q-item to="/admin/suppliers" clickable>
+                        <q-item to="/owner/suppliers" clickable>
                             <q-item-section>Supplier</q-item-section>
                         </q-item>
 
@@ -96,19 +96,60 @@
                 </q-btn-dropdown>
                 <q-btn-dropdown label="Transactions" stretch flat no-caps>
                     <q-list style="min-width: 180px">
-                        <q-item to="/admin/purchaseOrders" clickable>
+                        <q-item to="/owner/purchaseOrders" clickable>
                             <q-item-section>Purchase Orders</q-item-section>
                         </q-item>
-                        <q-item to="/admin/saleOrders" clickable>
+                        <q-item to="/owner/saleOrders" clickable>
+                            <q-item-section>Sale Orders</q-item-section>
+                        </q-item>
+
+
+                    </q-list>
+                </q-btn-dropdown> -->
+                <q-space />
+            </template>
+            <template v-if="currentUser.hasRole('owner') || currentUser.hasRole('admin')">
+                <q-btn-dropdown label="Products" stretch flat no-caps>
+                    <q-list style="min-width: 180px">
+                        <q-item to="/owner/products" clickable>
+                            <q-item-section>Products</q-item-section>
+                        </q-item>
+                        <q-item to="/owner/branchProduct" clickable>
+                            <q-item-section>Branch Product</q-item-section>
+                        </q-item>
+                        <q-item to="/owner/categories" clickable>
+                            <q-item-section>Categories</q-item-section>
+                        </q-item>
+                    </q-list>
+                </q-btn-dropdown>
+                <q-btn-dropdown label="Partner" stretch flat no-caps>
+                    <q-list style="min-width: 180px">
+                        <q-item to="/owner/customers" clickable>
+                            <q-item-section>Customer</q-item-section>
+                        </q-item>
+                        <q-item to="/owner/suppliers" clickable>
+                            <q-item-section>Supplier</q-item-section>
+                        </q-item>
+
+                    </q-list>
+                </q-btn-dropdown>
+                <q-btn-dropdown label="Transactions" stretch flat no-caps>
+                    <q-list style="min-width: 180px">
+                        <q-item to="/owner/purchaseOrders" clickable>
+                            <q-item-section>Purchase Orders</q-item-section>
+                        </q-item>
+                        <q-item to="/owner/saleOrders" clickable>
                             <q-item-section>Sale Orders</q-item-section>
                         </q-item>
 
 
                     </q-list>
                 </q-btn-dropdown>
+
             </template>
             <q-space />
             <!-- right side -->
+
 
             <template v-if="currentUser.hasloggedIn()" class="">
                 <!-- <q-btn stretch flat :label="t('menu.my_instances')" to="/my_data"

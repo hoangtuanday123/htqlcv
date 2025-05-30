@@ -33,4 +33,34 @@ public class business extends abstractEntity {
     @OneToMany(mappedBy="business")
     @JsonManagedReference
     private List<user> users;
+
+    @OneToMany(mappedBy="business")
+    @JsonManagedReference
+    private List<category> categories;
+
+    @OneToMany(mappedBy="business")
+    @JsonManagedReference
+    private List<branchProduct> branchProducts;
+
+    @OneToMany(mappedBy="business")
+    @JsonManagedReference
+    private List<supplier> suppliers;
+
+    @OneToMany(mappedBy="business")
+    @JsonManagedReference
+    private List<customer> customers;
+
+    @OneToMany(mappedBy="business")
+    @JsonManagedReference
+    private List<product> products;
+
+    @OneToMany(mappedBy="business")
+    @JsonManagedReference
+    private List<saleOrders> saleOrders;
+
+    @OneToMany(mappedBy="business")
+    @JsonManagedReference
+    private List<purchaseOrders> purchaseOrders;
+
+    
 }

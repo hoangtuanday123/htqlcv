@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.example.htqlCV.DAO.request.supplierRequestDTO;
 import com.example.htqlCV.Model.supplier;
 public interface  supplierServices {
-    List<supplier> getAllSupplier();
+    List<supplier> getAllSupplier(UUID businessId);
     supplier getSupplierById(UUID id);
     UUID createSupplier(supplierRequestDTO supplier);
     void updateSupplier(UUID id, supplierRequestDTO supplier);

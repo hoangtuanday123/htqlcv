@@ -42,4 +42,9 @@ public class purchaseOrders extends abstractEntity{
     @OneToMany(mappedBy = "purchaseOrders")
     @JsonBackReference
     private List<purchaseOrderItems> purchaseOrderItems;
+
+    @ManyToOne()
+    @JoinColumn(name = "business_id")
+    @JsonBackReference
+    private business business;
 }

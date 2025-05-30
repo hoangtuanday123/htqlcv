@@ -38,7 +38,7 @@ public class businessController {
        return businessServices.createBusiness(businessRequestDTO);
     }
 
-    @PutMapping("/{id}/{update}")
+    @PutMapping("/{id}/update")
     public void  updateBusiness(@PathVariable UUID id, @RequestBody businessRequestDTO businessRequestDTO) {
         businessServices.updateBusiness(id, businessRequestDTO);
     }

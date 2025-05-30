@@ -39,16 +39,18 @@ public class SecurityConfig {
     private customJwtDecoder CustomJwtDecoder;
     
     private final String[] PUBLIC_ENDPOINTS = {
-        "/auth/**", "/swagger-ui/**", "/v3/api-docs/**","/common/**","/businesses/","/user/"
+        "/auth/**", "/swagger-ui/**", "/v3/api-docs/**","/common/**","/businesses/**","/user/"
     };
     private final String[] AUTH_ENDPOINTS = {
-        "/user/current_user",
+        "/user/current_user","/user/changePassword"
     };
     private final String[] ADMIN_ENDPOINTS = {
-        "/role/**","/user/{id}","/user/update/{id}","/user/delete/{id}","/customer/**","/supplier/**",
-        "/category/**","/branchProduct/**","/product/**","/purchaseOrders/**","/purchaseOrderItems/**",
-        "/saleOrderItems/**","/saleOrders/**"
+        "/role/**","/user/{id}","/user/update/{id}","/user/delete/{id}"
 
+    };
+    private final String[] OWNER_ENDPOINTS={
+        "/category/**","/branchProduct/**","/supplier/**","/customer/**","/product/**",
+        "/saleOrderItems/**","/saleOrders/**","/purchaseOrders/**","/purchaseOrderItems/**"
     };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -56,6 +58,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(request -> request
                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                 .requestMatchers(AUTH_ENDPOINTS).hasAnyAuthority( "SCOPE_admin", "SCOPE_owner","SCOPE_user")
+                .requestMatchers(OWNER_ENDPOINTS).hasAnyAuthority("SCOPE_admin","SCOPE_owner")
                 .requestMatchers(ADMIN_ENDPOINTS).hasAuthority( "SCOPE_admin")
                 .anyRequest().authenticated()
             )

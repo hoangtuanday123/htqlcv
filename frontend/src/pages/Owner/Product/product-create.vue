@@ -55,6 +55,9 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
 import api, { ProductRequest } from '../../../services/api'
 const router = useRouter()
 const loading = ref(false)
@@ -71,6 +74,7 @@ let product: ProductRequest = reactive({
     stockQuantity: 0,
     categoryId: null,
     branchProductId: null,
+    businessId: userInfo.value.businessId
 })
 
 async function save() {
@@ -83,13 +87,13 @@ async function save() {
 }
 async function fetch() {
     loading.value = true
-    const categoryRes = await api.api.category.getCategories()
+    const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
     categoryOptions.value = categoryRes.map((item) => ({
         label: item.name,
         value: item.id,
     }))
 
-    const branchProductRes = await api.api.branchProduct.getBranchProducts()
+    const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId)
     branchProductOptions.value = branchProductRes.map((item) => ({
         label: item.name,
         value: item.id,
@@ -99,8 +103,8 @@ async function fetch() {
 
 async function addCategory(scope) {
     loading.value = true
-    const res = await api.api.category.createCategory({ name: scope.value })
-    const categoryRes = await api.api.category.getCategories()
+    const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId })
+    const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
     categoryOptions.value = categoryRes.map((item) => ({
         label: item.name,
         value: item.id,
@@ -112,8 +116,8 @@ async function addCategory(scope) {
 
 async function addBranchProduct(scope) {
     loading.value = true
-    const res = await api.api.branchProduct.createBranchProduct({ name: scope.value })
-    const branchProductRes = await api.api.branchProduct.getBranchProducts()
+    const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
+    const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId)
     branchProductOptions.value = branchProductRes.map((item) => ({
         label: item.name,
         value: item.id,

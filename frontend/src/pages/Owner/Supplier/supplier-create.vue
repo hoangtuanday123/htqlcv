@@ -24,6 +24,9 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { SupplierRequest } from '../../../services/api'
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
 const router = useRouter()
 const loading = ref(false)
 
@@ -35,7 +38,8 @@ let supplier: SupplierRequest = reactive({
     note: '',
     branch: '',
     mst: '',
-    company: ''
+    company: '',
+    businessId: userInfo.value.businessId
 })
 
 async function save() {
@@ -44,6 +48,6 @@ async function save() {
 
     await api.api.supplier.createSupplier(supplier)
     loading.value = false
-    router.push({path:'../suppliers'})
+    router.push({ path: '../suppliers' })
 }
 </script>

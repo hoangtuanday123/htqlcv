@@ -13,14 +13,15 @@
     <q-table :rows="SaleOrders" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
       row-key="id">
       <template v-slot:body-cell-dept="props">
-                            <q-td :props="props">
-                                {{ props.row.totalAmount - props.row.totalAmountPaid }}
-                            </q-td>
-                        </template>
+        <q-td :props="props">
+          {{ props.row.totalAmount - props.row.totalAmountPaid }}
+        </q-td>
+      </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" auto-width style="min-width: 120px;">
           <q-btn icon="edit" :to="'./saleOrders/' + props.row.id + '/edit'" round text-color="grey-7" />
-          <q-btn icon="delete" @click="deletesaleOrder(props.row)" round class="q-ml-sm" text-color="grey-7" v-if="!['Completed', 'Cancelled'].includes(props.row.status)"/>
+          <q-btn icon="delete" @click="deletesaleOrder(props.row)" round class="q-ml-sm" text-color="grey-7"
+            v-if="!['Completed', 'Cancelled'].includes(props.row.status)" />
         </q-td>
       </template>
     </q-table>
@@ -28,7 +29,10 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import api, {  SaleOrder } from '../../../services/api';
+import api, { SaleOrder } from '../../../services/api';
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
 const loading = ref(false)
 const SaleOrders = ref<SaleOrder[]>([])
 const keyword = ref('')
@@ -48,7 +52,7 @@ function search(rows, terms) {
 }
 async function fetchSaleOrders() {
   loading.value = true;
-  const res = await api.api.saleOrder.getSaleOrders();
+  const res = await api.api.saleOrder.getSaleOrders(userInfo.value.businessId);
   SaleOrders.value = res;
   loading.value = false;
 }

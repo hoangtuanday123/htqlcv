@@ -24,6 +24,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import api, { Supplier } from '../../../services/api';
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
 const loading = ref(false)
 const suppliers = ref<Supplier[]>([])
 const keyword = ref('')
@@ -45,7 +48,7 @@ function search(rows, terms) {
 }
 async function fetchSuppliers() {
     loading.value = true;
-    const res = await api.api.supplier.getSuppiers();
+    const res = await api.api.supplier.getSuppiers(userInfo.value.businessId);
     suppliers.value = res;
     loading.value = false;
 }

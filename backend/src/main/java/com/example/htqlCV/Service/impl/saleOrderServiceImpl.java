@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.saleOrdersRequestDTO;
+import com.example.htqlCV.Model.business;
 import com.example.htqlCV.Model.saleOrders;
+import com.example.htqlCV.Respository.businessRespository;
 import com.example.htqlCV.Respository.customerRespository;
 import com.example.htqlCV.Respository.saleOrderItemsRespository;
 import com.example.htqlCV.Respository.saleOrdersRespository;
@@ -21,9 +23,11 @@ public class saleOrderServiceImpl implements saleOrdersServices{
     private final customerRespository customerRespository;
     private final saleOrderItemsServices saleOrderItemsServices;
     private final saleOrderItemsRespository saleOrderItemsRespository;
+    private final businessRespository businessRespository;
     @Override
-    public List<saleOrders> getAllSaleOrders(){
-        return saleOrdersRespository.findAll();
+    public List<saleOrders> getAllSaleOrders(UUID businessId){
+        business business_value=businessRespository.findById(businessId).orElse(null);
+        return saleOrdersRespository.findByBusiness(business_value);
     }
 
     @Override
@@ -33,12 +37,14 @@ public class saleOrderServiceImpl implements saleOrdersServices{
     @Override
     public UUID createSaleOrder(saleOrdersRequestDTO saleOrdersRequestDTO){
         var customer=customerRespository.findById(saleOrdersRequestDTO.getCustomerId()).orElse(null);
+        business business_value=businessRespository.findById(saleOrdersRequestDTO.getBusinessId()).orElse(null);
         saleOrders saleOrders_value=saleOrders.builder()
         .totalAmount(saleOrdersRequestDTO.getTotalAmount())
         .totalAmountPaid(saleOrdersRequestDTO.getTotalAmountPaid())
         .status(saleOrdersRequestDTO.getStatus())
         .SubStatus(saleOrdersRequestDTO.getSubStatus())
         .customer(customer)
+        .business(business_value)
         .build();
         saleOrdersRespository.save(saleOrders_value);
         var saleOrderId=saleOrders_value.getId();

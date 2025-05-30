@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.htqlCV.DAO.request.branchProductRequestDTO;
@@ -21,9 +22,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class branchProductController {
     private final branchProductServices branchProductServices;
-    @GetMapping("/")
-    public List<branchProduct> getBranchProductList() {
-        return branchProductServices.getAllBranchProduct();
+    @GetMapping
+    public List<branchProduct> getBranchProductList(@RequestParam UUID businessId) {
+        return branchProductServices.getAllBranchProduct(businessId);
     }
     @GetMapping("/{id}")
     public branchProduct getBranchProductById(@PathVariable UUID id) {

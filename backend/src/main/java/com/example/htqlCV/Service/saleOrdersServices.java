@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.example.htqlCV.DAO.request.saleOrdersRequestDTO;
 import com.example.htqlCV.Model.saleOrders;
 public interface saleOrdersServices {
-    List<saleOrders> getAllSaleOrders();
+    List<saleOrders> getAllSaleOrders(UUID businessId);
     saleOrders getSaleOrdersById(UUID id);
     UUID createSaleOrder(saleOrdersRequestDTO saleOrdersRequestDTO);
     void updateSaleOrder(UUID id,saleOrdersRequestDTO saleOrdersRequestDTO);

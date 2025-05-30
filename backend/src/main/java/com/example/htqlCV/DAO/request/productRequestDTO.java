@@ -11,4 +11,5 @@ public class productRequestDTO {
     private Long stockQuantity;
     private UUID categoryId;
     private UUID branchProductId;
+    private UUID businessId;
 }

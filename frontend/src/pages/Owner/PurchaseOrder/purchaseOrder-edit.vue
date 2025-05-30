@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>Update Sale Order</h1>
+    <h1>Update Purchase Order</h1>
     <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
       spellcheck="false">
       <div class="row">
@@ -11,9 +11,9 @@
               <q-btn round dense flat icon="add" @click="openDiaglog = true" />
             </template>
           </q-select>
-          <q-table :rows="saleOrderItems" :columns="columns" :loading="loading" row-key="id">
+          <q-table :rows="purchaseOrderItems" :columns="columns" :loading="loading" row-key="id">
             <template v-slot:body-cell-quantity="props">
-              <q-td :props="props" >
+              <q-td :props="props">
                 <q-input v-model.number="props.row.quantity" type="number" dense borderless
                   class="bg-blue-1 border-primary" :disable="isDisabled" />
               </q-td>
@@ -21,7 +21,7 @@
             <template v-slot:body-cell-unitPrice="props">
               <q-td :props="props">
                 <q-input v-model.number="props.row.unitPrice" type="number" dense borderless
-                  class="bg-blue-1 border-primary" :disable="isDisabled"/>
+                  class="bg-blue-1 border-primary" :disable="isDisabled" />
               </q-td>
             </template>
             <template v-slot:body-cell-totalPrice="props">
@@ -31,12 +31,14 @@
             </template>
             <template v-slot:body-cell-note="props">
               <q-td :props="props">
-                <q-input v-model.string="props.row.note" dense borderless autogrow class="bg-blue-1 border-primary" :disable="isDisabled"/>
+                <q-input v-model.string="props.row.note" dense borderless autogrow class="bg-blue-1 border-primary"
+                  :disable="isDisabled" />
               </q-td>
             </template>
             <template v-slot:body-cell-actions="props">
               <q-td :props="props" auto-width style="min-width: 120px;">
-                <q-btn icon="delete" @click="deleteSaleItem(props.row)" round class="q-ml-sm" text-color="grey-7" :disable="isDisabled"/>
+                <q-btn icon="delete" @click="deletePurchaseItem(props.row)" round class="q-ml-sm" text-color="grey-7"
+                  :disable="isDisabled" />
               </q-td>
             </template>
           </q-table>
@@ -90,26 +92,38 @@
         </div>
         <div class="col-1"></div>
         <div class="col-4">
-          <q-select v-model="saleOrder.customerId" :options="customerOptions" label="Customer" map-options
-            emit-value use-input :filter="customFilter"
-            input-debounce="300" :rules="[val => !!val || 'Category is required']">
+          <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions" label="Supplier" map-options
+            emit-value use-input :filter="customFilter" input-debounce="300"
+            :rules="[val => !!val || 'Category is required']">
           </q-select>
-          <q-input v-model="saleOrder.totalAmount" label="Total Amound" type="number" readonly />
-          <q-input v-model="saleOrder.totalAmountPaid" label="Total Amound Paid" type="number" />
-          <q-input :model-value="saleOrder.totalAmount - saleOrder.totalAmountPaid" label="Dept" type="number"
+          <q-input v-model="purchaseOrder.totalAmount" label="Total Amound" type="number" readonly />
+          <q-input v-model="purchaseOrder.totalAmountPaid" label="Total Amound Paid" type="number" />
+          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid" label="Dept" type="number"
             readonly />
-          <q-select v-model="saleOrder.subStatus" :options="subStatusOptions" label="Sub Status">
+          <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions" label="Sub Status">
           </q-select>
-          <q-select v-model="saleOrder.status" :options="statusOptions" label="Status" map-options emit-value
+          <q-select v-model="purchaseOrder.status" :options="statusOptions" label="Status" map-options emit-value
             :disable="isDisabled">
           </q-select>
         </div>
       </div>
+      <q-dialog v-model="openDiaglogOrder">
+        <q-card style="width: 66vw; max-width: 90vw">
+          <q-card-section class="q-pt-none">
+            <order></order>
+          </q-card-section>
+          <q-card-actions align="right" class="text-primary">
+            <q-btn flat label="Add" @click="AddProduct" />
+            <q-btn flat label="Close" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
 
       <div class="row">
         <div class="col q-gutter-md">
           <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-          <q-btn label="Close" icon="close" type="button" to="../../saleOrders" outline color="grey-9" />
+          <q-btn label="Close" icon="close" type="button" to="../../purchaseOrders" outline color="grey-9" />
+          <q-btn label="View Order" @click="openDiaglogOrder = true" type="button" outline color="grey-9" />
         </div>
       </div>
     </q-form>
@@ -117,12 +131,15 @@
 </template>
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import api, { SaleOrderRequest, ProductRequest } from '../../../services/api';
-const router = useRouter();
+import { useRoute } from 'vue-router';
+import api, { PurchaseOrderRequest, ProductRequest } from '../../../services/api';
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
+import Order from '../../../components/order.vue'
 const route = useRoute();
 const loading = ref(false);
-const customerOptions = ref([])
+const supplierOptions = ref([])
 const subStatusOptions = ["None", "Not Paid"]
 const statusOptions = ["None", "Processing", "Completed", "Cancelled"]
 const categoryOptions = ref([])
@@ -132,24 +149,26 @@ const newCategoryName = ref('')
 const openPopupBranchProduct = ref(false)
 const newBranchProductName = ref('')
 const isDisabled = ref(false)
-let saleOrder: SaleOrderRequest = reactive({
+const openDiaglogOrder = ref(false)
+let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
-  customerId: null,
+  supplierId: null,
   subStatus: "None",
   status: "None",
-  saleOrderItemsRequestDTO: [{
+  purchaseOrderItemsRequestDTO: [{
     id: null,
     productId: null,
-    SaleOrdersId: null,
+    purchaseOrdersId: null,
     quantity: 0,
     unitPrice: 0,
     note: null
-  }]
+  }],
+  businessId: userInfo.value.businessId
 });
 const product = ref(null)
 const productOptions = ref([])
-const saleOrderItems = ref([])
+const purchaseOrderItems = ref([])
 const openDiaglog = ref(false)
 let productAdd: ProductRequest = reactive({
   name: '',
@@ -158,6 +177,7 @@ let productAdd: ProductRequest = reactive({
   stockQuantity: 0,
   categoryId: null,
   branchProductId: null,
+  businessId: userInfo.value.businessId
 })
 const columns = [
   { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
@@ -176,45 +196,45 @@ const customFilter = (option, search) => {
   );
 };
 const totalAmount = computed(() => {
-  return saleOrderItems.value.reduce(
+  return purchaseOrderItems.value.reduce(
     (sum, item) => sum + (item.unitPrice || 0) * (item.quantity || 0),
     0
   );
 });
 
 watch(totalAmount, (newTotal) => {
-  saleOrder.totalAmount = newTotal;
+  purchaseOrder.totalAmount = newTotal;
 
 });
 async function fetch() {
   loading.value = true;
-  const CustomerRes = await api.api.customer.getCustomers();
-  customerOptions.value = CustomerRes.map((item) => ({
+  const SupplierRes = await api.api.supplier.getSuppiers(userInfo.value.businessId);
+  supplierOptions.value = SupplierRes.map((item) => ({
     label: `${item.name} (${item.phone})`,
     value: item.id,
     name: item.name,   // giữ lại để filter
     phone: item.phone, // giữ lại để filter
   }));
-  const categoryRes = await api.api.category.getCategories()
+  const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
   categoryOptions.value = categoryRes.map((item) => ({
     label: item.name,
     value: item.id,
   }))
 
-  const branchProductRes = await api.api.branchProduct.getBranchProducts()
+  const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId)
   branchProductOptions.value = branchProductRes.map((item) => ({
     label: item.name,
     value: item.id,
   }))
 
-  const saleOrderRes = await api.api.saleOrder.getSaleOrder(route.params.id as string)
-  Object.assign(saleOrder, saleOrderRes)
-  if (["Completed", "Cancelled"].includes(saleOrder.status)) {
+  const purchaseOrderRes = await api.api.purchaseOrder.getPurchaseOrder(route.params.id as string)
+  Object.assign(purchaseOrder, purchaseOrderRes)
+  if (["Completed", "Cancelled"].includes(purchaseOrder.status)) {
     isDisabled.value = true
   }
-  saleOrder.customerId = saleOrderRes["customer"]["id"]
-  const saleOrderItemsRes = await api.api.saleOrderItem.getSaleItemsbySaleOrder(route.params.id as string)
-  saleOrderItems.value = saleOrderItemsRes.map((item) => ({
+  purchaseOrder.supplierId = purchaseOrderRes["supplier"]["id"]
+  const purchaseOrderItemsRes = await api.api.purchaseOrderItem.getPurchaseOrderItemsbyPurchaseOrder(route.params.id as string)
+  purchaseOrderItems.value = purchaseOrderItemsRes.map((item) => ({
     id: item.id,
     productId: item['product']['id'],
     // name: productOptions.value.find((item1) => item1.value === item['product']['id'])?.label,
@@ -223,8 +243,8 @@ async function fetch() {
     unitPrice: item.unitPrice,
     note: item.note
   }))
-  const existingProductIds = new Set(saleOrderItems.value.map(item => item.productId));
-  const productRes = await api.api.product.getProducts();
+  const existingProductIds = new Set(purchaseOrderItems.value.map(item => item.productId));
+  const productRes = await api.api.product.getProducts(userInfo.value.businessId);
   productOptions.value = productRes
     .filter(item => !existingProductIds.has(item.id)) // loại trừ những sản phẩm đã có
     .map(item => ({
@@ -232,8 +252,8 @@ async function fetch() {
       value: item.id,
     }));
 
-  // Cập nhật lại name trong saleOrderItems sau khi đã có productOptions (nếu cần giữ lại name ban đầu)
-  saleOrderItems.value.forEach(item => {
+  // Cập nhật lại name trong purchaseOrderItems sau khi đã có productOptions (nếu cần giữ lại name ban đầu)
+  purchaseOrderItems.value.forEach(item => {
     item.name = productRes.find(product => product.id === item.productId)?.name || '';
   });
   loading.value = false;
@@ -241,45 +261,46 @@ async function fetch() {
 }
 async function save() {
   loading.value = true;
-  saleOrder.saleOrderItemsRequestDTO = saleOrderItems.value.map((item) => ({
+  purchaseOrder.purchaseOrderItemsRequestDTO = purchaseOrderItems.value.map((item) => ({
     id: item.id,
     productId: item.productId,
-    SaleOrdersId: null,
+    purchaseOrdersId: null,
     quantity: item.quantity,
     unitPrice: item.unitPrice,
     note: item.note
   }))
 
-  await api.api.saleOrder.updateSaleOrder(route.params.id as string, saleOrder)
-  if (saleOrder.status == "Completed") {
-    saleOrder.saleOrderItemsRequestDTO.forEach(async (item) => {
+  await api.api.purchaseOrder.updatePurchaseOrder(route.params.id as string, purchaseOrder)
+  if (purchaseOrder.status == "Completed") {
+    purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
       const product_value = await api.api.product.getProduct(String(item.productId))
       const increase_quantity = product_value['stockQuantity'] + item.quantity
       await api.api.product.updateProduct(String(item.productId), {
         name: product_value['name'],
         capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
-        categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id']
+        categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
+        businessId: userInfo.value.businessId
       })
     })
     isDisabled.value = true
   }
-  if (saleOrder.status == "Cancelled") {
+  if (purchaseOrder.status == "Cancelled") {
     isDisabled.value = false
   }
   loading.value = false;
 }
 
-async function deleteSaleItem(item) {
+async function deletePurchaseItem(item) {
   loading.value = true
   try {
-    await api.api.saleOrderItem.deleteSaleOrderItems(item.id)
+    await api.api.purchaseOrderItem.deletePurchaseOrderItems(item.id)
   } catch (error) {
 
   }
   finally {
-    const index = saleOrderItems.value.indexOf(item);
+    const index = purchaseOrderItems.value.indexOf(item);
     if (index > -1) {
-      saleOrderItems.value.splice(index, 1);
+      purchaseOrderItems.value.splice(index, 1);
       await nextTick();
     }
     if (!productOptions.value.some(p => p.value === item.productId)) {
@@ -298,8 +319,8 @@ async function onProductSelect() {
   const selectedProduct = productOptions.value.find((item) => item.value === product.value);
   if (!selectedProduct) return;
 
-  // Thêm vào danh sách saleOrderItems
-  saleOrderItems.value.push({
+  // Thêm vào danh sách purchaseOrderItems
+  purchaseOrderItems.value.push({
     productId: product.value,
     name: selectedProduct.label,
     quantity: 0,
@@ -316,8 +337,8 @@ async function onProductSelect() {
 
 async function addCategory(scope) {
   loading.value = true
-  const res = await api.api.category.createCategory({ name: scope.value })
-  const categoryRes = await api.api.category.getCategories()
+  const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId })
+  const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
   categoryOptions.value = categoryRes.map((item) => ({
     label: item.name,
     value: item.id,
@@ -329,8 +350,8 @@ async function addCategory(scope) {
 
 async function addBranchProduct(scope) {
   loading.value = true
-  const res = await api.api.branchProduct.createBranchProduct({ name: scope.value })
-  const branchProductRes = await api.api.branchProduct.getBranchProducts()
+  const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
+  const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId)
   branchProductOptions.value = branchProductRes.map((item) => ({
     label: item.name,
     value: item.id,
@@ -342,12 +363,12 @@ async function addBranchProduct(scope) {
 async function AddProduct() {
   loading.value = true
   const productId = await api.api.product.createProduct(productAdd)
-  const productRes = await api.api.product.getProducts();
+  const productRes = await api.api.product.getProducts(userInfo.value.businessId);
   productOptions.value = productRes.map((item) => ({
     label: item.name,
     value: item.id,
   }))
-  saleOrderItems.value.push({
+  purchaseOrderItems.value.push({
     productId: productId,
     name: productOptions.value.find((item) => item.value === productId)?.label,
     quantity: 0,

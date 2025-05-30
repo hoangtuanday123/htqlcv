@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.supplierRequestDTO;
+import com.example.htqlCV.Model.business;
 import com.example.htqlCV.Model.supplier;
+import com.example.htqlCV.Respository.businessRespository;
 import com.example.htqlCV.Respository.supplierRespository;
 import com.example.htqlCV.Service.supplierServices;
 
@@ -16,10 +18,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class supplierServiceImpl implements supplierServices {
     private final supplierRespository supplierRespository;
-
+    private final businessRespository businessRespository;
     @Override
-    public List<supplier> getAllSupplier() {
-        return supplierRespository.findAll();
+    public List<supplier> getAllSupplier(UUID businessId) {
+        business business_value=businessRespository.findById(businessId).orElse(null);
+        return supplierRespository.findByBusiness(business_value);
     }
 
     @Override
@@ -29,6 +32,7 @@ public class supplierServiceImpl implements supplierServices {
 
     @Override
     public UUID createSupplier(supplierRequestDTO supplierRequestDTO) {
+        business business_value=businessRespository.findById(supplierRequestDTO.getBusinessId()).orElse(null);
         supplier supplier_value = supplier.builder()
                 .name(supplierRequestDTO.getName())
                 .address(supplierRequestDTO.getAddress())
@@ -37,6 +41,7 @@ public class supplierServiceImpl implements supplierServices {
                 .email(supplierRequestDTO.getEmail())
                 .company(supplierRequestDTO.getCompany())
                 .note(supplierRequestDTO.getNote())
+                .business(business_value)
                 .build();
         supplierRespository.save(supplier_value);
         return supplier_value.getId();

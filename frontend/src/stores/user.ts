@@ -6,6 +6,7 @@ interface User {
     email: string;
     phoneNumber: string;
     roles: string[];
+    businessId: number
 }
 
 export const userStore = defineStore('userStore', {

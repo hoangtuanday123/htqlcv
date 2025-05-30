@@ -24,6 +24,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import api, { Customer } from '../../../services/api';
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
 const loading = ref(false)
 const customers = ref<Customer[]>([])
 const keyword = ref('')
@@ -47,7 +50,7 @@ function search(rows, terms) {
 }
 async function fetchCustomers() {
   loading.value = true;
-  const res = await api.api.customer.getCustomers();
+  const res = await api.api.customer.getCustomers(userInfo.value.businessId);
   customers.value = res;
   loading.value = false;
 }

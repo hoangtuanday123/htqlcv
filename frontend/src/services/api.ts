@@ -3,6 +3,7 @@ import { userStore } from '../stores/user'
 import { storeToRefs } from 'pinia';
 import pinia from '../stores/index';
 import { ref } from 'vue';
+import ChangePassword from 'src/pages/Account/change-password.vue';
 const _userStore = userStore(pinia())
 
 const { authToken } = storeToRefs(_userStore);
@@ -36,7 +37,7 @@ export interface User {
   phoneNumber: string;
   roles: string[];
   password: string;
-  business_id:number
+  businessId: number
 }
 export interface refreshTokenDTO {
   token: string
@@ -54,6 +55,7 @@ export interface Customer {
   email: string;
   note: string;
   companyName: string;
+  businessId: number;
 }
 
 export interface CustomerRequest {
@@ -67,6 +69,7 @@ export interface CustomerRequest {
   email: string;
   note: string;
   companyName: string;
+  businessId: number;
 }
 
 export interface Supplier {
@@ -79,6 +82,7 @@ export interface Supplier {
   email: string;
   note: string;
   company: string;
+  businessId: number;
 }
 
 export interface SupplierRequest {
@@ -90,23 +94,28 @@ export interface SupplierRequest {
   email: string;
   note: string;
   company: string;
+  businessId: number;
 }
 export interface Category {
   id: number;
   name: string;
+  businessId: number;
 }
 
 export interface CategoryRequest {
   name: string;
+  businessId: number;
 }
 
 export interface BranchProduct {
   id: number;
   name: string;
+  businessId: number;
 }
 
 export interface BranchProductRequest {
   name: string;
+  businessId: number;
 }
 
 export interface Product {
@@ -117,6 +126,7 @@ export interface Product {
   stockQuantity: number;
   category: Category;
   branchProduct: BranchProduct;
+  businessId: number;
 }
 
 export interface ProductRequest {
@@ -126,6 +136,7 @@ export interface ProductRequest {
   stockQuantity: number;
   categoryId: number;
   branchProductId: number;
+  businessId: number;
 }
 
 export interface Guarantee {
@@ -146,7 +157,7 @@ export interface PurchaseOrderItem {
   purchaseOrdersId: number;
   quantity: number;
   unitPrice: number;
-  note:string;
+  note: string;
 }
 
 export interface PurchaseOrderItemRequest {
@@ -154,7 +165,7 @@ export interface PurchaseOrderItemRequest {
   purchaseOrdersId: number;
   quantity: number;
   unitPrice: number;
-  note:string;
+  note: string;
 }
 export interface PurchaseOrder {
   id: number;
@@ -164,7 +175,7 @@ export interface PurchaseOrder {
   subStatus: string;
   status: string;
   purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
-
+  businessId: number;
 }
 
 export interface PurchaseOrderRequest {
@@ -174,6 +185,7 @@ export interface PurchaseOrderRequest {
   subStatus: string;
   status: string;
   purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
+  businessId: number;
 }
 
 export interface SaleOrderItem {
@@ -182,7 +194,7 @@ export interface SaleOrderItem {
   SaleOrdersId: number;
   quantity: number;
   unitPrice: number;
-  note:string;
+  note: string;
 }
 
 export interface SaleOrderItemRequest {
@@ -190,7 +202,7 @@ export interface SaleOrderItemRequest {
   SaleOrdersId: number;
   quantity: number;
   unitPrice: number;
-  note:string;
+  note: string;
 }
 
 export interface SaleOrder {
@@ -201,6 +213,7 @@ export interface SaleOrder {
   subStatus: string;
   status: string;
   saleOrderItemsRequestDTO: SaleOrderItem[];
+  businessId: number;
 
 }
 
@@ -211,23 +224,29 @@ export interface SaleOrderRequest {
   subStatus: string;
   status: string;
   saleOrderItemsRequestDTO: SaleOrderItem[];
+  businessId: number;
 }
 
-export interface Business{
-  id:number
-  name:string;
-  mst:string;
-  email:string;
-  phone:string;
+export interface Business {
+  id: number
+  name: string;
+  mst: string;
+  email: string;
+  phone: string;
 }
 
-export interface BusinessRequest{
-  name:string;
-  mst:string;
-  email:string;
-  phone:string;
+export interface BusinessRequest {
+  name: string;
+  mst: string;
+  email: string;
+  phone: string;
 }
 
+export interface ChangePassword {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
@@ -290,11 +309,12 @@ const auth = {
 
 const user = {
   getUsers: () => request.get<User[]>('/user/'),
-  getUser: (id: string) => request.get<User>(`/user/${id}`),
+  getUser: (id: number) => request.get<User>(`/user/${id}`),
   createUser: (data: User) => request.post<void>('/user/', data),
-  updateUser: (id: string, data: User) => request.put<void>(`/user/${id}/update`, data),
+  updateUser: (id: number, data: User) => request.put<void>(`/user/${id}/update`, data),
   deleteUser: (id: string) => request.delete<void>(`/user/${id}/delete`),
   getCurrentUser: () => request.get<string>('/user/current_user'),
+  ChangePassword: (data: ChangePassword) => request.put<void>('/user/changePassword', data)
 }
 
 const role = {
@@ -307,7 +327,7 @@ const role = {
 }
 
 const customer = {
-  getCustomers: () => request.get<Customer[]>('/customer/'),
+  getCustomers: (businessId: number) => request.get<Customer[]>(`/customer?businessId=${businessId}`),
   getCustomer: (id: string) => request.get<Customer>(`/customer/${id}`),
   createCustomer: (data: CustomerRequest) => request.post<number>('/customer/', data),
   updateCustomer: (id: string, data: CustomerRequest) => request.put<void>(`/customer/${id}/update`, data),
@@ -316,7 +336,7 @@ const customer = {
 }
 
 const supplier = {
-  getSuppiers: () => request.get<Supplier[]>('/supplier/'),
+  getSuppiers: (businessId: number) => request.get<Supplier[]>(`/supplier?businessId=${businessId}`),
   getSupplier: (id: string) => request.get<Supplier>(`/supplier/${id}`),
   createSupplier: (data: SupplierRequest) => request.post<number>('/supplier/', data),
   updateSupplier: (id: string, data: SupplierRequest) => request.put<void>(`/supplier/${id}/update`, data),
@@ -325,21 +345,21 @@ const supplier = {
 }
 
 const category = {
-  getCategories: () => request.get<Category[]>('/category/'),
+  getCategories: (businessId: number) => request.get<Category[]>(`/category?businessId=${businessId}`),
   getCategory: (id: string) => request.get<Category>(`/category/${id}`),
   createCategory: (data: CategoryRequest) => request.post<number>('/category/', data),
   deleteCategory: (id: string) => request.delete<void>(`/category/${id}/delete`),
 }
 
 const branchProduct = {
-  getBranchProducts: () => request.get<BranchProduct[]>('/branchProduct/'),
+  getBranchProducts: (businessId: number) => request.get<BranchProduct[]>(`/branchProduct?businessId=${businessId}`),
   getBranchProduct: (id: string) => request.get<BranchProduct>(`/branchProduct/${id}`),
   createBranchProduct: (data: BranchProductRequest) => request.post<number>('/branchProduct/', data),
   deleteBranchProduct: (id: string) => request.delete<void>(`/branchProduct/${id}/delete`),
 }
 
 const product = {
-  getProducts: () => request.get<Product[]>('/product/'),
+  getProducts: (businessId: number) => request.get<Product[]>(`/product?businessId=${businessId}`),
   getProduct: (id: string) => request.get<Product>(`/product/${id}`),
   createProduct: (data: ProductRequest) => request.post<number>('/product/', data),
   updateProduct: (id: string, data: ProductRequest) => request.put<void>(`/product/${id}/update`, data),
@@ -355,7 +375,7 @@ const guarantee = {
 }
 
 const purchaseOrder = {
-  getPurchaseOrders: () => request.get<PurchaseOrder[]>('/purchaseOrders/'),
+  getPurchaseOrders: (businessId: number) => request.get<PurchaseOrder[]>(`/purchaseOrders?businessId=${businessId}`),
   getPurchaseOrder: (id: string) => request.get<PurchaseOrder>(`/purchaseOrders/${id}`),
   createPurchaseOrder: (data: PurchaseOrderRequest) => request.post<number>('/purchaseOrders/', data),
   deletePurchaseOrder: (id: string) => request.delete<void>(`/purchaseOrders/${id}/delete`),
@@ -380,7 +400,7 @@ const saleOrderItem = {
 }
 
 const saleOrder = {
-  getSaleOrders: () => request.get<SaleOrder[]>('/saleOrders/'),
+  getSaleOrders: (businessId: number) => request.get<SaleOrder[]>(`/saleOrders?businessId=${businessId}`),
   getSaleOrder: (id: string) => request.get<SaleOrder>(`/saleOrders/${id}`),
   createSaleOrder: (data: SaleOrderRequest) => request.post<number>('/saleOrders/', data),
   deleteSaleOrder: (id: string) => request.delete<void>(`/saleOrders/${id}/delete`),
@@ -390,18 +410,18 @@ const saleOrder = {
 
 const business = {
   getBusinesses: () => request.get<Business[]>('/businesses/'),
-  getBusiness: (id: string) => request.get<Business>(`/businesses/${id}`),
+  getBusiness: (id: number) => request.get<Business>(`/businesses/${id}`),
   createBusiness: (data: BusinessRequest) => request.post<number>('/businesses/', data),
-  updateBusiness: (id: string, data: BusinessRequest) => request.put<void>(`/businesses/${id}/update`, data),
-  blockBusiness:(id:string)=>request.put<void>(`/businesses/${id}/block`, {}),
-  openBlockBusiness:(id:string)=>request.put<void>(`/businesses/${id}/open`, {}),
+  updateBusiness: (id: number, data: BusinessRequest) => request.put<void>(`/businesses/${id}/update`, data),
+  blockBusiness: (id: string) => request.put<void>(`/businesses/${id}/block`, {}),
+  openBlockBusiness: (id: string) => request.put<void>(`/businesses/${id}/open`, {}),
 }
 const api = {
   auth,
   user,
   role,
   customer,
-  supplier ,
+  supplier,
   category,
   branchProduct,
   product,

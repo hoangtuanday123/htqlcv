@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.htqlCV.DAO.request.changePasswordRequestDTO;
 import com.example.htqlCV.DAO.request.userRequestDTO;
 import com.example.htqlCV.DAO.response.userResponse;
 import com.example.htqlCV.Model.currentUser;
@@ -31,6 +32,7 @@ public class userServiceImpl implements userSevices {
     private final userHasRoleServices userHasRoleServices;
     private final roleServices roleServices;
     private final businessRespository businessRespository;
+    
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
@@ -139,7 +141,7 @@ public class userServiceImpl implements userSevices {
         currentuser.setUsername(user_value.getUsername());
         currentuser.setPhoneNumber(user_value.getPhoneNumber());
         if (user_value.getBusiness() != null) {
-            currentuser.setBusinessId(user_value.getBusiness().getId());
+            currentuser.setBusinessId(user_value.getBusiness().getId());  
         } else {
             currentuser.setBusinessId(null); // hoặc không set gì tùy yêu cầu
         }
@@ -152,6 +154,17 @@ public class userServiceImpl implements userSevices {
         currentuser.setRoles(roles);
         return currentuser;
         
+    }
+    @Override
+    public void changePassword(changePasswordRequestDTO changePasswordRequestDTO, String username) {
+        user user_value = userRepository.findByUsername(username);
+        if (passwordEncoder.matches(changePasswordRequestDTO.getOldPassword(), user_value.getPassword())
+        &&(changePasswordRequestDTO.getNewPassword().equals(changePasswordRequestDTO.getConfirmPassword()))) {
+            user_value.setPassword(passwordEncoder.encode(changePasswordRequestDTO.getNewPassword()));
+            userRepository.save(user_value);
+        } else {
+            throw new RuntimeException("Old password is incorrect");
+        }
     }
     
 }

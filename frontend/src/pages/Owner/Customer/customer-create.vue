@@ -36,7 +36,7 @@
             <div class="row">
                 <div class="col q-gutter-md">
                     <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-                    <q-btn label="Close" icon="close" type="button" to="../../customers" outline color="grey-9" />
+                    <q-btn label="Close" icon="close" type="button" to="../customers" outline color="grey-9" />
                 </div>
             </div>
         </q-form>
@@ -44,10 +44,13 @@
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import api, { CustomerRequest } from '../../../services/api'
-const route = useRoute()
+const router = useRouter()
 const loading = ref(false)
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
 
 let customer: CustomerRequest = reactive({
     name: '',
@@ -59,24 +62,16 @@ let customer: CustomerRequest = reactive({
     cmnd: '',
     email: '',
     note: '',
-    companyName: null
+    companyName: null,
+    businessId: userInfo.value.businessId
 })
-
-async function fetch() {
-    loading.value = true;
-    const res = await api.api.customer.getCustomer(route.params.id as string)
-    Object.assign(customer, res)
-    loading.value = false;
-}
 
 async function save() {
 
     loading.value = true
 
-    await api.api.customer.updateCustomer(route.params.id as string, customer)
+    await api.api.customer.createCustomer(customer)
     loading.value = false
+    router.push({ path: '../customers' })
 }
-onMounted(async () => {
-    await fetch()
-})
 </script>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.htqlCV.DAO.request.purchaseOrdersRequestDTO;
@@ -24,9 +25,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class purchaseOrdersController {
     private final purchaseOrdersServices purchaseOrdersServices;
-    @GetMapping("/")
-    public List<purchaseOrders> getPurchaseOrders() {
-        return purchaseOrdersServices.getAllPurchaseOrders();
+    @GetMapping
+    public List<purchaseOrders> getPurchaseOrdersBusinessId(@RequestParam UUID businessId) {
+        return purchaseOrdersServices.getAllPurchaseOrders(businessId);
     }
     @GetMapping("/{id}")
     public purchaseOrders getPurchaseOrders(@PathVariable UUID id) {

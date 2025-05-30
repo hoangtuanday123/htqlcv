@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.htqlCV.DAO.request.changePasswordRequestDTO;
 import com.example.htqlCV.DAO.request.userRequestDTO;
 import com.example.htqlCV.DAO.response.userResponse;
 import com.example.htqlCV.Model.currentUser;
@@ -76,6 +77,12 @@ public class userController {
             return null;
         }
         
+    }
+
+    @PutMapping("/changePassword")
+    public void changePassword(@RequestBody changePasswordRequestDTO changePasswordRequestDTO) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        userSevices.changePassword(changePasswordRequestDTO, username);
     }
     
 }

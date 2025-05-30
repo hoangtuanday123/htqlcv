@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.productRequestDTO;
 import com.example.htqlCV.Model.branchProduct;
+import com.example.htqlCV.Model.business;
 import com.example.htqlCV.Model.category;
 import com.example.htqlCV.Model.product;
+import com.example.htqlCV.Respository.businessRespository;
 import com.example.htqlCV.Respository.productRespository;
 import com.example.htqlCV.Service.branchProductServices;
 import com.example.htqlCV.Service.categoryServices;
@@ -21,9 +23,11 @@ public class productServiceImpl implements productServices {
     private final productRespository productRespository;
     private final branchProductServices branchProductServices;
     private final categoryServices categoryServices;
+    private final businessRespository businessRespository;
     @Override
-    public List<product> getAllProduct() {
-        return productRespository.findAll();
+    public List<product> getAllProduct(UUID businessId) {
+        business business_value=businessRespository.findById(businessId).orElse(null);
+        return productRespository.findByBusiness(business_value);
     }
     @Override
     public product getProductById(UUID id) {
@@ -33,6 +37,7 @@ public class productServiceImpl implements productServices {
     public UUID createProduct(productRequestDTO productRequestDTO) {
         branchProduct branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
         category category=categoryServices.getCategoryById(productRequestDTO.getCategoryId());
+        business business_value=businessRespository.findById(productRequestDTO.getBusinessId()).orElse(null);
         product product_value;
         product_value = product.builder()
                 .name(productRequestDTO.getName())
@@ -41,6 +46,7 @@ public class productServiceImpl implements productServices {
                 .stockQuantity(productRequestDTO.getStockQuantity())
                 .branchProduct(branchProduct)
                 .category(category)
+                .business(business_value)
                 .build();
         productRespository.save(product_value);
         return product_value.getId();

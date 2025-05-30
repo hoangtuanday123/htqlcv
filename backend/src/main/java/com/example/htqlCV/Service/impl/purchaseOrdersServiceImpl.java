@@ -6,24 +6,29 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.purchaseOrdersRequestDTO;
+import com.example.htqlCV.Model.business;
 import com.example.htqlCV.Model.purchaseOrders;
+import com.example.htqlCV.Respository.businessRespository;
 import com.example.htqlCV.Respository.purchaseOrderItemRespository;
 import com.example.htqlCV.Respository.purchaseOrdersRespository;
 import com.example.htqlCV.Respository.supplierRespository;
 import com.example.htqlCV.Service.purchaseOrderItemsServices;
 import com.example.htqlCV.Service.purchaseOrdersServices;
 
+
 import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
-   private final purchaseOrdersRespository purchaseOrdersRespository;
-   private final supplierRespository supplierRespository;
-   private final purchaseOrderItemsServices purchaseOrderItemsServices;
-   private final purchaseOrderItemRespository purchaseOrderItemRespository;
+    private final purchaseOrdersRespository purchaseOrdersRespository;
+    private final supplierRespository supplierRespository;
+    private final purchaseOrderItemsServices purchaseOrderItemsServices;
+    private final purchaseOrderItemRespository purchaseOrderItemRespository;
+    private final businessRespository businessRespository;
     @Override
-    public List<purchaseOrders> getAllPurchaseOrders() {
-        return purchaseOrdersRespository.findAll();
+    public List<purchaseOrders> getAllPurchaseOrders(UUID businessId) {
+        business business_value=businessRespository.findById(businessId).orElse(null);
+        return purchaseOrdersRespository.findByBusiness(business_value);
     }
     @Override
     public purchaseOrders getPurchaseOrdersById(UUID id) {
@@ -32,12 +37,14 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
     @Override
     public UUID createPurchaseOrders(purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
         var supplier = supplierRespository.findById(purchaseOrdersRequestDTO.getSupplierId()).orElse(null);
+        business business_value=businessRespository.findById(purchaseOrdersRequestDTO.getBusinessId()).orElse(null);
         purchaseOrders purchaseOrders_value = purchaseOrders.builder()
                 .totalAmount(purchaseOrdersRequestDTO.getTotalAmount())
                 .totalAmountPaid(purchaseOrdersRequestDTO.getTotalAmountPaid())
                 .status(purchaseOrdersRequestDTO.getStatus())
                 .SubStatus(purchaseOrdersRequestDTO.getSubStatus())
                 .supplier(supplier)
+                .business(business_value)
                 .build();
         purchaseOrdersRespository.save(purchaseOrders_value);
         var purchaseOrdersId = purchaseOrders_value.getId();

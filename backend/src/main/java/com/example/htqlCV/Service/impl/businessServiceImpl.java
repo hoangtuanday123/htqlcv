@@ -44,6 +44,7 @@ public class businessServiceImpl implements businessServices{
             business_value.setName(businessRequestDTO.getName());
             business_value.setEmail(businessRequestDTO.getEmail());
             business_value.setMst(businessRequestDTO.getMst());
+            business_value.setPhone(businessRequestDTO.getPhone());
             businessRespository.save(business_value);
         }
     }

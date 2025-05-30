@@ -114,17 +114,7 @@ public class authServiceimpl implements authServices {
         
     }
 
-    @Override
-    public void changePassword(changePasswordRequestDTO changePasswordRequestDTO, String username) {
-        user user_value = userRepository.findByUsername(username);
-        if (passwordEncoder.matches(changePasswordRequestDTO.getOldPassword(), user_value.getPassword())
-        &&(changePasswordRequestDTO.getNewPassword().equals(changePasswordRequestDTO.getConfirmPassword()))) {
-            user_value.setPassword(passwordEncoder.encode(changePasswordRequestDTO.getNewPassword()));
-            userRepository.save(user_value);
-        } else {
-            throw new RuntimeException("Old password is incorrect");
-        }
-    }
+
 
     private SignedJWT verifyToken(String token){
         try {

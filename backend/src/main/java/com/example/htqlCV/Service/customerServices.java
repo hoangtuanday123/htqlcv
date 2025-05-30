@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.example.htqlCV.DAO.request.customerRequestDTO;
 import com.example.htqlCV.Model.customer;
 public interface  customerServices {
-    List<customer> getCustomers();
+    List<customer> getCustomers(UUID businessId);
     customer getCustomer(UUID id);
     UUID createCustomer(customerRequestDTO customer);
     void updateCustomer(UUID id, customerRequestDTO customer);

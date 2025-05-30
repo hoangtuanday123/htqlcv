@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.htqlCV.DAO.request.categoryRequestDTO;
@@ -21,9 +22,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class categoryController {
     private final categoryServices categoryServices;
-    @GetMapping("/")
-    public List<category> getCategoryList() {
-        return categoryServices.getAllCategory();
+    @GetMapping
+    public List<category> getCategoryList(@RequestParam UUID businessId) {
+        return categoryServices.getAllCategory(businessId);
     }
     @GetMapping("/{id}")
     public category getCategoryById(@PathVariable UUID id) {

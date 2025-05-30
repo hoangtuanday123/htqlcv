@@ -12,4 +12,5 @@ public class saleOrdersRequestDTO {
     private String status;
     private String SubStatus;
     private List<saleOrderItemsRequestDTO>saleOrderItemsRequestDTO;
+    private UUID businessId;
 }
