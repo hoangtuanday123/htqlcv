@@ -39,7 +39,7 @@ public class user extends abstractEntity{
     private List<userHasRole> userRoles;
 
     @ManyToOne()
-    @JoinColumn(name = "business_id")
+    @JoinColumn(name = "business_id", nullable = true)
     @JsonBackReference
     private business business;
 }

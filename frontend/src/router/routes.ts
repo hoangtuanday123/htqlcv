@@ -142,6 +142,24 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('pages/Owner/PurchaseOrder/purchaseOrder-edit.vue')
               }
             ]
+          },
+          {
+            path: 'staffs',
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/Staff/staff-list.vue')
+              },
+              {
+                path: ':id/edit',
+                component: () => import('pages/Owner/Staff/staff-edit.vue')
+              },
+              {
+                path: 'create',
+                component: () => import('pages/Owner/Staff/staff-create.vue')
+              }
+            ]
+
           }
         ]
       },

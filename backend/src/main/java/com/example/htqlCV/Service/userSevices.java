@@ -12,6 +12,8 @@ import com.example.htqlCV.Model.currentUser;
 import com.example.htqlCV.Model.user;
 public interface  userSevices {
     user createUser(userRequestDTO userRequestDTO);
+    user createStaff(userRequestDTO userRequestDTO);
+    List<userResponse> getUsersByBusiness(UUID businessId);
     List<userResponse> getAllUser();
     userResponse getUserById(UUID id);
     void updateUser(UUID id, userRequestDTO userRequestDTO);

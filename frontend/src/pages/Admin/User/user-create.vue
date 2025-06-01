@@ -39,7 +39,7 @@ let user: User = reactive({
     email: '',
     phoneNumber: '',
     roles: [],
-    business_id:null
+    businessId:null
 })
 
 

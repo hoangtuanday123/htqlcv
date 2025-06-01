@@ -22,7 +22,7 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import {  onMounted, ref } from 'vue';
 import api, { User } from '../../../services/api';
 const loading = ref(false)
 const users = ref<User[]>([])

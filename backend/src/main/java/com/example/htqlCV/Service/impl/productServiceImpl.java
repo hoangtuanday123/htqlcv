@@ -35,8 +35,14 @@ public class productServiceImpl implements productServices {
     }
     @Override
     public UUID createProduct(productRequestDTO productRequestDTO) {
-        branchProduct branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
-        category category=categoryServices.getCategoryById(productRequestDTO.getCategoryId());
+        branchProduct branchProduct=null;
+        if(productRequestDTO.getBranchProductId()!=null){
+            branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
+        }
+        category category=null;
+        if(productRequestDTO.getCategoryId()!=null){
+            category=categoryServices.getCategoryById(productRequestDTO.getCategoryId());
+        }
         business business_value=businessRespository.findById(productRequestDTO.getBusinessId()).orElse(null);
         product product_value;
         product_value = product.builder()

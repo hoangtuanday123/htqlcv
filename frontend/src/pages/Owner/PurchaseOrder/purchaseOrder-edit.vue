@@ -110,10 +110,9 @@
       <q-dialog v-model="openDiaglogOrder">
         <q-card style="width: 66vw; max-width: 90vw">
           <q-card-section class="q-pt-none">
-            <order></order>
+            <order :purchaseOrderId="route.params.id as string" :paid="purchaseOrder.totalAmountPaid" :businessId="String(userInfo.businessId)"></order>
           </q-card-section>
           <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Add" @click="AddProduct" />
             <q-btn flat label="Close" v-close-popup />
           </q-card-actions>
         </q-card>
@@ -136,7 +135,7 @@ import api, { PurchaseOrderRequest, ProductRequest } from '../../../services/api
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
-import Order from '../../../components/order.vue'
+import Order from '../../../components/OrderPurchaseInvoice.vue'
 const route = useRoute();
 const loading = ref(false);
 const supplierOptions = ref([])
@@ -221,7 +220,7 @@ async function fetch() {
     value: item.id,
   }))
 
-  const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId)
+  const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
   branchProductOptions.value = branchProductRes.map((item) => ({
     label: item.name,
     value: item.id,
@@ -244,7 +243,7 @@ async function fetch() {
     note: item.note
   }))
   const existingProductIds = new Set(purchaseOrderItems.value.map(item => item.productId));
-  const productRes = await api.api.product.getProducts(userInfo.value.businessId);
+  const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
   productOptions.value = productRes
     .filter(item => !existingProductIds.has(item.id)) // loại trừ những sản phẩm đã có
     .map(item => ({
@@ -351,7 +350,7 @@ async function addCategory(scope) {
 async function addBranchProduct(scope) {
   loading.value = true
   const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
-  const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId)
+  const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
   branchProductOptions.value = branchProductRes.map((item) => ({
     label: item.name,
     value: item.id,
@@ -363,7 +362,7 @@ async function addBranchProduct(scope) {
 async function AddProduct() {
   loading.value = true
   const productId = await api.api.product.createProduct(productAdd)
-  const productRes = await api.api.product.getProducts(userInfo.value.businessId);
+  const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
   productOptions.value = productRes.map((item) => ({
     label: item.name,
     value: item.id,

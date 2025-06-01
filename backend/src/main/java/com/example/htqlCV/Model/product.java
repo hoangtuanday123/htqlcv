@@ -35,12 +35,12 @@ public class product extends abstractEntity {
     private Long stockQuantity;
 
     @ManyToOne()
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = true)
     @JsonManagedReference
     private category category;
 
     @ManyToOne()
-    @JoinColumn(name = "branch_product_id")
+    @JoinColumn(name = "branch_product_id", nullable = true)
     @JsonManagedReference
     private branchProduct branchProduct;
 

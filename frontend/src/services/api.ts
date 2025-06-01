@@ -2,15 +2,12 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { userStore } from '../stores/user'
 import { storeToRefs } from 'pinia';
 import pinia from '../stores/index';
-import { ref } from 'vue';
+
 import ChangePassword from 'src/pages/Account/change-password.vue';
 const _userStore = userStore(pinia())
 
 const { authToken } = storeToRefs(_userStore);
-interface Todo {
-  id: string;
-  title: string;
-}
+
 
 interface Login {
   username: string;
@@ -261,7 +258,7 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(
   (res) => res,
   (error: AxiosError) => {
-    const { data, status, config } = error.response!;
+    const { data, status } = error.response!;
     switch (status) {
       case 400:
         console.error(data);
@@ -287,9 +284,9 @@ const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const request = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
-  post: <T>(url: string, body: {}) =>
+  post: <T>(url: string, body: object) =>
     axios.post<T>(url, body).then(responseBody),
-  put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
+  put: <T>(url: string, body: object) => axios.put<T>(url, body).then(responseBody),
   delete: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
@@ -309,12 +306,14 @@ const auth = {
 
 const user = {
   getUsers: () => request.get<User[]>('/user/'),
-  getUser: (id: number) => request.get<User>(`/user/${id}`),
+  getUser: (id: string) => request.get<User>(`/user/${id}`),
   createUser: (data: User) => request.post<void>('/user/', data),
-  updateUser: (id: number, data: User) => request.put<void>(`/user/${id}/update`, data),
+  updateUser: (id: string, data: User) => request.put<void>(`/user/${id}/update`, data),
   deleteUser: (id: string) => request.delete<void>(`/user/${id}/delete`),
   getCurrentUser: () => request.get<string>('/user/current_user'),
-  ChangePassword: (data: ChangePassword) => request.put<void>('/user/changePassword', data)
+  ChangePassword: (data: ChangePassword) => request.put<void>('/user/changePassword', data),
+  createStaff:(data: User) => request.post<void>('/user/createStaff', data),
+  getStaffs: (businessId:string) => request.get<User[]>(`/user/staffs?businessId=${businessId}`),
 }
 
 const role = {
@@ -352,14 +351,14 @@ const category = {
 }
 
 const branchProduct = {
-  getBranchProducts: (businessId: number) => request.get<BranchProduct[]>(`/branchProduct?businessId=${businessId}`),
+  getBranchProducts: (businessId: string) => request.get<BranchProduct[]>(`/branchProduct?businessId=${businessId}`),
   getBranchProduct: (id: string) => request.get<BranchProduct>(`/branchProduct/${id}`),
   createBranchProduct: (data: BranchProductRequest) => request.post<number>('/branchProduct/', data),
   deleteBranchProduct: (id: string) => request.delete<void>(`/branchProduct/${id}/delete`),
 }
 
 const product = {
-  getProducts: (businessId: number) => request.get<Product[]>(`/product?businessId=${businessId}`),
+  getProducts: (businessId: string) => request.get<Product[]>(`/product?businessId=${businessId}`),
   getProduct: (id: string) => request.get<Product>(`/product/${id}`),
   createProduct: (data: ProductRequest) => request.post<number>('/product/', data),
   updateProduct: (id: string, data: ProductRequest) => request.put<void>(`/product/${id}/update`, data),
@@ -375,7 +374,7 @@ const guarantee = {
 }
 
 const purchaseOrder = {
-  getPurchaseOrders: (businessId: number) => request.get<PurchaseOrder[]>(`/purchaseOrders?businessId=${businessId}`),
+  getPurchaseOrders: (businessId: string) => request.get<PurchaseOrder[]>(`/purchaseOrders?businessId=${businessId}`),
   getPurchaseOrder: (id: string) => request.get<PurchaseOrder>(`/purchaseOrders/${id}`),
   createPurchaseOrder: (data: PurchaseOrderRequest) => request.post<number>('/purchaseOrders/', data),
   deletePurchaseOrder: (id: string) => request.delete<void>(`/purchaseOrders/${id}/delete`),
@@ -400,7 +399,7 @@ const saleOrderItem = {
 }
 
 const saleOrder = {
-  getSaleOrders: (businessId: number) => request.get<SaleOrder[]>(`/saleOrders?businessId=${businessId}`),
+  getSaleOrders: (businessId: string) => request.get<SaleOrder[]>(`/saleOrders?businessId=${businessId}`),
   getSaleOrder: (id: string) => request.get<SaleOrder>(`/saleOrders/${id}`),
   createSaleOrder: (data: SaleOrderRequest) => request.post<number>('/saleOrders/', data),
   deleteSaleOrder: (id: string) => request.delete<void>(`/saleOrders/${id}/delete`),

@@ -95,9 +95,6 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import api, {
   Product,
-  ProductRequest,
-  Category,
-  BranchProduct,
   Guarantee,
   GuaranteeRequest
 } from '../../../services/api';
@@ -167,6 +164,12 @@ async function fetch() {
   }));
   const res = await api.api.product.getProduct(route.params.id as string);
   Object.assign(product, res);
+  if (product.category ==null){
+    product.category={id:null,name:'',businessId: null}
+  }
+  if (product.branchProduct ==null){
+    product.branchProduct={id:null,name:'',businessId: null}
+  }
   const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
   guarantees.value = guaranteeRes;
   loading.value = false;

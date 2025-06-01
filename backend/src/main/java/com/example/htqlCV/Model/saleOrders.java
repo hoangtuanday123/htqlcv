@@ -35,7 +35,7 @@ public class saleOrders extends abstractEntity{
     private String SubStatus;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", nullable = true)
     @JsonManagedReference
     private customer customer;
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.htqlCV.DAO.request.changePasswordRequestDTO;
@@ -37,6 +38,11 @@ public class userController {
         user id=userSevices.createUser(userRequestDTO);
         
     }
+    @PostMapping("/createStaff")
+    public void createStaff(@RequestBody userRequestDTO userRequestDTO) {
+        user id=userSevices.createStaff(userRequestDTO);
+        
+    }
     @GetMapping("/")
     public List<userResponse> getAllUser() {
         var authentication=SecurityContextHolder.getContext().getAuthentication();
@@ -47,6 +53,10 @@ public class userController {
          // Return the list of users as a response
          System.out.println("Get all user request received with size: " + users);
         return userSevices.getAllUser();
+    }
+    @GetMapping("/staffs")
+    public List<userResponse> getAllstaff(@RequestParam UUID businessId) {
+        return userSevices.getUsersByBusiness(businessId);
     }
 
     @GetMapping("/{id}")

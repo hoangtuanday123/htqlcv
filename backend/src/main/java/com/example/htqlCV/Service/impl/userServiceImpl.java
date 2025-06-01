@@ -38,7 +38,11 @@ public class userServiceImpl implements userSevices {
     @Override
     public user createUser(userRequestDTO userRequestDTO) {
         try {
-            business business_value=businessRespository.findById(userRequestDTO.getBusiness_id()).orElse(null);
+            System.out.println(userRequestDTO.getBusinessId());
+            business business_value=null;
+            if(userRequestDTO.getBusinessId()!=null){
+                business_value=businessRespository.findById(userRequestDTO.getBusinessId()).orElse(null);
+            }
             user user_value = user.builder()
                 .username(userRequestDTO.getUsername())
                 .password(passwordEncoder.encode(userRequestDTO.getPassword()))
@@ -55,12 +59,36 @@ public class userServiceImpl implements userSevices {
                 role role_value=roleServices.getRoleById(role);
                 userHasRoleServices.createUserHasRole(user_value,role_value);
             }
-
             return user_value;
         } catch (Exception e) {
             return null;
         }
         
+    }
+
+    @Override
+    public user createStaff(userRequestDTO userRequestDTO){
+        try {
+            System.out.println(userRequestDTO.getBusinessId());
+            business business_value=null;
+            if(userRequestDTO.getBusinessId()!=null){
+                business_value=businessRespository.findById(userRequestDTO.getBusinessId()).orElse(null);
+            }
+            user user_value = user.builder()
+                .username(userRequestDTO.getUsername())
+                .password(passwordEncoder.encode(userRequestDTO.getPassword()))
+                .email(userRequestDTO.getEmail())
+                .business(business_value)
+                .build(); 
+            userRepository.save(user_value);
+            
+           
+            role role_value=roleServices.getRoleByName("staff");
+            userHasRoleServices.createUserHasRole(user_value,role_value);
+            return user_value;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -90,7 +118,28 @@ public class userServiceImpl implements userSevices {
         }
         return userResponses;
     }
-
+    @Override
+    public List<userResponse> getUsersByBusiness(UUID businessId){
+        business business_value=businessRespository.findById(businessId).orElse(null);
+        var users= userRepository.findByBusiness(business_value);
+        var userResponses = new ArrayList<userResponse>();
+        for (user user : users) {
+            userResponse userResponse = new userResponse();
+            userResponse.setId(user.getId());
+            userResponse.setUsername(user.getUsername());
+            userResponse.setEmail(user.getEmail());
+            userResponse.setPhoneNumber(user.getPhoneNumber());
+            userResponse.setAddress(user.getAddress());
+            if (user.getBusiness() != null) {
+                userResponse.setBusinessId(user.getBusiness().getId());
+            } else {
+                userResponse.setBusinessId(null); // hoặc không set gì tùy yêu cầu
+            }
+            userResponses.add(userResponse);
+        }
+        return userResponses;
+        
+    }
     @Override
     public userResponse getUserById(UUID id) {
         var user= userRepository.findById(id).orElse(null);

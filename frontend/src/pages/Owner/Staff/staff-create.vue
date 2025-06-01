@@ -1,0 +1,53 @@
+<template>
+  <q-page class="q-pa-md">
+      <h1>Create Staff</h1>
+      <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
+          spellcheck="false">
+          <q-input stack-label v-model="user.username" label="Username" required />
+
+          <q-input type="email" v-model="user.email" label="Email" />
+
+          <q-input type="password" v-model="user.password" label="Password" />
+
+          <div class="row">
+              <div class="col q-gutter-md">
+                  <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
+                  <q-btn label="Close" icon="close" type="button" to="../users" outline text-color="text-color" />
+              </div>
+          </div>
+      </q-form>
+  </q-page>
+</template>
+<script setup lang="ts">
+import {  reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import api, { User } from '../../../services/api';
+import { useCurrentuser } from '../../../share/currentuser';
+const currentUser = useCurrentuser()
+const userInfo = currentUser.info
+const router = useRouter()
+const loading = ref(false)
+
+
+let user: User = reactive({
+  id: null,
+  username: '',
+  password: '',
+  email: '',
+  phoneNumber: '',
+  roles: [],
+  businessId:null
+})
+
+
+async function save() {
+
+  loading.value = true
+  user.businessId=userInfo.value.businessId
+  await api.api.user.createStaff(user)
+  loading.value = false
+  router.push({path:'../staffs'})
+}
+
+
+</script>

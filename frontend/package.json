@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "productName": "he thong xe dap dien",
   "author": "",
   "private": true,
   "scripts": {
@@ -15,8 +15,12 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "axios": "^1.7.9",
+    "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^1.5.11",
     "html2pdf.js": "^0.10.3",
     "install": "^0.13.0",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "npm": "^11.4.1",
     "pinia": "^2.2.4",
     "quasar": "^2.16.0",

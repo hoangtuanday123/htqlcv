@@ -35,7 +35,7 @@ public class purchaseOrders extends abstractEntity{
     private String SubStatus;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id")
+    @JoinColumn(name = "supplier_id", nullable = true)
     @JsonManagedReference
     private supplier supplier;
 

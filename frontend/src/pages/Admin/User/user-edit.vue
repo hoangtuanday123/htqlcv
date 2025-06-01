@@ -40,6 +40,7 @@ let user: User = reactive({
     roles: [] as string[],
     phoneNumber: '',
     password: ' ',
+    businessId:null
 })
 
 async function fetch() {

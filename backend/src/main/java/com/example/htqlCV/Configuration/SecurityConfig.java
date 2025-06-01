@@ -45,10 +45,15 @@ public class SecurityConfig {
         "/user/current_user","/user/changePassword"
     };
     private final String[] ADMIN_ENDPOINTS = {
-        "/role/**","/user/{id}","/user/update/{id}","/user/delete/{id}"
+        "/role/**","/user/{id}","/user/{id}/update","/user/{id}delete","/user/createStaff","/user/staffs"
 
     };
     private final String[] OWNER_ENDPOINTS={
+        "/category/**","/branchProduct/**","/supplier/**","/customer/**","/product/**",
+        "/saleOrderItems/**","/saleOrders/**","/purchaseOrders/**","/purchaseOrderItems/**",
+        "/user/createStaff","/user/staffs","/user/{id}/update","/user/{id}"
+    };
+    private final String[] STAFF_ENDPOINTS={
         "/category/**","/branchProduct/**","/supplier/**","/customer/**","/product/**",
         "/saleOrderItems/**","/saleOrders/**","/purchaseOrders/**","/purchaseOrderItems/**"
     };
@@ -57,8 +62,9 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(request -> request
                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                .requestMatchers(AUTH_ENDPOINTS).hasAnyAuthority( "SCOPE_admin", "SCOPE_owner","SCOPE_user")
+                .requestMatchers(AUTH_ENDPOINTS).hasAnyAuthority( "SCOPE_admin", "SCOPE_owner","SCOPE_staff")
                 .requestMatchers(OWNER_ENDPOINTS).hasAnyAuthority("SCOPE_admin","SCOPE_owner")
+                .requestMatchers(STAFF_ENDPOINTS).hasAnyAuthority("SCOPE_admin","SCOPE_owner","SCOPE_staff")
                 .requestMatchers(ADMIN_ENDPOINTS).hasAuthority( "SCOPE_admin")
                 .anyRequest().authenticated()
             )

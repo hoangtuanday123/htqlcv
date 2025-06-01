@@ -3,8 +3,14 @@
         <q-btn v-if="$q.screen.lt.md" flat round icon="menu" @click="$emit('toggleDrawer')" />
 
         <q-toolbar-title :shrink="true" class="row no-wrap items-center">
-            <!-- <img style="height: 16px;" src="../../assets/connexus_white.png"> -->
-            <span style="margin-left: 10px; font-family: 'Sui Generis Rg'; font-size: 22px;">APP</span>
+          <a href="/home" style="display: flex; align-items: center;">
+    <img
+      alt="Logo"
+      src="../../assets/image.png"
+      style="height: 60px; width: auto; margin-right: 12px"
+    />
+  </a>
+
         </q-toolbar-title>
         <!-- desktop -->
         <template v-if="$q.screen.gt.sm">
@@ -108,7 +114,7 @@
                 </q-btn-dropdown> -->
                 <q-space />
             </template>
-            <template v-if="currentUser.hasRole('owner') || currentUser.hasRole('admin')">
+            <template v-if="currentUser.hasRole('owner')||currentUser.hasRole('staff') ">
                 <q-btn-dropdown label="Products" stretch flat no-caps>
                     <q-list style="min-width: 180px">
                         <q-item to="/owner/products" clickable>
@@ -145,13 +151,22 @@
 
                     </q-list>
                 </q-btn-dropdown>
+                <q-btn-dropdown label="Staff" stretch flat no-caps>
+                    <q-list style="min-width: 180px">
+                        <q-item to="/owner/staffs" clickable>
+                            <q-item-section>Staffs</q-item-section>
+                        </q-item>
+
+
+                    </q-list>
+                </q-btn-dropdown>
 
             </template>
             <q-space />
             <!-- right side -->
 
 
-            <template v-if="currentUser.hasloggedIn()" class="">
+            <template v-if="currentUser.hasloggedIn()" >
                 <!-- <q-btn stretch flat :label="t('menu.my_instances')" to="/my_data"
                     v-if="currentUser.hasRole('Customer')" /> -->
                 <q-btn round flat>

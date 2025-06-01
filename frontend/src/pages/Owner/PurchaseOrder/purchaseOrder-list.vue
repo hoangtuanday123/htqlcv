@@ -52,7 +52,7 @@ function search(rows, terms) {
 }
 async function fetchPurchaseOrders() {
   loading.value = true;
-  const res = await api.api.purchaseOrder.getPurchaseOrders(userInfo.value.businessId);
+  const res = await api.api.purchaseOrder.getPurchaseOrders(String(userInfo.value.businessId));
   purchaseOrders.value = res;
   loading.value = false;
 }
