@@ -1,14 +1,14 @@
 <template>
   <q-page class="q-pa-md">
-      <h1>Staffs</h1>
+      <h1>{{t('staff.title')}}</h1>
       <div class="row q-gutter-md q-mb-md">
-          <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
+          <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
               <template v-slot:append>
                   <q-icon name="search" />
               </template>
           </q-input>
           <q-space></q-space>
-          <q-btn color="accent" icon="add" to="./staffs/create" label="Create Staff" />
+          <q-btn color="accent" icon="add" to="./staffs/create" :label="t('staff.create')" />
       </div>
       <q-table :rows="users" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
           row-key="id">
@@ -25,6 +25,8 @@
 import {  onMounted, ref } from 'vue';
 import api, { User } from '../../../services/api';
 import * as ui from '../../../utils/ui'
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -32,10 +34,10 @@ const loading = ref(false)
 const users = ref<User[]>([])
 const keyword = ref('')
 const columns = [
-  { name: 'username', label: 'Username', align: 'left' as const, field: 'username', sortable: true },
-  { name: 'email', label: 'Email', align: 'left' as const, field: 'email', sortable: true },
-  { name: 'phoneNumber', label: 'Phone Number', align: 'left' as const, field: 'phoneNumber', sortable: true },
-  { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+  { name: 'username', label: t('staff.username'), align: 'left' as const, field: 'username', sortable: true },
+  { name: 'email', label: t('staff.email'), align: 'left' as const, field: 'email', sortable: true },
+  { name: 'phoneNumber', label: t('staff.phone'), align: 'left' as const, field: 'phoneNumber', sortable: true },
+  { name: 'actions', label: t('staff.action'), align: 'right' as const, field: '', sortable: false }
 ];
 
 function search(rows, terms) {
@@ -49,7 +51,7 @@ async function fetch() {
     users.value = res;
     loading.value = false;
   } catch {
-    ui.error("unknown")
+   ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

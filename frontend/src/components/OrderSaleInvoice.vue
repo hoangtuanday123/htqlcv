@@ -1,26 +1,26 @@
 <template>
   <div class="invoice-wrapper">
-    <div class="title">Hóa đơn thanh toán</div>
+    <div class="title">{{ t('sale_order.title') }}</div>
 
     <div class="info">
       <strong>Mã:</strong> {{ props.saleOrderId }}<br />
-      <strong v-if="customer.customerType=='individual'">Khách hàng:</strong> {{ customer.name }}<br v-if="customer.customerType=='individual'"/>
-      <strong v-if="customer.customerType=='companyCustomer'">Công ty:</strong> {{ customer.companyName }}<br v-if="customer.customerType=='companyCustomer'"/>
-      <strong v-if="customer.customerType=='companyCustomer'">Mã Số Thuế:</strong> {{ customer.mst }}<br v-if="customer.customerType=='companyCustomer'"/>
-      <strong>Số điện thoại:</strong> {{ customer.phone }}<br />
-      <strong>Địa chỉ:</strong> {{ customer.address }}<br />
-      <strong>Ngày tạo:</strong> {{ createDate }}
+      <strong v-if="customer.customerType=='individual'">{{ t('customer.title') }}:</strong> {{ customer.name }}<br v-if="customer.customerType=='individual'"/>
+      <strong v-if="customer.customerType=='companyCustomer'">{{ t('customer.company_name') }}:</strong> {{ customer.companyName }}<br v-if="customer.customerType=='companyCustomer'"/>
+      <strong v-if="customer.customerType=='companyCustomer'">{{ t('customer.tax_code') }}:</strong> {{ customer.companyName }}:</strong> {{ customer.mst }}<br v-if="customer.customerType=='companyCustomer'"/>
+      <strong>{{ t('customer.phone') }}:</strong> {{ customer.companyName }}:</strong> {{ customer.phone }}<br />
+      <strong>{{ t('customer.address') }}:</strong> {{ customer.companyName }}:</strong> {{ customer.address }}<br />
+      <strong>{{ t('sale_order.created_date') }}:</strong> {{ createDate }}
     </div>
 
     <table class="invoice-table">
       <thead>
         <tr>
-          <th>STT</th>
-          <th>Sản phẩm</th>
-          <th>Số lượng</th>
-          <th>Đơn giá</th>
-          <th>Thành tiền</th>
-          <th>Lưu ý</th>
+          <th>{{ t('sale_order.number') }}</th>
+          <th>{{ t('sale_order.product') }}</th>
+          <th>{{ t('sale_order.si_quantity') }}</th>
+          <th>{{ t('sale_order.si_unitprice') }}</th>
+          <th>{{ t('sale_order.si_totalprice') }}</th>
+          <th>{{ t('sale_order.si_note') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -36,21 +36,21 @@
     </table>
 
     <div class="total">
-      <strong>Tổng cộng: {{ formatCurrency(totalAmount) }}</strong>
+      <strong>{{ t('sale_order.total_amound') }}: {{ formatCurrency(totalAmount) }}</strong>
 
     </div>
     <div class="total">
 
-      <strong>Thanh Toán: {{ formatCurrency(props.paid) }}</strong>
+      <strong>{{ t('sale_order.total_amound_paid') }}: {{ formatCurrency(props.paid) }}</strong>
     </div>
     <div class="total">
 
-    <strong>Nợ: {{ formatCurrency(totalAmount-props.paid) }}</strong>
+    <strong>{{ t('sale_order.dept') }}: {{ formatCurrency(totalAmount-props.paid) }}</strong>
     </div>
 
     <div class="print-button" >
-      <button @click="downloadPdf" :loading="loading">Tải PDF</button>
-      <button @click="printInvoice" :loading="loading">In hóa đơn</button>
+      <button @click="downloadPdf" :loading="loading">{{ t('sale_order.download_pdf') }}</button>
+      <button @click="printInvoice" :loading="loading">{{ t('sale_order.print') }}</button>
     </div>
   </div>
 </template>
@@ -59,7 +59,8 @@
 import { ref, computed, nextTick, reactive, onMounted, watch } from 'vue'
 import { defineProps } from 'vue'
 import * as ui from '../utils/ui'
-// import html2pdf from 'html2pdf.js'
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro';
 import api, { SaleOrderRequest,Customer } from '../services/api';
@@ -142,7 +143,7 @@ async function fetch(){
     });
     loading.value = false;
     } catch {
-    ui.error("unknown")
+   ui.error(t('error.unknown'))
   }
 }
 async function downloadPdf() {
@@ -172,7 +173,7 @@ async function downloadPdf() {
     loading.value=false
     ui.success("download sucessfull")
   } catch {
-    ui.error("unknown")
+   ui.error(t('error.unknown'))
   }
 }
 function printInvoice() {
@@ -261,7 +262,7 @@ function printInvoice() {
     }, 500)
     ui.success("print sucessfull")
   } catch {
-    ui.error("unknown")
+   ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

@@ -3,22 +3,22 @@
 
         <q-card>
             <q-card-section>
-                <div class="text-h6">Login</div>
+                <div class="text-h6">{{t('login.title')}}</div>
 
             </q-card-section>
             <q-card-section>
                 <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-                    <q-input filled v-model="username" label="Your username *" hint="username" lazy-rules
-                        :rules="[val => val && val.length > 0 || 'Please type something']" />
+                    <q-input filled v-model="username" :label="t('login.username')" :hint="t('login.username')" lazy-rules
+                        :rules="[val => val && val.length > 0 || t('login.invalid')]" />
 
-                    <q-input filled v-model="password" label="Your password *" hint="Your password" lazy-rules
-                        :rules="[val => val && val.length > 0 || 'Please type something']" />
+                    <q-input filled v-model="password" :label="t('login.password')" :hint="t('login.password')" lazy-rules
+                        :rules="[val => val && val.length > 0 || t('login.invalid')]" />
 
                     <!-- <q-toggle v-model="accept" label="I accept the license and terms" /> -->
 
                     <div>
-                        <q-btn label="Login" type="submit" :loading="loading" color="primary" />
-                        <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+                        <q-btn :label="t('login.title')" type="submit" :loading="loading" color="primary" />
+                        <q-btn :label="t('login.reset')" type="reset" color="primary" flat class="q-ml-sm" />
                     </div>
                 </q-form>
             </q-card-section>
@@ -34,7 +34,8 @@ import { userStore } from '../stores/user'
 import pinia from '../stores'
 import router from '../router/index'
 import * as ui from '../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const username = ref('')
 const password = ref('')
 // const accept = ref(false)
@@ -63,7 +64,7 @@ async function onSubmit() {
         }
     }
     catch  {
-        ui.error("unknown")
+        ui.error(t('error.unknown'))
     }
     finally {
 

@@ -1,14 +1,14 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Products</h1>
+        <h1>{{ t('product.title') }}</h1>
         <div class="row q-gutter-md q-mb-md">
-            <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
+            <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>
             </q-input>
             <q-space></q-space>
-            <q-btn color="accent" icon="add" to="./products/create" label="Create Product" />
+            <q-btn color="accent" icon="add" to="./products/create" :label="t('product.create')" />
         </div>
         <q-table :rows="products" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
             row-key="id">
@@ -25,7 +25,8 @@
 import { computed, onMounted, ref } from 'vue';
 import api, { Product } from '../../../services/api';
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -33,11 +34,11 @@ const loading = ref(false)
 const products = ref<Product[]>([])
 const keyword = ref('')
 const columns = [
-    { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
-    { name: 'capitalPrice', label: 'Capital Price', align: 'left' as const, field: 'capitalPrice', sortable: true },
-    { name: 'salePrice', label: 'Sale Price', align: 'left' as const, field: 'salePrice', sortable: true },
-    { name: 'stockQuantity', label: 'Stock Quantity', align: 'left' as const, field: 'stockQuantity', sortable: true },
-    { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+    { name: 'name', label: t('product.name'), align: 'left' as const, field: 'name', sortable: true },
+    { name: 'capitalPrice', label: t('product.capital_price'), align: 'left' as const, field: 'capitalPrice', sortable: true },
+    { name: 'salePrice', label: t('product.sale_price'), align: 'left' as const, field: 'salePrice', sortable: true },
+    { name: 'stockQuantity', label: t('product.stock_quantity'), align: 'left' as const, field: 'stockQuantity', sortable: true },
+    { name: 'actions', label: t('product.action'), align: 'right' as const, field: '', sortable: false }
 ];
 
 function search(rows, terms) {
@@ -53,7 +54,7 @@ async function fetchProducts() {
         loading.value = false;
     }
     catch {
-        ui.error("unknown")
+        ui.error(t('error.unknown'))
     }
 }
 
@@ -66,7 +67,7 @@ async function deleteProduct(product) {
         ui.success("delete sucessfull")
     }
     catch {
-        ui.error("unknown")
+        ui.error(t('error.unknown'))
     }
 }
 onMounted(async () => {

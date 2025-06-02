@@ -1,14 +1,14 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>Sale Orders</h1>
+    <h1>{{t('sale_order.title')}}</h1>
     <div class="row q-gutter-md q-mb-md">
-      <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
+      <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
       </q-input>
       <q-space></q-space>
-      <q-btn color="accent" icon="add" to="./saleOrders/create" label="Create Sale Order" />
+      <q-btn color="accent" icon="add" to="./saleOrders/create" :label="t('sale_order.create')" />
     </div>
     <q-table :rows="SaleOrders" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
       row-key="id">
@@ -31,7 +31,8 @@
 import { computed, onMounted, ref } from 'vue';
 import api, { SaleOrder } from '../../../services/api';
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -40,12 +41,12 @@ const SaleOrders = ref<SaleOrder[]>([])
 const keyword = ref('')
 const columns = [
   { name: 'id', label: 'ID', align: 'left' as const, field: 'id', sortable: true },
-  { name: 'totalAmount', label: 'Total Amount', align: 'left' as const, field: 'totalAmount', sortable: true },
-  { name: 'totalAmountPaid', label: 'Total Amount Paid', align: 'left' as const, field: 'totalAmountPaid', sortable: true },
-  { name: 'dept', label: 'Dept', align: 'left' as const, field: 'dept', sortable: true },
-  { name: 'subStatus', label: 'Sub Status', align: 'left' as const, field: 'subStatus', sortable: true },
-  { name: 'status', label: 'Status', align: 'left' as const, field: 'status', sortable: true },
-  { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+  { name: 'totalAmount', label: t('sale_order.total_amound'), align: 'left' as const, field: 'totalAmount', sortable: true },
+  { name: 'totalAmountPaid', label: t('sale_order.total_amound_paid'), align: 'left' as const, field: 'totalAmountPaid', sortable: true },
+  { name: 'dept', label: t('sale_order.dept'), align: 'left' as const, field: 'dept', sortable: true },
+  { name: 'subStatus', label: t('sale_order.sub_status'), align: 'left' as const, field: 'subStatus', sortable: true },
+  { name: 'status', label: t('sale_order.status'), align: 'left' as const, field: 'status', sortable: true },
+  { name: 'actions', label: t('sale_order.action'), align: 'right' as const, field: '', sortable: false }
 ];
 
 function search(rows, terms) {
@@ -59,7 +60,7 @@ async function fetchSaleOrders() {
     SaleOrders.value = res;
     loading.value = false;
   } catch {
-    ui.error("unknown")
+   ui.error(t('error.unknown'))
   }
 }
 async function deletesaleOrder(saleOrder) {
@@ -70,7 +71,7 @@ async function deletesaleOrder(saleOrder) {
     loading.value = false;
     ui.success("delete sucessfull")
   } catch {
-    ui.error("unknown")
+   ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

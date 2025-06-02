@@ -1,14 +1,14 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>Customers</h1>
+    <h1>{{ t('customer.title') }}</h1>
     <div class="row q-gutter-md q-mb-md">
-      <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
+      <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
       </q-input>
       <q-space></q-space>
-      <q-btn color="accent" icon="add" to="./customers/create" label="Create Customer" />
+      <q-btn color="accent" icon="add" to="./customers/create" :label="t('customer.create')" />
     </div>
     <q-table :rows="customers" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
       row-key="id">
@@ -26,24 +26,25 @@ import { onMounted, ref } from 'vue';
 import api, { Customer } from '../../../services/api';
 import { useCurrentuser } from '../../../share/currentuser';
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 const loading = ref(false)
 const customers = ref<Customer[]>([])
 const keyword = ref('')
 const columns = [
-  { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
-  { name: 'phone', label: 'Phone', align: 'left' as const, field: 'phone', sortable: true },
-  { name: 'dob', label: 'Date Of Birth', align: 'left' as const, field: 'dob', sortable: true },
-  { name: 'address', label: 'Address', align: 'left' as const, field: 'address', sortable: true },
-  { name: 'customerType', label: 'Customer Type', align: 'left' as const, field: 'customerType', sortable: true },
-  { name: 'mst', label: 'Tax Code', align: 'left' as const, field: 'mst', sortable: true },
-  { name: 'cmnd', label: 'Personal ID', align: 'left' as const, field: 'cmnd', sortable: true },
-  { name: 'email', label: 'Email', align: 'left' as const, field: 'email', sortable: true },
-  { name: 'note', label: 'Note', align: 'left' as const, field: 'note', sortable: true },
-  { name: 'companyName', label: 'Company Name', align: 'left' as const, field: 'companyName', sortable: true },
-  { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+  { name: 'name', label: t('customer.name'), align: 'left' as const, field: 'name', sortable: true },
+  { name: 'phone', label: t('customer.phone'), align: 'left' as const, field: 'phone', sortable: true },
+  { name: 'dob', label: t('customer.dob'), align: 'left' as const, field: 'dob', sortable: true },
+  { name: 'address', label: t('customer.address'), align: 'left' as const, field: 'address', sortable: true },
+  { name: 'customerType', label: t('customer.type'), align: 'left' as const, field: 'customerType', sortable: true },
+  { name: 'mst', label: t('customer.tax_code'), align: 'left' as const, field: 'mst', sortable: true },
+  { name: 'cmnd', label: t('customer.personal_code'), align: 'left' as const, field: 'cmnd', sortable: true },
+  { name: 'email', label: t('customer.email'), align: 'left' as const, field: 'email', sortable: true },
+  { name: 'note', label: t('customer.note'), align: 'left' as const, field: 'note', sortable: true },
+  { name: 'companyName', label: t('customer.company_name'), align: 'left' as const, field: 'companyName', sortable: true },
+  { name: 'actions', label: t('customer.action'), align: 'right' as const, field: '', sortable: false }
 ];
 
 function search(rows, terms) {
@@ -58,7 +59,7 @@ async function fetchCustomers() {
     loading.value = false;
 
   } catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -70,7 +71,7 @@ async function deleteCustomer(customer) {
     loading.value = false;
     ui.success("delete sucessfull")
   } catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

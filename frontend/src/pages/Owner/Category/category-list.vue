@@ -2,13 +2,13 @@
   <q-page class="q-pa-md">
     <h1>Category</h1>
     <div class="row q-gutter-md q-mb-md">
-      <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
+      <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
       </q-input>
       <q-space></q-space>
-      <q-btn color="accent" icon="add" @click="openDiaglog = true" label="Create Category" />
+      <q-btn color="accent" icon="add" @click="openDiaglog = true" :label="t('category.create')" />
     </div>
     <q-table :rows="categories" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
       row-key="id">
@@ -21,11 +21,11 @@
     <q-dialog v-model="openDiaglog">
       <q-card>
         <q-card-section class="q-pt-none">
-          <q-input v-model="category_request.name" label="Name" required />
+          <q-input v-model="category_request.name" :label="t('category.name')" required />
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Add" @click="AddCategory" />
-          <q-btn flat label="Close" v-close-popup />
+          <q-btn flat :label="t('button.add')" @click="AddCategory" />
+          <q-btn flat :label="t('button.close')" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -35,7 +35,8 @@
 import { onMounted, ref } from 'vue';
 import api, { Category, CategoryRequest } from '../../../services/api';
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const loading = ref(false)
 const categories = ref<Category[]>([])
 const keyword = ref('')
@@ -45,8 +46,8 @@ const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 const category_request = ref<CategoryRequest>({ name: '', businessId: userInfo.value.businessId })
 const columns = [
-  { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
-  { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+  { name: 'name', label: t('category.name'), align: 'left' as const, field: 'name', sortable: true },
+  { name: 'actions', label: t('category.action'), align: 'right' as const, field: '', sortable: false }
 ];
 
 function search(rows, terms) {
@@ -61,7 +62,7 @@ async function fetchCategory() {
     loading.value = false;
 
   } catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -69,9 +70,9 @@ async function deleteCategory(row) {
   try {
     await api.api.category.deleteCategory(row.id)
     await fetchCategory()
-    ui.success("delete sucessfull")
+    ui.success(t('success.delete'))
   } catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 
 }
@@ -81,9 +82,9 @@ async function AddCategory() {
     await api.api.category.createCategory(category_request.value)
     openDiaglog.value = false
     await fetchCategory()
-    ui.success("save sucessfull")
+    ui.success(t('success.save'))
   } catch (error) {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 
 }

@@ -1,12 +1,12 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>Create Purchase Order</h1>
+    <h1>{{ t('purchase_order.create') }}</h1>
     <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
       spellcheck="false">
       <div class="row">
         <div class="col-7">
-          <q-select v-model="product" :options="productOptions" label="Product" map-options emit-value
-            @update:model-value="onProductSelect" :disable="isDisabled">
+          <q-select v-model="product" :options="productOptions" :label="t('purchase_order.product')" map-options
+            emit-value @update:model-value="onProductSelect" :disable="isDisabled">
             <template v-slot:append>
               <q-btn round dense flat icon="add" @click="openDiaglog = true" />
             </template>
@@ -43,13 +43,13 @@
           <q-dialog v-model="openDiaglog">
             <q-card>
               <q-card-section class="q-pt-none">
-                <q-input v-model="productAdd.name" label="Name" required />
-                <q-select v-model="productAdd.categoryId" :options="categoryOptions" label="Category" map-options
-                  emit-value>
+                <q-input v-model="productAdd.name" :label="t('purchase_order.product_name')" required />
+                <q-select v-model="productAdd.categoryId" :options="categoryOptions"
+                  :label="t('purchase_order.product_category')" map-options emit-value>
                   <template v-slot:append>
                     <q-btn round dense flat icon="add" @click="openPopupCategory = true" />
                     <q-popup-edit v-model="newCategoryName" v-model:opened="openPopupCategory" v-slot="scope">
-                      <q-input autofocus dense v-model="scope.value" hint="Category name">
+                      <q-input autofocus dense v-model="scope.value" :hint="t('purchase_order.product_category')">
                         <template v-slot:after>
                           <q-btn flat dense color="negative" icon="cancel" @click.stop.prevent="scope.cancel" />
 
@@ -62,12 +62,12 @@
                   </template>
                 </q-select>
 
-                <q-select v-model="productAdd.branchProductId" :options="branchProductOptions" label="Branch Product"
-                  map-options emit-value>
+                <q-select v-model="productAdd.branchProductId" :options="branchProductOptions"
+                  :label="t('purchase_order.product_branch_product')" map-options emit-value>
                   <template v-slot:append>
                     <q-btn round dense flat icon="add" @click="openPopupBranchProduct = true" />
                     <q-popup-edit v-model="newBranchProductName" v-model:opened="openPopupBranchProduct" v-slot="scope">
-                      <q-input autofocus dense v-model="scope.value" hint="Branch Product name">
+                      <q-input autofocus dense v-model="scope.value" :hint="t('purchase_order.product_branch_product')">
                         <template v-slot:after>
                           <q-btn flat dense color="negative" icon="cancel" @click.stop.prevent="scope.cancel" />
 
@@ -82,35 +82,37 @@
               </q-card-section>
 
               <q-card-actions align="right" class="text-primary">
-                <q-btn flat label="Add" @click="AddProduct" />
-                <q-btn flat label="Close" v-close-popup />
+                <q-btn flat :label="t('button.add')" @click="AddProduct" />
+                <q-btn flat :label="t('button.close')" v-close-popup />
               </q-card-actions>
             </q-card>
           </q-dialog>
         </div>
         <div class="col-1"></div>
         <div class="col-4">
-          <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions" label="Supplier" map-options
-            emit-value use-input :filter="customFilter" input-debounce="300"
-            :rules="[val => !!val || 'Category is required']">
+          <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions"
+            :label="t('purchase_order.product_supplier')" map-options emit-value use-input :filter="customFilter"
+            input-debounce="300" :rules="[val => !!val || t('category.required')]">
           </q-select>
-          <q-input v-model="purchaseOrder.totalAmount" label="Total Amound" type="number" readonly />
-          <q-input v-model="purchaseOrder.totalAmountPaid" label="Total Amound Paid" type="number" />
-          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid" label="Dept" type="number"
+          <q-input v-model="purchaseOrder.totalAmount" :label="t('purchase_order.total_amound')" type="number"
             readonly />
-          <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions" label="Sub Status" map-options
-            emit-value>
+          <q-input v-model="purchaseOrder.totalAmountPaid" :label="t('purchase_order.total_amound_paid')"
+            type="number" />
+          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid"
+            :label="t('purchase_order.dept')" type="number" readonly />
+          <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions"
+            :label="t('purchase_order.sub_status')" map-options emit-value>
           </q-select>
-          <q-select v-model="purchaseOrder.status" :options="statusOptions" label="Status" map-options emit-value
-            :disable="isDisabled">
+          <q-select v-model="purchaseOrder.status" :options="statusOptions" :label="t('purchase_order.status')"
+            map-options emit-value :disable="isDisabled">
           </q-select>
         </div>
       </div>
 
       <div class="row">
         <div class="col q-gutter-md">
-          <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-          <q-btn label="Close" icon="close" type="button" to="../purchaseOrders" outline color="grey-9" />
+          <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
+          <q-btn :label="t('button.close')" icon="close" type="button" to="../purchaseOrders" outline color="grey-9" />
         </div>
       </div>
     </q-form>
@@ -119,7 +121,8 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import { useRouter } from 'vue-router';
 import api, { PurchaseOrderRequest, ProductRequest } from '../../../services/api';
 const route = useRouter();
@@ -167,12 +170,12 @@ let productAdd: ProductRequest = reactive({
   businessId: userInfo.value.businessId
 })
 const columns = [
-  { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
-  { name: 'quantity', label: 'Quantity', align: 'left' as const, field: 'quantity', sortable: true },
-  { name: 'unitPrice', label: 'Unit Price', align: 'left' as const, field: 'unitPrice', sortable: true },
-  { name: 'totalPrice', label: 'Total Price', align: 'left' as const, field: 'totalPrice', sortable: true },
-  { name: 'note', label: 'Note', align: 'left' as const, field: 'note', sortable: true },
-  { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+  { name: 'name', label: t('purchase_order.pi_name'), align: 'left' as const, field: 'name', sortable: true },
+  { name: 'quantity', label: t('purchase_order.pi_quantity'), align: 'left' as const, field: 'quantity', sortable: true },
+  { name: 'unitPrice', label: t('purchase_order.pi_unitprice'), align: 'left' as const, field: 'unitPrice', sortable: true },
+  { name: 'totalPrice', label: t('purchase_order.pi_totalprice'), align: 'left' as const, field: 'totalPrice', sortable: true },
+  { name: 'note', label: t('purchase_order.pi_note'), align: 'left' as const, field: 'note', sortable: true },
+  { name: 'actions', label: t('purchase_order.action'), align: 'right' as const, field: '', sortable: false }
 ];
 
 const customFilter = (option, search) => {
@@ -246,12 +249,12 @@ async function save() {
       })
       isDisabled.value = true
     }
-    ui.success("save sucessfull")
+    ui.success(t('success.save'))
     loading.value = false;
     route.push({ path: '../purchaseOrders' })
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -270,7 +273,7 @@ async function deletePurchaseItem(item) {
     ui.success("delete sucessfull")
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 async function onProductSelect() {
@@ -296,7 +299,7 @@ async function onProductSelect() {
     product.value = null;
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -311,10 +314,10 @@ async function addCategory(scope) {
     }))
     productAdd.categoryId = res
     loading.value = false
-    ui.success("add sucessfull")
+    ui.success(t('success.add'))
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -330,10 +333,10 @@ async function addBranchProduct(scope) {
     }))
     productAdd.branchProductId = res
     loading.value = false
-    ui.success("add sucessfull")
+    ui.success(t('success.add'))
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -355,10 +358,10 @@ async function AddProduct() {
     product.value = null
 
     loading.value = false
-    ui.success("add sucessfull")
+    ui.success(t('success.add'))
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

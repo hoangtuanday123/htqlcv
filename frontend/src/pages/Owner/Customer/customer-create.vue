@@ -1,12 +1,12 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Create Customer</h1>
+        <h1>{{ t('customer.create') }}</h1>
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
-            <q-input v-model="customer.name" label="Name" required />
-            <q-input v-model="customer.phone" label="Phone" required />
+            <q-input v-model="customer.name" :label="t('customer.name')" required />
+            <q-input v-model="customer.phone" :label="t('customer.phone')" required />
             <q-input filled v-model="customer.dob" mask="####-##-##"
-                :rules="[val => /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Ngày không hợp lệ']">
+                :rules="[val => /^\d{4}-\d{2}-\d{2}$/.test(val) || t('customer.invalid_dob')]">
                 <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -20,23 +20,25 @@
                 </template>
             </q-input>
 
-            <q-input v-model="customer.address" label="Address" />
+            <q-input v-model="customer.address" :label="t('customer.address')" />
             <div class="q-gutter-sm">
-                <q-radio v-model="customer.customerType" val="individual" label="Individual" />
-                <q-radio v-model="customer.customerType" val="companyCustomer" label="Company Customer" />
+                <q-radio v-model="customer.customerType" val="individual" :label="t('customer.individual')" />
+                <q-radio v-model="customer.customerType" val="companyCustomer"
+                    :label="t('customer.company_customer')" />
             </div>
-            <q-input v-model="customer.mst" label="MST" />
-            <q-input v-model="customer.cmnd" label="CMND" />
-            <q-input v-model="customer.email" label="Email" />
-            <q-input v-model="customer.mst" label="note" />
+            <q-input v-model="customer.mst" :label="t('customer.tax_code')" />
+            <q-input v-model="customer.cmnd" :label="t('customer.personal_code')" />
+            <q-input v-model="customer.email" :label="t('customer.email')" />
+            <q-input v-model="customer.mst" :label="t('customer.note')" />
             <div v-if="customer.customerType === 'companyCustomer'">
-                <q-input v-model="customer.companyName" label="Company Name" />
+                <q-input v-model="customer.companyName" :label="t('customer.company_name')" />
 
             </div>
             <div class="row">
                 <div class="col q-gutter-md">
-                    <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-                    <q-btn label="Close" icon="close" type="button" to="../customers" outline color="grey-9" />
+                    <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
+                    <q-btn :label="t('button.close')" icon="close" type="button" to="../customers" outline
+                        color="grey-9" />
                 </div>
             </div>
         </q-form>
@@ -45,6 +47,8 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import api, { CustomerRequest } from '../../../services/api'
 import * as ui from '../../../utils/ui'
 const router = useRouter()
@@ -72,11 +76,11 @@ async function save() {
         loading.value = true
         await api.api.customer.createCustomer(customer)
         loading.value = false
-        ui.success("save sucessfull")
+        ui.success(t('success.save'))
         router.push({ path: '../customers' })
 
     } catch {
-        ui.error("unknown")
+        ui.error(t('error.unknown'))
     }
 }
 </script>

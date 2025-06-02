@@ -1,13 +1,14 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Account</h1>
+        <h1>{{ t('account.title') }}</h1>
         <div class="row justify-end">
-            <q-btn label="Change Password" icon="refresh" type="button" to="/account/password" color="accent" />
+            <q-btn :label="t('account.change_password')" icon="refresh" type="button" to="/account/password"
+                color="accent" />
         </div>
         <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify"
             narrow-indicator>
-            <q-tab name="information" label="Information" />
-            <q-tab name="business" label="Business" />
+            <q-tab name="information" :label="t('account.information')" />
+            <q-tab name="business" :label="t('account.business')" />
         </q-tabs>
         <q-separator />
         <q-tab-panels v-model="tab" animated>
@@ -16,16 +17,17 @@
                 <q-form class="q-gutter-md" @submit="saveUser" autocorrect="off" autocapitalize="off" autocomplete="off"
                     spellcheck="false">
 
-                    <q-input v-model="user.username" readonly label="Username" />
+                    <q-input v-model="user.username" readonly :label="t('account.username')" />
 
-                    <q-input type="email" v-model="user.email" readonly label="Email" />
-                    <q-input type="text" v-model="user.phoneNumber" label="Phone Number" />
+                    <q-input type="email" v-model="user.email" readonly :label="t('account.email')" />
+                    <q-input type="text" v-model="user.phoneNumber" :label="t('account.phone_number')" />
 
 
                     <div class="row">
                         <div class="col q-gutter-md">
-                            <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-                            <q-btn label="Close" icon="close" type="button" to="/" outline color="white"
+                            <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit"
+                                color="primary" />
+                            <q-btn :label="t('button.close')" icon="close" type="button" to="/" outline color="white"
                                 text-color="black" />
                         </div>
                     </div>
@@ -36,19 +38,21 @@
                 <q-form class="q-gutter-md" @submit="saveBusiness" autocorrect="off" autocapitalize="off"
                     autocomplete="off" spellcheck="false">
 
-                    <q-input filled v-model="business.name" label="Business Name *" hint="Business Name" lazy-rules
-                        :rules="[val => val && val.length > 0 || 'Please type something']" />
+                    <q-input filled v-model="business.name" :label="t('business.name')" :hint="t('business.name')"
+                        lazy-rules :rules="[val => val && val.length > 0 || t('business.invalid')]" />
 
-                    <q-input filled v-model="business.mst" label="Mst " hint="mst" />
-                    <q-input filled v-model="business.email" label="Email " hint="email" />
-                    <q-input filled v-model="business.phone" label="Phone Number *" hint="Phone Number" lazy-rules
-                        :rules="[val => val && val.length > 0 || 'Please type something']" />
+                    <q-input filled v-model="business.mst" :label="t('business.tax_code')"
+                        :hint="t('business.tax_code')" />
+                    <q-input filled v-model="business.email" :label="t('business.email')" :hint="t('business.email')" />
+                    <q-input filled v-model="business.phone" :label="t('business.phone')" :hint="t('business.phone')"
+                        lazy-rules :rules="[val => val && val.length > 0 || t('business.invalid')]" />
 
 
                     <div class="row">
                         <div class="col q-gutter-md">
-                            <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-                            <q-btn label="Close" icon="close" type="button" to="/" outline color="white"
+                            <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit"
+                                color="primary" />
+                            <q-btn :label="t('business.close')" icon="close" type="button" to="/" outline color="white"
                                 text-color="black" />
                         </div>
                     </div>
@@ -66,7 +70,8 @@ const _userStore = userStore(pinia())
 const tab = ref('information')
 const loading = ref(false)
 import * as ui from '../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const user = ref<User>({
     id: null,
     username: '',
@@ -103,7 +108,7 @@ async function fetch() {
         loading.value = false;
     }
     catch {
-        ui.error("unknown")
+        ui.error(t('error.unknown'))
     }
 }
 
@@ -113,10 +118,10 @@ async function saveUser() {
         await api.api.user.updateUser(String(user.value.id), user.value)
         _userStore.saveUserInfo({ id: user.value.id, username: user.value.username, email: user.value.email, phoneNumber: user.value.phoneNumber, roles: role.value, businessId: user.value.businessId })
         loading.value = false
-        ui.success("save sucessfull")
+        ui.success(t('success.save'))
 
     } catch {
-        ui.error("unknown")
+        ui.error(t('error.unknown'))
     }
 }
 
@@ -129,10 +134,10 @@ async function saveBusiness() {
             mst: business.value.mst, email: business.value.email, phone: business.value.phone
         })
         loading.value = false
-        ui.success("save sucessfull")
+        ui.success(t('success.save'))
     }
     catch {
-        ui.error("unknown")
+        ui.error(t('error.unknown'))
     }
 }
 onMounted(async () => {

@@ -115,46 +115,46 @@
                 <q-space />
             </template>
             <template v-if="currentUser.hasRole('owner')||currentUser.hasRole('staff') ">
-                <q-btn-dropdown label="Products" stretch flat no-caps>
+                <q-btn-dropdown :label="t('product.title')" stretch flat no-caps>
                     <q-list style="min-width: 180px">
                         <q-item to="/owner/products" clickable>
-                            <q-item-section>Products</q-item-section>
+                            <q-item-section>{{t('product.title')}}</q-item-section>
                         </q-item>
                         <q-item to="/owner/branchProduct" clickable>
-                            <q-item-section>Branch Product</q-item-section>
+                            <q-item-section>{{t('branch_product.title')}}</q-item-section>
                         </q-item>
                         <q-item to="/owner/categories" clickable>
-                            <q-item-section>Categories</q-item-section>
+                            <q-item-section>{{t('category.title')}}</q-item-section>
                         </q-item>
                     </q-list>
                 </q-btn-dropdown>
-                <q-btn-dropdown label="Partner" stretch flat no-caps>
+                <q-btn-dropdown :label="t('partner.title')" stretch flat no-caps>
                     <q-list style="min-width: 180px">
                         <q-item to="/owner/customers" clickable>
-                            <q-item-section>Customer</q-item-section>
+                            <q-item-section>{{t('customer.title')}}</q-item-section>
                         </q-item>
                         <q-item to="/owner/suppliers" clickable>
-                            <q-item-section>Supplier</q-item-section>
+                            <q-item-section>{{t('supplier.title')}}</q-item-section>
                         </q-item>
 
                     </q-list>
                 </q-btn-dropdown>
-                <q-btn-dropdown label="Transactions" stretch flat no-caps>
+                <q-btn-dropdown :label="t('transaction.title')" stretch flat no-caps>
                     <q-list style="min-width: 180px">
                         <q-item to="/owner/purchaseOrders" clickable>
-                            <q-item-section>Purchase Orders</q-item-section>
+                            <q-item-section>{{t('purchase_order.title')}}</q-item-section>
                         </q-item>
                         <q-item to="/owner/saleOrders" clickable>
-                            <q-item-section>Sale Orders</q-item-section>
+                            <q-item-section>{{t('sale_order.title')}}</q-item-section>
                         </q-item>
 
 
                     </q-list>
                 </q-btn-dropdown>
-                <q-btn-dropdown label="Staff" stretch flat no-caps>
+                <q-btn-dropdown :label="t('staff.title')" stretch flat no-caps>
                     <q-list style="min-width: 180px">
                         <q-item to="/owner/staffs" clickable>
-                            <q-item-section>Staffs</q-item-section>
+                            <q-item-section>{{t('staff.title')}}</q-item-section>
                         </q-item>
 
 
@@ -178,51 +178,56 @@
                                 <q-item-section avatar>
                                     <q-icon color="grey" name="person_outline" />
                                 </q-item-section>
-                                <q-item-section>Account</q-item-section>
+                                <q-item-section>{{t('current_user.account')}}</q-item-section>
                             </q-item>
                             <q-item clickable v-close-popup @click="logout">
                                 <q-item-section avatar>
                                     <q-icon color="grey" name="logout" />
                                 </q-item-section>
-                                <q-item-section>Logout</q-item-section>
+                                <q-item-section>{{t('current_user.logout')}}</q-item-section>
                             </q-item>
                         </q-list>
                     </q-menu>
                 </q-btn>
             </template>
             <template v-else class="items-center no-wrap">
-                <q-btn rounded outline to="/register">Resgister </q-btn>
-                <q-btn rounded outline to="/login">Login</q-btn>
+                <q-btn rounded outline to="/register">{{t('register.title')}} </q-btn>
+                <q-btn rounded outline to="/login">{{t('login.title')}}</q-btn>
             </template>
         </template>
         <!-- mobile -->
         <template v-else>
             <q-space />
         </template>
-        <!-- <q-btn flat round>
+        <q-btn flat round>
             <q-icon name="language" />
             <q-menu>
                 <q-list>
-                    <q-item v-for="locale in supportLocales" :key="locale.value" clickable
-                        @click="selectLanguage(locale.value)">
+                    <q-item v-for="item in localeOptions" :key="item.value" clickable
+                        @click="locale = item.value">
                         <q-item-section>
-                            {{ locale.label }}
+                            {{ item.label }}
                         </q-item-section>
                     </q-item>
                 </q-list>
             </q-menu>
-        </q-btn> -->
+        </q-btn>
+       
 
     </q-toolbar>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-// import router from '@/router';
-// import { setI18nLanguage } from '@/i18n';
-import { useQuasar } from 'quasar';
-import languages from 'quasar/lang/index.json'
-// import { useI18n } from 'vue-i18n';
+
+import { useI18n } from 'vue-i18n'
+
+const { locale } = useI18n({ useScope: 'global' })
+
+const { t } = useI18n();
+const localeOptions= [
+  { value: 'en-US', label: 'English' },
+  { value: 'vi', label: 'Vietnam' }
+]
 
 import { useCurrentuser } from '../../share/currentuser';
 import Avatar from '../..//components/avatar.vue';
@@ -233,26 +238,6 @@ import Avatar from '../..//components/avatar.vue';
 // const { t } = useI18n();
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
-const $q = useQuasar();
-
-// const appLanguages = languages.filter(lang =>
-//     ['en-US', 'vi'].includes(lang.isoName)
-// )
-// const supportLocales = appLanguages.map(lang => ({
-//     label: lang.nativeName, value: lang.isoName
-// }))
-
-// const selectedLocale = ref($q.lang.isoName);
-
-// const selectLanguage = (locale) => {
-//     selectedLocale.value = locale;
-//     changeLanguage();
-//     router.go(0);
-// };
-// const loading = ref(false)
-// const changeLanguage = () => {
-//     setI18nLanguage(selectedLocale.value);
-// };
 
 function logout() {
     // ui.confirm('Are you sure', 'Logout', () => currentUser.logout(), null)

@@ -1,0 +1,197 @@
+{
+  "login": {
+    "title": "Đăng nhập",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "invalid": "Làm ơn nhập ký tự",
+    "reset": "Xóa hết"
+  },
+  "register": {
+    "register_business": "Đăng ký kinh doanh",
+    "register_user": "Đăng ký người dùng",
+    "business_name": "Tên kinh doanh",
+    "title": "Đăng ký",
+    "tax_code": "Mã số thuế",
+    "email": "Email",
+    "phone_number": "Số điện thoại",
+    "invalid": "Làm ơn nhập ký tự",
+    "continue": "Tiếp tục",
+    "username": "Tên đăng nhập",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "finish": "Kết thúc",
+    "back": "Quay lại "
+  },
+  "success": {
+    "add": "Thêm thành công",
+    "save": "Lưu thành công",
+    "delete": "Xóa thành công"
+  },
+  "error": {
+    "unknown": "lỗi "
+  },
+  "product": {
+    "title": "Sản phẩm",
+    "name": "Tên ",
+    "capital_price": "Giá gốc",
+    "sale_price": "Giá bán",
+    "stock_quantity": "Tồn kho",
+    "category": "Phân loại",
+    "branch_product": "Nhãn hiệu",
+    "create": "Tạo sản phẩm",
+    "action": "Chức năng",
+    "update": "Cập nhật sản phẩm",
+    "guarantee": {
+      "name": "Tên",
+      "time": "Thời gian bảo hành (tháng)"
+    }
+  },
+  "branch_product": {
+    "title": "Nhãn hiệu",
+    "create": "Tạo nhãn hiệu",
+    "name": "Tên",
+    "action": "Chức năng",
+    "required": "Vui lòng điền"
+  },
+  "category": {
+    "title": "Phân loại",
+    "create": "Tạo Phân loại",
+    "name": "Tên",
+    "action": "Chức năng",
+    "required": "Vui lòng điền"
+  },
+  "partner": {
+    "title": "Đối tác"
+  },
+  "customer": {
+    "title": "Khách hàng",
+    "create": "Tạo khách hàng",
+    "name": "Tên",
+    "phone": "Số điện thoại",
+    "invalid_dob": "Ngày sinh không hợp lệ",
+    "address": "Địa chỉ",
+    "individual": "Cá nhân",
+    "company_customer": "Doanh nghiệp",
+    "tax_code": "Mã số thuế",
+    "personal_code": "Căn cước công dân",
+    "email": "Email",
+    "note": "Lưu ý",
+    "company_name": "Tên công ty",
+    "update": "Cập nhật khách hàng",
+    "dob": "Ngày sinh",
+    "customer_type": "Loại khách hàng",
+    "action": "Chức năng",
+    "required": "Vui lòng chọn khách hàng"
+  },
+  "supplier": {
+    "title": "Nhà cung ứng",
+    "create": "Tạo nhà cung ứng",
+    "update": "Cập nhật nhà cung ứng",
+    "company": "Công ty",
+    "name": "Tên",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "email": "Email",
+    "branch": "Chi nhánh",
+    "tax_code": "Mã số thuế",
+    "note": "Lưu ý",
+    "action": "Chức năng"
+  },
+  "transaction": {
+    "title": "Giao dịch"
+  },
+  "purchase_order": {
+    "title": "Đơn đặt hàng",
+    "create": "Tạo đơn đặt hàng",
+    "update": "Cập nhật đơn đặt hàng",
+    "product": "Sản phẩm",
+    "product_name": "Tên",
+    "product_category": "Phân Loại",
+    "product_branch_product": "Nhãn hiệu",
+    "product_supplier": "Nhà cung ứng",
+    "total_amound": "Tổng số tiền",
+    "total_amound_paid": "Khách hàng trả",
+    "sub_status": "Trạng thái con",
+    "status": "Trạng thái",
+    "dept": "Nợ",
+    "pi_name": "Tên",
+    "pi_quantity": "Số lượng",
+    "pi_unitprice": "Đơn giá",
+    "pi_totalprice": "Tổng giá tiền",
+    "pi_note": "Lưu ý",
+    "action": "Chức năng",
+    "ID": "Mã",
+    "created_date": "Ngày tạo",
+    "number": "STT",
+    "download_pdf": "Tải PDF",
+    "print": "In hóa đơn"
+  },
+  "sale_order": {
+    "title": "Đơn bán hàng",
+    "create": "Tạo đơn bán hàng",
+    "update": "Cập nhật đơn bán hàng",
+    "product": "Sản phẩm",
+    "product_name": "Tên",
+    "product_category": "Phân Loại",
+    "product_branch_product": "Nhãn hiệu",
+    "product_supplier": "Nhà cung ứng",
+    "total_amound": "Tổng số tiền",
+    "total_amound_paid": "Khách hàng trả",
+    "sub_status": "Trạng thái con",
+    "status": "Trạng thái",
+    "dept": "Nợ",
+    "si_name": "Tên",
+    "si_quantity": "Số lượng",
+    "si_unitprice": "Đơn giá",
+    "si_totalprice": "Tổng giá tiền",
+    "si_note": "Lưu ý",
+    "action": "Chức năng",
+    "ID": "Mã",
+    "created_date": "Ngày tạo",
+    "number": "STT",
+    "download_pdf": "Tải PDF",
+    "print": "In hóa đơn"
+  },
+  "staff": {
+    "title": "Nhân viên",
+    "create": "Tạo nhân viên",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "update": "Cập nhật nhân viên",
+    "username": "Tên đăng nhập",
+    "phone": "Số điện thoại",
+    "action": "Chức năng"
+  },
+  "current_user": {
+    "account": "Tài khoản",
+    "logout": "Đăng xuất"
+  },
+  "account": {
+    "title": "Tài khoản",
+    "change_password": "Thay đổi mật khẩu",
+    "information": "Thông tin Cá nhân",
+    "business": "Thông tin kinh doanh",
+    "username": "Tên đăng nhập",
+    "email": "Email",
+    "phone_number": "Số điện thoại",
+    "old_password": "Mật khẩu cũ",
+    "new_password": "Mật khẩu mới",
+    "confirm_password": "Nhập lại mật khẩu cũ"
+  },
+  "business": {
+    "name": "Tên kinh doanh",
+    "tax_code": "Mã số thuế",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "invalid": "Làm ơn nhập ký tự"
+  },
+  "button": {
+    "save": "Lưu",
+    "close": "Đóng",
+    "reset": "Xóa hết",
+    "search": "Tìm kiếm",
+    "add": "Thêm",
+    "create": "Tạo",
+    "view_order": "Xem Đơn hàng"
+  }
+}

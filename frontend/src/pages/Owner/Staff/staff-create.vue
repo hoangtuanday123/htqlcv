@@ -1,18 +1,18 @@
 <template>
   <q-page class="q-pa-md">
-      <h1>Create Staff</h1>
+      <h1>{{t('staff.create')}}</h1>
       <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
           spellcheck="false">
-          <q-input stack-label v-model="user.username" label="Username" required />
+          <q-input stack-label v-model="user.username" :label="t('staff.username')" required />
 
-          <q-input type="email" v-model="user.email" label="Email" />
+          <q-input type="email" v-model="user.email" :label="t('staff.email')" />
 
-          <q-input type="password" v-model="user.password" label="Password" />
+          <q-input type="password" v-model="user.password" :label="t('staff.password')" />
 
           <div class="row">
               <div class="col q-gutter-md">
-                  <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-                  <q-btn label="Close" icon="close" type="button" to="../users" outline text-color="text-color" />
+                  <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
+                  <q-btn :label="t('button.close')" icon="close" type="button" to="../staffs" outline text-color="text-color" />
               </div>
           </div>
       </q-form>
@@ -23,7 +23,8 @@ import {  reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { User } from '../../../services/api';
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -48,10 +49,10 @@ async function save() {
     user.businessId=userInfo.value.businessId
     await api.api.user.createStaff(user)
     loading.value = false
-    ui.success("save sucessfull")
+    ui.success(t('success.save'))
     router.push({path:'../staffs'})
   } catch {
-    ui.error("unknown")
+   ui.error(t('error.unknown'))
   }
 }
 

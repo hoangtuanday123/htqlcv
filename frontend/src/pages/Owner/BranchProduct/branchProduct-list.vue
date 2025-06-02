@@ -1,14 +1,14 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>Branch Product</h1>
+    <h1>{{ t('branch_product.title') }}</h1>
     <div class="row q-gutter-md q-mb-md">
-      <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
+      <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
       </q-input>
       <q-space></q-space>
-      <q-btn color="accent" icon="add" @click="openDiaglog = true" label="Create Branch Product" />
+      <q-btn color="accent" icon="add" @click="openDiaglog = true" :label="t('branch_product.create')" />
     </div>
     <q-table :rows="branchProducts" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
       row-key="id">
@@ -21,11 +21,11 @@
     <q-dialog v-model="openDiaglog">
       <q-card>
         <q-card-section class="q-pt-none">
-          <q-input v-model="branchProduct_request.name" label="Name" required />
+          <q-input v-model="branchProduct_request.name" :label="t('branch_product.name')" required />
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Add" @click="AddBranchProduct" />
-          <q-btn flat label="Close" v-close-popup />
+          <q-btn flat :label="t('button.add')" @click="AddBranchProduct" />
+          <q-btn flat :label="t('button.close')" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -35,17 +35,20 @@
 import { onMounted, ref } from 'vue';
 import api, { BranchProduct, BranchProductRequest } from '../../../services/api';
 import * as ui from '../../../utils/ui'
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const loading = ref(false)
 const branchProducts = ref<BranchProduct[]>([])
 const keyword = ref('')
 const openDiaglog = ref(false)
 import { useCurrentuser } from '../../../share/currentuser';
+import { mdiButtonCursor } from '@quasar/extras/mdi-v6';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 const branchProduct_request = ref<BranchProductRequest>({ name: '', businessId: userInfo.value.businessId })
 const columns = [
-  { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
-  { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+  { name: 'name', label: t('branch_product.name'), align: 'left' as const, field: 'name', sortable: true },
+  { name: 'actions', label: t('branch_product.action'), align: 'right' as const, field: '', sortable: false }
 ];
 
 function search(rows, terms) {
@@ -60,7 +63,7 @@ async function fetchBranchProducts() {
     loading.value = false;
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 
 }
@@ -69,10 +72,10 @@ async function deleteBranchProduct(row) {
   try {
     await api.api.branchProduct.deleteBranchProduct(row.id)
     await fetchBranchProducts()
-    ui.success("delete sucessfull")
+    ui.success(t('success.delete'))
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -81,9 +84,9 @@ async function AddBranchProduct() {
     await api.api.branchProduct.createBranchProduct(branchProduct_request.value)
     openDiaglog.value = false
     await fetchBranchProducts()
-    ui.success("save sucessfull")
+    ui.success(t('success.save'))
   } catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

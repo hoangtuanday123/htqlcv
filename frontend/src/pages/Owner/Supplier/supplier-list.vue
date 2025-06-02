@@ -1,14 +1,14 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Supplier</h1>
+        <h1>{{t('supplier.title')}}</h1>
         <div class="row q-gutter-md q-mb-md">
-            <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
+            <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>
             </q-input>
             <q-space></q-space>
-            <q-btn color="accent" icon="add" to="./suppliers/create" label="Create Supplier" />
+            <q-btn color="accent" icon="add" to="./suppliers/create" :label="t('supplier.create')" />
         </div>
         <q-table :rows="suppliers" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
             row-key="id">
@@ -25,7 +25,8 @@
 import { computed, onMounted, ref } from 'vue';
 import api, { Supplier } from '../../../services/api';
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -33,15 +34,14 @@ const loading = ref(false)
 const suppliers = ref<Supplier[]>([])
 const keyword = ref('')
 const columns = [
-    { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
-    { name: 'phone', label: 'Phone', align: 'left' as const, field: 'phone', sortable: true },
-    { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
-    { name: 'address', label: 'Address', align: 'left' as const, field: 'address', sortable: true },
-    { name: 'email', label: 'Email', align: 'left' as const, field: 'email', sortable: true },
-    { name: 'note', label: 'Note', align: 'left' as const, field: 'note', sortable: true },
-    { name: 'branch', label: 'Branch', align: 'left' as const, field: 'branch', sortable: true },
-    { name: 'mst', label: 'Tax Code', align: 'left' as const, field: 'mst', sortable: true },
-    { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+    { name: 'phone', label: t('supplier.phone'), align: 'left' as const, field: 'phone', sortable: true },
+    { name: 'name', label: t('supplier.name'), align: 'left' as const, field: 'name', sortable: true },
+    { name: 'address', label: t('supplier.address'), align: 'left' as const, field: 'address', sortable: true },
+    { name: 'email', label: t('supplier.address'), align: 'left' as const, field: 'email', sortable: true },
+    { name: 'note', label: t('supplier.note'), align: 'left' as const, field: 'note', sortable: true },
+    { name: 'branch', label: t('supplier.branch'), align: 'left' as const, field: 'branch', sortable: true },
+    { name: 'mst', label: t('supplier.tax_code'), align: 'left' as const, field: 'mst', sortable: true },
+    { name: 'actions', label: t('supplier.action'), align: 'right' as const, field: '', sortable: false }
 ];
 
 function search(rows, terms) {
@@ -55,7 +55,7 @@ async function fetchSuppliers() {
         suppliers.value = res;
         loading.value = false;
     } catch {
-        ui.error("unknown")
+       ui.error(t('error.unknown'))
     }
 }
 
@@ -67,7 +67,7 @@ async function deleteSupplier(supplier) {
         loading.value = false;
         ui.success("delete sucessfull")
     } catch {
-        ui.error("unknown")
+       ui.error(t('error.unknown'))
     }
 }
 onMounted(async () => {

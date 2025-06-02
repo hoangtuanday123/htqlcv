@@ -10,15 +10,16 @@
       <q-tab-panel name="infomations">
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
           spellcheck="false">
-          <q-input v-model="product.name" label="Name" required />
-          <q-input v-model="product.capitalPrice" label="Capital Price" type="number" />
-          <q-input v-model="product.salePrice" label="Sale Price" type="number" />
-          <q-input v-model="product.stockQuantity" label="Stock Quantity" type="number" />
-          <q-select v-model="product.category.id" :options="categoryOptions" label="Category" map-options emit-value>
+          <q-input v-model="product.name" :label="t('product.name')" required />
+          <q-input v-model="product.capitalPrice" :label="t('product.capital_price')" type="number" />
+          <q-input v-model="product.salePrice" :label="t('product.sale_price')" type="number" />
+          <q-input v-model="product.stockQuantity" :label="t('product.stock_quantity')" type="number" />
+          <q-select v-model="product.category.id" :options="categoryOptions" :label="t('product.category')" map-options
+            emit-value>
             <template v-slot:append>
               <q-btn round dense flat icon="add" @click="openPopupCategory = true" />
               <q-popup-edit v-model="newCategoryName" v-model:opened="openPopupCategory" v-slot="scope">
-                <q-input autofocus dense v-model="scope.value" hint="Category name">
+                <q-input autofocus dense v-model="scope.value" :hint="t('product.category')">
                   <template v-slot:after>
                     <q-btn flat dense color="negative" icon="cancel" @click.stop.prevent="scope.cancel" />
 
@@ -32,12 +33,12 @@
             </template>
           </q-select>
 
-          <q-select v-model="product.branchProduct.id" :options="branchProductOptions" label="Branch Product"
-            map-options emit-value>
+          <q-select v-model="product.branchProduct.id" :options="branchProductOptions"
+            :label="t('product.branch_product')" map-options emit-value>
             <template v-slot:append>
               <q-btn round dense flat icon="add" @click="openPopupBranchProduct = true" />
               <q-popup-edit v-model="newBranchProductName" v-model:opened="openPopupBranchProduct" v-slot="scope">
-                <q-input autofocus dense v-model="scope.value" hint="Branch Product name">
+                <q-input autofocus dense v-model="scope.value" :hint="t('product.branch_product')">
                   <template v-slot:after>
                     <q-btn flat dense color="negative" icon="cancel" @click.stop.prevent="scope.cancel" />
 
@@ -53,8 +54,8 @@
 
           <div class="row">
             <div class="col q-gutter-md">
-              <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-              <q-btn label="Close" icon="close" type="button" to="../../products" outline color="grey-9" />
+              <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
+              <q-btn :label="t('button.close')" icon="close" type="button" to="../../products" outline color="grey-9" />
             </div>
           </div>
         </q-form>
@@ -75,13 +76,14 @@
           <q-card>
 
             <q-card-section class="q-pt-none">
-              <q-input v-model="guaranteeRequest.name" label="Name" required />
-              <q-input v-model="guaranteeRequest.guaranteeTime" label="Name" type="number" required />
+              <q-input v-model="guaranteeRequest.name" :label="t('product.guarantee.name')" required />
+              <q-input v-model="guaranteeRequest.guaranteeTime" :label="t('product.guarantee.time')" type="number"
+                required />
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
-              <q-btn flat label="Create" @click="createGuarantee" />
-              <q-btn flat label="Close" v-close-popup />
+              <q-btn flat :label="t('button.create')" @click="createGuarantee" />
+              <q-btn flat :label="t('button.close')" v-close-popup />
             </q-card-actions>
           </q-card>
 
@@ -99,7 +101,8 @@ import api, {
   GuaranteeRequest
 } from '../../../services/api';
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const route = useRoute();
 const loading = ref(false);
 const categoryOptions = ref([]);
@@ -130,9 +133,9 @@ let product: Product = reactive({
   businessId: null
 });
 const columns = [
-  { name: 'name', label: 'Name', align: 'left' as const, field: 'name', sortable: true },
-  { name: 'guaranteeTime', label: 'Guarantee Time (month)', align: 'left' as const, field: 'guaranteeTime', sortable: true },
-  { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
+  { name: 'name', label: t('product.guarantee.name'), align: 'left' as const, field: 'name', sortable: true },
+  { name: 'guaranteeTime', label: t('product.guarantee.time'), align: 'left' as const, field: 'guaranteeTime', sortable: true },
+  { name: 'actions', label: t('product.action'), align: 'right' as const, field: '', sortable: false }
 ];
 async function save() {
   try {
@@ -151,10 +154,10 @@ async function save() {
       productRequest
     );
     loading.value = false;
-    ui.success("save sucessfull")
+    ui.success(t('success.save'))
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 async function fetch() {
@@ -184,7 +187,7 @@ async function fetch() {
     loading.value = false;
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -199,10 +202,10 @@ async function addCategory(scope) {
     }));
     product.category.id = res;
     loading.value = false;
-    ui.success("add sucessfull")
+    ui.success(t('success.add'))
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -220,10 +223,10 @@ async function addBranchProduct(scope) {
     }));
     product.branchProduct.id = res;
     loading.value = false;
-    ui.success("add sucessfull")
+    ui.success(t('success.add'))
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -237,7 +240,7 @@ async function deleteGuarantee(guarantee) {
     ui.success("delete sucessfull")
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -253,7 +256,7 @@ async function createGuarantee() {
     ui.success("create sucessfull")
   }
   catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

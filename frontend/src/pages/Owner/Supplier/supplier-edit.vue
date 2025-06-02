@@ -1,20 +1,20 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Create Supplier</h1>
+        <h1>{{t('supplier.update')}}</h1>
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
-            <q-input v-model="supplier.company" label="Company" />
-            <q-input v-model="supplier.name" label="Name" required />
-            <q-input v-model="supplier.phone" label="Phone" required />
-            <q-input v-model="supplier.address" label="Address" />
-            <q-input v-model="supplier.email" label="Email" />
-            <q-input v-model="supplier.branch" label="Branch" />
-            <q-input v-model="supplier.mst" label="Tax Code" />
-            <q-input v-model="supplier.note" label="Note" />
+            <q-input v-model="supplier.company" :label="t('supplier.company')" />
+            <q-input v-model="supplier.name" :label="t('supplier.name')" required />
+            <q-input v-model="supplier.phone" :label="t('supplier.phone')" required />
+            <q-input v-model="supplier.address" :label="t('supplier.address')" />
+            <q-input v-model="supplier.email" :label="t('supplier.email')" />
+            <q-input v-model="supplier.branch" :label="t('supplier.branch')" />
+            <q-input v-model="supplier.mst" :label="t('supplier.tax_code')" />
+            <q-input v-model="supplier.note" :label="t('supplier.note')" />
             <div class="row">
                 <div class="col q-gutter-md">
-                    <q-btn label="Save" icon="check" :loading="loading" type="submit" color="primary" />
-                    <q-btn label="Close" icon="close" type="button" to="../../suppliers" outline color="grey-9" />
+                    <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
+                    <q-btn :label="t('button.close')" icon="close" type="button" to="../../suppliers" outline color="grey-9" />
                 </div>
             </div>
         </q-form>
@@ -25,7 +25,8 @@ import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import api, { SupplierRequest } from '../../../services/api'
 import * as ui from '../../../utils/ui'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const route = useRoute()
 const loading = ref(false)
 
@@ -48,7 +49,7 @@ async function fetch() {
         Object.assign(supplier, res)
         loading.value = false;
     } catch {
-        ui.error("unknown")
+       ui.error(t('error.unknown'))
     }
 }
 async function save() {
@@ -56,9 +57,9 @@ async function save() {
         loading.value = true
         await api.api.supplier.updateSupplier(route.params.id as string, supplier)
         loading.value = false
-        ui.success("save sucessfull")
+        ui.success(t('success.save'))
     } catch {
-        ui.error("unknown")
+       ui.error(t('error.unknown'))
     }
 }
 onMounted(async () => {

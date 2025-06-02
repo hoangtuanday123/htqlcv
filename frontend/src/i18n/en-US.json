@@ -1,0 +1,197 @@
+{
+  "login": {
+    "title": "Login",
+    "username": "Your username",
+    "password": "Your password",
+    "invalid": "Please type something",
+    "reset": "Reset"
+  },
+  "register": {
+    "register_business": "Register Business",
+    "register_user": "Register_user",
+    "business_name": "Business Name",
+    "title": "Register",
+    "tax_code": "Tax Code",
+    "email": "Email",
+    "phone_number": "Phone Number",
+    "invalid": "Please type something",
+    "continue": "Continue",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "finish": "Finish",
+    "Back": "Back"
+  },
+  "success": {
+    "add": "Add successfull",
+    "save": "Save successfull",
+    "delete": "Delete successfull"
+  },
+  "error": {
+    "unknown": "Unknown"
+  },
+  "product": {
+    "title": "Products",
+    "name": "Name",
+    "capital_price": "Capital Price",
+    "sale_price": "Sale Price",
+    "stock_quantity": "Stock Quantity",
+    "category": "Category",
+    "branch_product": "Branch Product",
+    "create": "Create Product",
+    "action": "Actions",
+    "update": "Update Product",
+    "guarantee": {
+      "name": "Name",
+      "time": "Guarantee Time (month)"
+    }
+  },
+  "branch_product": {
+    "title": "Branch Product",
+    "create": "Create Branch Product",
+    "name": "Name",
+    "action": "Action",
+    "required": "Branch Product is required"
+  },
+  "category": {
+    "title": "Categories",
+    "create": "Create category",
+    "name": "Name",
+    "action": "Action",
+    "required": "Category is required"
+  },
+  "partner": {
+    "title": "Partner"
+  },
+  "customer": {
+    "title": "Customers",
+    "create": "Create Customer",
+    "name": "Name",
+    "phone": "Phone",
+    "invalid_dob": "Date of birth is invalid",
+    "address": "Address",
+    "individual": "Individual",
+    "company_customer": "Company Customer",
+    "tax_code": "Tax code",
+    "personal_code": "Personal Code",
+    "email": "Email",
+    "note": "Note",
+    "company_name": "Company Name",
+    "update": "Update Customer",
+    "dob": "Date of birth",
+    "customer_type": "Customer Type",
+    "action": "Actions",
+    "required": "Customer is required"
+  },
+  "supplier": {
+    "title": "suppliers",
+    "create": "Create Supplier",
+    "update": "Update Supplier",
+    "company": "Company",
+    "name": "Name",
+    "phone": "Phone Number",
+    "address": "Address",
+    "email": "Email",
+    "branch": "Branch",
+    "tax_code": "Tax Code",
+    "note": "Note",
+    "action": "Actions"
+  },
+  "transaction": {
+    "title": "Transactions"
+  },
+  "purchase_order": {
+    "title": "Purchase Orders",
+    "create": "Create Purchase Order",
+    "update": "Update Purchase Order",
+    "product": "Product",
+    "product_name": "Name",
+    "product_category": "Category",
+    "product_branch_product": "Branch product",
+    "product_supplier": "Supplier",
+    "total_amound": "Total Amound",
+    "total_amound_paid": "Total Amound Paid",
+    "sub_status": "Sub status",
+    "status": "Status",
+    "dept": "Dept",
+    "pi_name": "Name",
+    "pi_quantity": "Quantity",
+    "pi_unitprice": "Unit Price",
+    "pi_totalprice": "Total Price",
+    "pi_note": "Note",
+    "action": "Actions",
+    "ID": "ID",
+    "created_date": "Created date",
+    "number": "Number",
+    "download_pdf": "Download PDF",
+    "print": "Print Order"
+  },
+  "sale_order": {
+    "title": "Sale Orders",
+    "create": "Create Sale Order",
+    "update": "Update Sale Order",
+    "product": "Product",
+    "product_name": "Name",
+    "product_category": "Category",
+    "product_branch_product": "Branch product",
+    "product_supplier": "Supplier",
+    "total_amound": "Total Amound",
+    "total_amound_paid": "Total Amound Paid",
+    "sub_status": "Sub status",
+    "status": "Status",
+    "dept": "Dept",
+    "si_name": "Name",
+    "si_quantity": "Quantity",
+    "si_unitprice": "Unit Price",
+    "si_totalprice": "Total Price",
+    "si_note": "Note",
+    "action": "Actions",
+    "ID": "ID",
+    "created_date": "Created date",
+    "number": "Number",
+    "download_pdf": "Download PDF",
+    "print": "Print Order"
+  },
+  "staff": {
+    "title": "Staff",
+    "create": "Create Staff",
+    "email": "Email",
+    "password": "Password",
+    "update": "Update Staff",
+    "username": "Username",
+    "phone": "Phone Number",
+    "action": "Action"
+  },
+  "current_user": {
+    "account": "Account",
+    "logout": "Logout"
+  },
+  "account": {
+    "title": "Account",
+    "change_password": "Change Password",
+    "information": "Information",
+    "business": "Business",
+    "username": "Username",
+    "email": "Email",
+    "phone_number": "Phone Number",
+    "old_password": "Old Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password"
+  },
+  "business": {
+    "name": "Business Name",
+    "tax_code": "Tax Code",
+    "email": "Email",
+    "phone": "Phone Number",
+    "invalid": "Please type something"
+  },
+  "button": {
+    "save": "Save",
+    "close": "Close",
+    "reset": "Reset",
+    "search": "Search",
+    "add": "Add",
+    "create": "Create",
+    "view_order": "View Order"
+  }
+}

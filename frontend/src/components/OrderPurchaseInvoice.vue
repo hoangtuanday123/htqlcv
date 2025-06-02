@@ -1,25 +1,25 @@
 <template>
   <div class="invoice-wrapper">
-    <div class="title">Đơn đặt hàng</div>
+    <div class="title">{{ t('purchase_order.title') }}</div>
 
     <div class="info">
-      <strong>Mã:</strong> {{ props.purchaseOrderId }}<br />
-      <strong>Đối tác:</strong> {{ supplier.name }}<br />
-      <strong>Số điện thoại:</strong> {{ supplier.phone }}<br />
-      <strong>Địa chỉ:</strong> {{ supplier.address }}<br />
-      <strong>Mã số thuế:</strong> {{ supplier.mst }}<br />
-      <strong>Ngày tạo:</strong> {{ createDate }}
+      <strong>{{ t('purchase_order.ID') }}:</strong> {{ props.purchaseOrderId }}<br />
+      <strong>{{ t('purchase_order.product_supplier') }}:</strong> {{ supplier.name }}<br />
+      <strong>{{ t('supplier.phone') }}:</strong> {{ supplier.phone }}<br />
+      <strong>{{ t('supplier.address') }}:</strong> {{ supplier.address }}<br />
+      <strong>{{ t('supplier.tax-code') }}:</strong> {{ supplier.mst }}<br />
+      <strong>{{ t('purchase_order.created_date') }}:</strong> {{ createDate }}
     </div>
 
     <table class="invoice-table">
       <thead>
         <tr>
-          <th>STT</th>
-          <th>Sản phẩm</th>
-          <th>Số lượng</th>
-          <th>Đơn giá</th>
-          <th>Thành tiền</th>
-          <th>Lưu ý</th>
+          <th>{{ t('purchase_order.number') }}</th>
+          <th>{{ t('purchase_order.product') }}</th>
+          <th>{{ t('purchase_order.pi_quantity') }}</th>
+          <th>{{ t('purchase_order.pi_unitprice') }}</th>
+          <th>{{ t('purchase_order.pi_totalprice') }}</th>
+          <th>{{ t('purchase_order.pi_note') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -35,21 +35,21 @@
     </table>
 
     <div class="total">
-      <strong>Tổng cộng: {{ formatCurrency(totalAmount) }}</strong>
+      <strong>{{ t('purchase_order.total_amound') }}: {{ formatCurrency(totalAmount) }}</strong>
 
     </div>
     <div class="total">
 
-      <strong>Thanh Toán: {{ formatCurrency(props.paid) }}</strong>
+      <strong>{{ t('purchase_order.total_amound_paid') }}: {{ formatCurrency(props.paid) }}</strong>
     </div>
     <div class="total">
 
-      <strong>Nợ: {{ formatCurrency(totalAmount - props.paid) }}</strong>
+      <strong>{{ t('purchase_order.dept') }}: {{ formatCurrency(totalAmount - props.paid) }}</strong>
     </div>
 
     <div class="print-button">
-      <button @click="downloadPdf" :loading="loading">Tải PDF</button>
-      <button @click="printInvoice" :loading="loading">In hóa đơn</button>
+      <button @click="downloadPdf" :loading="loading">{{ t('purchase_order.download_pdf') }}</button>
+      <button @click="printInvoice" :loading="loading">{{ t('purchase_order.print') }}</button>
     </div>
   </div>
 </template>
@@ -57,7 +57,8 @@
 <script lang="ts" setup>
 import { ref, computed, nextTick, reactive, onMounted, watch } from 'vue'
 import { defineProps } from 'vue'
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 // import html2pdf from 'html2pdf.js'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro';
@@ -144,7 +145,7 @@ async function fetch() {
     });
     loading.value = false;
   } catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 async function downloadPdf() {
@@ -174,7 +175,7 @@ async function downloadPdf() {
     loading.value = false
     ui.success("download sucessfull")
   } catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 function printInvoice() {
@@ -263,7 +264,7 @@ function printInvoice() {
     }, 500)
     ui.success("print sucessfull")
   } catch {
-    ui.error("unknown")
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {
