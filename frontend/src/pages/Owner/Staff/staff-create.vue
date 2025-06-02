@@ -22,6 +22,8 @@
 import {  reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { User } from '../../../services/api';
+import * as ui from '../../../utils/ui'
+
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -41,12 +43,16 @@ let user: User = reactive({
 
 
 async function save() {
-
-  loading.value = true
-  user.businessId=userInfo.value.businessId
-  await api.api.user.createStaff(user)
-  loading.value = false
-  router.push({path:'../staffs'})
+  try{
+    loading.value = true
+    user.businessId=userInfo.value.businessId
+    await api.api.user.createStaff(user)
+    loading.value = false
+    ui.success("save sucessfull")
+    router.push({path:'../staffs'})
+  } catch {
+    ui.error("unknown")
+  }
 }
 
 

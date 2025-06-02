@@ -30,6 +30,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import api, { SaleOrder } from '../../../services/api';
+import * as ui from '../../../utils/ui'
+
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -51,16 +53,25 @@ function search(rows, terms) {
   return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : SaleOrders
 }
 async function fetchSaleOrders() {
-  loading.value = true;
-  const res = await api.api.saleOrder.getSaleOrders(userInfo.value.businessId);
-  SaleOrders.value = res;
-  loading.value = false;
+  try{
+    loading.value = true;
+    const res = await api.api.saleOrder.getSaleOrders(String(userInfo.value.businessId));
+    SaleOrders.value = res;
+    loading.value = false;
+  } catch {
+    ui.error("unknown")
+  }
 }
 async function deletesaleOrder(saleOrder) {
-  loading.value = true;
-  await api.api.saleOrder.deleteSaleOrder(saleOrder.id);
-  fetchSaleOrders();
-  loading.value = false;
+  try{
+    loading.value = true;
+    await api.api.saleOrder.deleteSaleOrder(saleOrder.id);
+    fetchSaleOrders();
+    loading.value = false;
+    ui.success("delete sucessfull")
+  } catch {
+    ui.error("unknown")
+  }
 }
 onMounted(async () => {
   await fetchSaleOrders()

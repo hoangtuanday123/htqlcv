@@ -48,6 +48,7 @@ import { useRoute } from 'vue-router'
 import api, { CustomerRequest } from '../../../services/api'
 const route = useRoute()
 const loading = ref(false)
+import * as ui from '../../../utils/ui'
 
 let customer: CustomerRequest = reactive({
     name: '',
@@ -71,11 +72,14 @@ async function fetch() {
 }
 
 async function save() {
-
-    loading.value = true
-
-    await api.api.customer.updateCustomer(route.params.id as string, customer)
-    loading.value = false
+    try {
+        loading.value = true
+        await api.api.customer.updateCustomer(route.params.id as string, customer)
+        loading.value = false
+        ui.success("save sucessfull")
+    } catch {
+        ui.error("unknown")
+    }
 }
 onMounted(async () => {
     await fetch()

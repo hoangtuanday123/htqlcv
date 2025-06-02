@@ -21,10 +21,10 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import api, { ChangePassword } from '../../services/api';
-import { RefSymbol } from '@vue/reactivity';
 
+import * as ui from '../../utils/ui'
 
 const loading = ref(false)
 const changePassword = ref<ChangePassword>({
@@ -35,9 +35,15 @@ const changePassword = ref<ChangePassword>({
 
 
 async function save() {
-    loading.value = true
-    await api.api.user.ChangePassword(changePassword.value)
-    loading.value = false
+    try {
+        loading.value = true
+        await api.api.user.ChangePassword(changePassword.value)
+        loading.value = false
+        ui.success('save successfull')
+    }
+    catch {
+        ui.error('unknown')
+    }
 }
 
 

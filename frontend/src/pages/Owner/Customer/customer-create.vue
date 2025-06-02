@@ -46,6 +46,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { CustomerRequest } from '../../../services/api'
+import * as ui from '../../../utils/ui'
 const router = useRouter()
 const loading = ref(false)
 import { useCurrentuser } from '../../../share/currentuser';
@@ -67,11 +68,15 @@ let customer: CustomerRequest = reactive({
 })
 
 async function save() {
+    try {
+        loading.value = true
+        await api.api.customer.createCustomer(customer)
+        loading.value = false
+        ui.success("save sucessfull")
+        router.push({ path: '../customers' })
 
-    loading.value = true
-
-    await api.api.customer.createCustomer(customer)
-    loading.value = false
-    router.push({ path: '../customers' })
+    } catch {
+        ui.error("unknown")
+    }
 }
 </script>

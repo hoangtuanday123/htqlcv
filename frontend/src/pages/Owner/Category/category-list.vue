@@ -34,6 +34,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import api, { Category, CategoryRequest } from '../../../services/api';
+import * as ui from '../../../utils/ui'
+
 const loading = ref(false)
 const categories = ref<Category[]>([])
 const keyword = ref('')
@@ -52,22 +54,38 @@ function search(rows, terms) {
   return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : categories
 }
 async function fetchCategory() {
-  loading.value = true;
-  const res = await api.api.category.getCategories(userInfo.value.businessId);
-  categories.value = res;
-  loading.value = false;
+  try {
+    loading.value = true;
+    const res = await api.api.category.getCategories(userInfo.value.businessId);
+    categories.value = res;
+    loading.value = false;
+
+  } catch {
+    ui.error("unknown")
+  }
 }
 
 async function deleteCategory(row) {
-  await api.api.category.deleteCategory(row.id)
-  await fetchCategory()
+  try {
+    await api.api.category.deleteCategory(row.id)
+    await fetchCategory()
+    ui.success("delete sucessfull")
+  } catch {
+    ui.error("unknown")
+  }
+
 }
 
 async function AddCategory() {
-  console.log(userInfo.value.businessId)
-  await api.api.category.createCategory(category_request.value)
-  openDiaglog.value = false
-  await fetchCategory()
+  try {
+    await api.api.category.createCategory(category_request.value)
+    openDiaglog.value = false
+    await fetchCategory()
+    ui.success("save sucessfull")
+  } catch (error) {
+    ui.error("unknown")
+  }
+
 }
 onMounted(async () => {
   await fetchCategory()

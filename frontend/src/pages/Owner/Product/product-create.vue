@@ -55,6 +55,8 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import * as ui from '../../../utils/ui'
+
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -78,54 +80,73 @@ let product: ProductRequest = reactive({
 })
 
 async function save() {
-
-    loading.value = true
-
-    await api.api.product.createProduct(product)
-    loading.value = false
-    router.push({ path: '../products' })
+    try {
+        loading.value = true
+        await api.api.product.createProduct(product)
+        loading.value = false
+        ui.success("save sucessfull")
+        router.push({ path: '../products' })
+    } catch {
+        ui.error("unknown")
+    }
 }
 async function fetch() {
-    loading.value = true
-    const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
-    categoryOptions.value = categoryRes.map((item) => ({
-        label: item.name,
-        value: item.id,
-    }))
+    try {
+        loading.value = true
+        const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
+        categoryOptions.value = categoryRes.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }))
 
-    const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId)
-    branchProductOptions.value = branchProductRes.map((item) => ({
-        label: item.name,
-        value: item.id,
-    }))
-    loading.value = false
+        const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
+        branchProductOptions.value = branchProductRes.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }))
+        loading.value = false
+    } catch {
+        ui.error("unknown")
+    }
+
 }
 
 async function addCategory(scope) {
-    loading.value = true
-    const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId })
-    const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
-    categoryOptions.value = categoryRes.map((item) => ({
-        label: item.name,
-        value: item.id,
-    }))
-    product.categoryId = res
-    loading.value = false
+    try {
+        loading.value = true
+        const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId })
+        const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
+        categoryOptions.value = categoryRes.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }))
+        product.categoryId = res
+        loading.value = false
+        ui.success("add sucessfull")
+    }
+    catch {
+        ui.error("unknown")
+    }
 }
 
 
 async function addBranchProduct(scope) {
-    loading.value = true
-    const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
-    const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId)
-    branchProductOptions.value = branchProductRes.map((item) => ({
-        label: item.name,
-        value: item.id,
-    }))
-    product.branchProductId = res
-    loading.value = false
+    try {
+        loading.value = true
+        const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
+        const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
+        branchProductOptions.value = branchProductRes.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }))
+        product.branchProductId = res
+        loading.value = false
+        ui.success("add sucessfull")
+    }
+    catch {
+        ui.error("unknown")
+    }
 }
-
 onMounted(async () => {
     await fetch()
 })

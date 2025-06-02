@@ -33,6 +33,7 @@ import { ref } from 'vue'
 import { userStore } from '../stores/user'
 import pinia from '../stores'
 import router from '../router/index'
+import * as ui from '../utils/ui'
 
 const username = ref('')
 const password = ref('')
@@ -61,11 +62,8 @@ async function onSubmit() {
             router.push({ path: '/home' })
         }
     }
-    catch (error) {
-        if (error)
-            alert(error)
-        else
-            alert('Unknown error occured')
+    catch  {
+        ui.error("unknown")
     }
     finally {
 

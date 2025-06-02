@@ -22,6 +22,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import api, { User } from '../../../services/api';
+import * as ui from '../../../utils/ui'
 
 const route = useRoute()
 const loading = ref(false)
@@ -38,19 +39,28 @@ let user: User = reactive({
 })
 
 async function fetch() {
-  loading.value = true;
+  try{
+    loading.value = true;
 
-  const res = await api.api.user.getUser(route.params.id as string)
-  console.log(res)
-  Object.assign(user, res)
-  user.password = ''
-  loading.value = false;
+    const res = await api.api.user.getUser(route.params.id as string)
+    console.log(res)
+    Object.assign(user, res)
+    user.password = ''
+    loading.value = false;
+  } catch {
+    ui.error("unknown")
+  }
 }
 
 async function save() {
-  loading.value = true
-  await api.api.user.updateUser(route.params.id as string, user)
-  loading.value = false
+  try{
+    loading.value = true
+    await api.api.user.updateUser(route.params.id as string, user)
+    loading.value = false
+    ui.success("save sucessfull")
+  } catch {
+    ui.error("unknown")
+  }
 }
 
 onMounted(async () => {

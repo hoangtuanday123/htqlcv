@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import {  onMounted, ref } from 'vue';
 import api, { User } from '../../../services/api';
+import * as ui from '../../../utils/ui'
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -42,10 +43,14 @@ function search(rows, terms) {
   return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : users
 }
 async function fetch() {
-  loading.value = true;
-  const res = await api.api.user.getStaffs(String(userInfo.value.businessId));
-  users.value = res;
-  loading.value = false;
+  try{  
+    loading.value = true;
+    const res = await api.api.user.getStaffs(String(userInfo.value.businessId));
+    users.value = res;
+    loading.value = false;
+  } catch {
+    ui.error("unknown")
+  }
 }
 onMounted(async () => {
   await fetch()

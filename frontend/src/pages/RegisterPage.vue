@@ -39,6 +39,8 @@
 <script setup lang="ts">
 
 import { reactive, ref } from 'vue'
+import * as ui from '../utils/ui'
+const { success, error } = ui.useNotify()
 import api, { BusinessRequest, User } from '../services/api';
 import { useRouter } from 'vue-router';
 import { QForm } from 'quasar';
@@ -64,18 +66,22 @@ let user: User = reactive({
 })
 
 async function next() {
-  if (step.value === 1) {
-    const isValid = await formStep1.value.validate()
-    if (!isValid) return
-    step.value = 2
-  }
-  else if (step.value === 2) {
-    const isValid = await formStep2.value.validate()
-    if (!isValid) return
-    const businessId = await api.api.business.createBusiness(business)
-    user.businessId = businessId
-    await api.api.user.createUser(user)
-    route.push({ path: '../login' })
+  try{
+    if (step.value === 1) {
+      const isValid = await formStep1.value.validate()
+      if (!isValid) return
+      step.value = 2
+    }
+    else if (step.value === 2) {
+      const isValid = await formStep2.value.validate()
+      if (!isValid) return
+      const businessId = await api.api.business.createBusiness(business)
+      user.businessId = businessId
+      await api.api.user.createUser(user)
+      route.push({ path: '../login' })
+    }
+  } catch {
+    error("unknown")
   }
 
 

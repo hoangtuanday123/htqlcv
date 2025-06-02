@@ -132,6 +132,8 @@ import {  useRoute } from 'vue-router';
 import api, { SaleOrderRequest, ProductRequest } from '../../../services/api';
 import { useCurrentuser } from '../../../share/currentuser';
 import Order from '../../../components/OrderSaleInvoice.vue'
+import * as ui from '../../../utils/ui'
+
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 const openDiaglogOrder=ref(false)
@@ -204,95 +206,104 @@ watch(totalAmount, (newTotal) => {
 
 });
 async function fetch() {
-  loading.value = true;
-  const CustomerRes = await api.api.customer.getCustomers(userInfo.value.businessId);
-  customerOptions.value = CustomerRes.map((item) => ({
-    label: `${item.name} (${item.phone})`,
-    value: item.id,
-    name: item.name,   // giữ lại để filter
-    phone: item.phone, // giữ lại để filter
-  }));
-  const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
-  categoryOptions.value = categoryRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }))
-
-  const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
-  branchProductOptions.value = branchProductRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }))
-
-  const saleOrderRes = await api.api.saleOrder.getSaleOrder(route.params.id as string)
-  Object.assign(saleOrder, saleOrderRes)
-  if (["Completed", "Cancelled"].includes(saleOrder.status)) {
-    isDisabled.value = true
-  }
-  saleOrder.customerId = saleOrderRes["customer"]["id"]
-  const saleOrderItemsRes = await api.api.saleOrderItem.getSaleItemsbySaleOrder(route.params.id as string)
-  saleOrderItems.value = saleOrderItemsRes.map((item) => ({
-    id: item.id,
-    productId: item['product']['id'],
-    // name: productOptions.value.find((item1) => item1.value === item['product']['id'])?.label,
-    name: '',
-    quantity: item.quantity,
-    unitPrice: item.unitPrice,
-    note: item.note
-  }))
-  const existingProductIds = new Set(saleOrderItems.value.map(item => item.productId));
-  const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
-  productOptions.value = productRes
-    .filter(item => !existingProductIds.has(item.id)) // loại trừ những sản phẩm đã có
-    .map(item => ({
+  try{
+    loading.value = true;
+    const CustomerRes = await api.api.customer.getCustomers(userInfo.value.businessId);
+    customerOptions.value = CustomerRes.map((item) => ({
+      label: `${item.name} (${item.phone})`,
+      value: item.id,
+      name: item.name,   // giữ lại để filter
+      phone: item.phone, // giữ lại để filter
+    }));
+    const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
+    categoryOptions.value = categoryRes.map((item) => ({
       label: item.name,
       value: item.id,
-    }));
+    }))
 
-  // Cập nhật lại name trong saleOrderItems sau khi đã có productOptions (nếu cần giữ lại name ban đầu)
-  saleOrderItems.value.forEach(item => {
-    item.name = productRes.find(product => product.id === item.productId)?.name || '';
-  });
-  loading.value = false;
+    const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
+    branchProductOptions.value = branchProductRes.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }))
 
+    const saleOrderRes = await api.api.saleOrder.getSaleOrder(route.params.id as string)
+    Object.assign(saleOrder, saleOrderRes)
+    if (["Completed", "Cancelled"].includes(saleOrder.status)) {
+      isDisabled.value = true
+    }
+    saleOrder.customerId = saleOrderRes["customer"]["id"]
+    const saleOrderItemsRes = await api.api.saleOrderItem.getSaleItemsbySaleOrder(route.params.id as string)
+    saleOrderItems.value = saleOrderItemsRes.map((item) => ({
+      id: item.id,
+      productId: item['product']['id'],
+      // name: productOptions.value.find((item1) => item1.value === item['product']['id'])?.label,
+      name: '',
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      note: item.note
+    }))
+    const existingProductIds = new Set(saleOrderItems.value.map(item => item.productId));
+    const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
+    productOptions.value = productRes
+      .filter(item => !existingProductIds.has(item.id)) // loại trừ những sản phẩm đã có
+      .map(item => ({
+        label: item.name,
+        value: item.id,
+      }));
+
+    // Cập nhật lại name trong saleOrderItems sau khi đã có productOptions (nếu cần giữ lại name ban đầu)
+    saleOrderItems.value.forEach(item => {
+      item.name = productRes.find(product => product.id === item.productId)?.name || '';
+    });
+    loading.value = false;
+  } catch {
+    ui.error("unknown")
+  }
 }
 async function save() {
-  loading.value = true;
-  saleOrder.saleOrderItemsRequestDTO = saleOrderItems.value.map((item) => ({
-    id: item.id,
-    productId: item.productId,
-    SaleOrdersId: null,
-    quantity: item.quantity,
-    unitPrice: item.unitPrice,
-    note: item.note
-  }))
+  try{
+    loading.value = true;
+    saleOrder.saleOrderItemsRequestDTO = saleOrderItems.value.map((item) => ({
+      id: item.id,
+      productId: item.productId,
+      SaleOrdersId: null,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      note: item.note
+    }))
 
-  await api.api.saleOrder.updateSaleOrder(route.params.id as string, saleOrder)
-  if (saleOrder.status == "Completed") {
-    saleOrder.saleOrderItemsRequestDTO.forEach(async (item) => {
-      const product_value = await api.api.product.getProduct(String(item.productId))
-      const increase_quantity = product_value['stockQuantity'] + item.quantity
-      await api.api.product.updateProduct(String(item.productId), {
-        name: product_value['name'],
-        capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
-        categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
-        businessId: userInfo.value.businessId
+    await api.api.saleOrder.updateSaleOrder(route.params.id as string, saleOrder)
+    if (saleOrder.status == "Completed") {
+      saleOrder.saleOrderItemsRequestDTO.forEach(async (item) => {
+        const product_value = await api.api.product.getProduct(String(item.productId))
+        const increase_quantity = product_value['stockQuantity'] + item.quantity
+        await api.api.product.updateProduct(String(item.productId), {
+          name: product_value['name'],
+          capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
+          categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
+          businessId: userInfo.value.businessId
+        })
       })
-    })
-    isDisabled.value = true
+      isDisabled.value = true
+    }
+    if (saleOrder.status == "Cancelled") {
+      isDisabled.value = false
+    }
+    loading.value = false;
+    ui.success("save sucessfull")
+  } catch {
+    ui.error("unknown")
   }
-  if (saleOrder.status == "Cancelled") {
-    isDisabled.value = false
-  }
-  loading.value = false;
 }
 
 async function deleteSaleItem(item) {
   loading.value = true
   try {
     await api.api.saleOrderItem.deleteSaleOrderItems(item.id)
-  } catch (error) {
-
+    ui.success("delete sucessfull")
+  } catch  {
+    ui.error("unknown")
   }
   finally {
     const index = saleOrderItems.value.indexOf(item);
@@ -311,69 +322,88 @@ async function deleteSaleItem(item) {
   }
 }
 async function onProductSelect() {
-  if (!product.value) return;
+  try{
+    if (!product.value) return;
 
-  const selectedProduct = productOptions.value.find((item) => item.value === product.value);
-  if (!selectedProduct) return;
+    const selectedProduct = productOptions.value.find((item) => item.value === product.value);
+    if (!selectedProduct) return;
 
-  // Thêm vào danh sách saleOrderItems
-  saleOrderItems.value.push({
-    productId: product.value,
-    name: selectedProduct.label,
-    quantity: 0,
-    unitPrice: 0,
-    note: null,
-  });
+    // Thêm vào danh sách saleOrderItems
+    saleOrderItems.value.push({
+      productId: product.value,
+      name: selectedProduct.label,
+      quantity: 0,
+      unitPrice: 0,
+      note: null,
+    });
 
-  // Loại bỏ sản phẩm vừa chọn khỏi productOptions
-  productOptions.value = productOptions.value.filter(item => item.value !== product.value);
+    // Loại bỏ sản phẩm vừa chọn khỏi productOptions
+    productOptions.value = productOptions.value.filter(item => item.value !== product.value);
 
-  // Reset product selection
-  product.value = null;
+    // Reset product selection
+    product.value = null;
+    } catch {
+    ui.error("unknown")
+  }
 }
 
 async function addCategory(scope) {
-  loading.value = true
-  const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId })
-  const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
-  categoryOptions.value = categoryRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }))
-  productAdd.categoryId = res
-  loading.value = false
+  try{
+    loading.value = true
+    const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId })
+    const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
+    categoryOptions.value = categoryRes.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }))
+    productAdd.categoryId = res
+    loading.value = false
+    ui.success("add sucessfull")
+  } catch {
+    ui.error("unknown")
+  }
 }
 
 
 async function addBranchProduct(scope) {
-  loading.value = true
-  const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
-  const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
-  branchProductOptions.value = branchProductRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }))
-  productAdd.branchProductId = res
-  loading.value = false
+  try{
+    loading.value = true
+    const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
+    const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
+    branchProductOptions.value = branchProductRes.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }))
+    productAdd.branchProductId = res
+    loading.value = false
+    ui.success("add sucessfull")
+  } catch {
+    ui.error("unknown")
+  }
 }
 
 async function AddProduct() {
-  loading.value = true
-  const productId = await api.api.product.createProduct(productAdd)
-  const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
-  productOptions.value = productRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }))
-  saleOrderItems.value.push({
-    productId: productId,
-    name: productOptions.value.find((item) => item.value === productId)?.label,
-    quantity: 0,
-    unitPrice: 0,
-  })
-  product.value = null
+  try{
+    loading.value = true
+    const productId = await api.api.product.createProduct(productAdd)
+    const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
+    productOptions.value = productRes.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }))
+    saleOrderItems.value.push({
+      productId: productId,
+      name: productOptions.value.find((item) => item.value === productId)?.label,
+      quantity: 0,
+      unitPrice: 0,
+    })
+    product.value = null
 
-  loading.value = false
+    loading.value = false
+    ui.success("add sucessfull")
+  } catch {
+    ui.error("unknown")
+  }
 }
 onMounted(async () => {
   await fetch()

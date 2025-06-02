@@ -60,12 +60,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import api, { User, Business } from '../../services/api';
-import { RefSymbol } from '@vue/reactivity';
 import { userStore } from '../../stores/user'
 import pinia from '../../stores'
 const _userStore = userStore(pinia())
 const tab = ref('information')
 const loading = ref(false)
+import * as ui from '../../utils/ui'
+
 const user = ref<User>({
     id: null,
     username: '',
@@ -85,37 +86,54 @@ const business = ref<Business>({
 })
 
 async function fetch() {
-    loading.value = true;
+    try {
+        loading.value = true;
 
-    const res_user = await api.api.user.getCurrentUser()
-    user.value.id = res_user['id']
-    user.value.username = res_user['username']
-    user.value.email = res_user['email']
-    role.value = res_user['roles']
-    user.value.phoneNumber = res_user['phoneNumber']
-    user.value.businessId = res_user['businessId']
+        const res_user = await api.api.user.getCurrentUser()
+        user.value.id = res_user['id']
+        user.value.username = res_user['username']
+        user.value.email = res_user['email']
+        role.value = res_user['roles']
+        user.value.phoneNumber = res_user['phoneNumber']
+        user.value.businessId = res_user['businessId']
 
 
-    const res_business = await api.api.business.getBusiness(user.value.businessId)
-    business.value = res_business
-    loading.value = false;
+        const res_business = await api.api.business.getBusiness(user.value.businessId)
+        business.value = res_business
+        loading.value = false;
+    }
+    catch {
+        ui.error("unknown")
+    }
 }
 
 async function saveUser() {
-    loading.value = true;
-    await api.api.user.updateUser(user.value.id, user.value)
-    _userStore.saveUserInfo({ id: user.value.id, username: user.value.username, email: user.value.email, phoneNumber: user.value.phoneNumber, roles: role.value, businessId: user.value.businessId })
-    loading.value = false
+    try {
+        loading.value = true;
+        await api.api.user.updateUser(String(user.value.id), user.value)
+        _userStore.saveUserInfo({ id: user.value.id, username: user.value.username, email: user.value.email, phoneNumber: user.value.phoneNumber, roles: role.value, businessId: user.value.businessId })
+        loading.value = false
+        ui.success("save sucessfull")
+
+    } catch {
+        ui.error("unknown")
+    }
 }
 
 async function saveBusiness() {
-    loading.value = true;
-    console.log(business.value)
-    await api.api.business.updateBusiness(business.value.id, {
-        name: business.value.name,
-        mst: business.value.mst, email: business.value.email, phone: business.value.phone
-    })
-    loading.value = false
+    try {
+        loading.value = true;
+        console.log(business.value)
+        await api.api.business.updateBusiness(business.value.id, {
+            name: business.value.name,
+            mst: business.value.mst, email: business.value.email, phone: business.value.phone
+        })
+        loading.value = false
+        ui.success("save sucessfull")
+    }
+    catch {
+        ui.error("unknown")
+    }
 }
 onMounted(async () => {
     await fetch()

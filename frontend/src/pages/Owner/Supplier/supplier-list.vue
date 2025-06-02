@@ -24,6 +24,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import api, { Supplier } from '../../../services/api';
+import * as ui from '../../../utils/ui'
+
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -47,17 +49,26 @@ function search(rows, terms) {
     return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : suppliers
 }
 async function fetchSuppliers() {
-    loading.value = true;
-    const res = await api.api.supplier.getSuppiers(userInfo.value.businessId);
-    suppliers.value = res;
-    loading.value = false;
+    try{
+        loading.value = true;
+        const res = await api.api.supplier.getSuppiers(userInfo.value.businessId);
+        suppliers.value = res;
+        loading.value = false;
+    } catch {
+        ui.error("unknown")
+    }
 }
 
 async function deleteSupplier(supplier) {
-    loading.value = true;
-    await api.api.supplier.deleteSupplier(supplier.id);
-    fetchSuppliers();
-    loading.value = false;
+    try{
+        loading.value = true;
+        await api.api.supplier.deleteSupplier(supplier.id);
+        fetchSuppliers();
+        loading.value = false;
+        ui.success("delete sucessfull")
+    } catch {
+        ui.error("unknown")
+    }
 }
 onMounted(async () => {
     await fetchSuppliers()

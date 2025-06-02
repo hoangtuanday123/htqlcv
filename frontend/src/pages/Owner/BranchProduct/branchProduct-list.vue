@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import api, { BranchProduct, BranchProductRequest } from '../../../services/api';
+import * as ui from '../../../utils/ui'
 const loading = ref(false)
 const branchProducts = ref<BranchProduct[]>([])
 const keyword = ref('')
@@ -52,21 +53,38 @@ function search(rows, terms) {
   return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : branchProducts
 }
 async function fetchBranchProducts() {
-  loading.value = true;
-  const res = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId);
-  branchProducts.value = res;
-  loading.value = false;
+  try {
+    loading.value = true;
+    const res = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId));
+    branchProducts.value = res;
+    loading.value = false;
+  }
+  catch {
+    ui.error("unknown")
+  }
+
 }
 
 async function deleteBranchProduct(row) {
-  await api.api.branchProduct.deleteBranchProduct(row.id)
-  await fetchBranchProducts()
+  try {
+    await api.api.branchProduct.deleteBranchProduct(row.id)
+    await fetchBranchProducts()
+    ui.success("delete sucessfull")
+  }
+  catch {
+    ui.error("unknown")
+  }
 }
 
 async function AddBranchProduct() {
-  await api.api.branchProduct.createBranchProduct(branchProduct_request.value)
-  openDiaglog.value = false
-  await fetchBranchProducts()
+  try {
+    await api.api.branchProduct.createBranchProduct(branchProduct_request.value)
+    openDiaglog.value = false
+    await fetchBranchProducts()
+    ui.success("save sucessfull")
+  } catch {
+    ui.error("unknown")
+  }
 }
 onMounted(async () => {
   await fetchBranchProducts()

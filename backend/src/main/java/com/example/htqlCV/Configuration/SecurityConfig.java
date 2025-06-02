@@ -30,68 +30,69 @@ import lombok.experimental.NonFinal;
 @EnableMethodSecurity
 public class SecurityConfig {
     @NonFinal
-    protected static final String SIGNER_KEY="DMACF1qWXznHLOloAZYRi2UtxXsIv8fZlemlOO8riEGInGO8MFK3+1CQE/STr+K0";
+    protected static final String SIGNER_KEY = "DMACF1qWXznHLOloAZYRi2UtxXsIv8fZlemlOO8riEGInGO8MFK3+1CQE/STr+K0";
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Autowired
     private customJwtDecoder CustomJwtDecoder;
-    
+
     private final String[] PUBLIC_ENDPOINTS = {
-        "/auth/**", "/swagger-ui/**", "/v3/api-docs/**","/common/**","/businesses/**","/user/"
+            "/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/common/**", "/businesses/**", "/user/"
     };
     private final String[] AUTH_ENDPOINTS = {
-        "/user/current_user","/user/changePassword"
+            "/user/current_user", "/user/changePassword"
     };
     private final String[] ADMIN_ENDPOINTS = {
-        "/role/**","/user/{id}","/user/{id}/update","/user/{id}delete","/user/createStaff","/user/staffs"
+            "/role/**", "/user/{id}", "/user/{id}/update", "/user/{id}delete", "/user/createStaff", "/user/staffs"
 
     };
-    private final String[] OWNER_ENDPOINTS={
-        "/category/**","/branchProduct/**","/supplier/**","/customer/**","/product/**",
-        "/saleOrderItems/**","/saleOrders/**","/purchaseOrders/**","/purchaseOrderItems/**",
-        "/user/createStaff","/user/staffs","/user/{id}/update","/user/{id}"
+    private final String[] OWNER_ENDPOINTS = {
+            "/category/**", "/branchProduct/**", "/supplier/**", "/customer/**", "/product/**",
+            "/saleOrderItems/**", "/saleOrders/**", "/purchaseOrders/**", "/purchaseOrderItems/**",
+            "/user/createStaff", "/user/staffs", "/user/{id}/update", "/user/{id}", "/product"
     };
-    private final String[] STAFF_ENDPOINTS={
-        "/category/**","/branchProduct/**","/supplier/**","/customer/**","/product/**",
-        "/saleOrderItems/**","/saleOrders/**","/purchaseOrders/**","/purchaseOrderItems/**"
+    private final String[] STAFF_ENDPOINTS = {
+            "/category/**", "/branchProduct/**", "/supplier/**", "/customer/**", "/product/**",
+            "/saleOrderItems/**", "/saleOrders/**", "/purchaseOrders/**", "/purchaseOrderItems/**", "/product"
     };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(request -> request
-                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                .requestMatchers(AUTH_ENDPOINTS).hasAnyAuthority( "SCOPE_admin", "SCOPE_owner","SCOPE_staff")
-                .requestMatchers(OWNER_ENDPOINTS).hasAnyAuthority("SCOPE_admin","SCOPE_owner")
-                .requestMatchers(STAFF_ENDPOINTS).hasAnyAuthority("SCOPE_admin","SCOPE_owner","SCOPE_staff")
-                .requestMatchers(ADMIN_ENDPOINTS).hasAuthority( "SCOPE_admin")
-                .anyRequest().authenticated()
-            )
-            .csrf().disable()
-            .httpBasic().disable()
-            .formLogin().disable();
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(AUTH_ENDPOINTS).hasAnyAuthority("SCOPE_admin", "SCOPE_owner", "SCOPE_staff")
+                        .requestMatchers(STAFF_ENDPOINTS).hasAnyAuthority("SCOPE_admin", "SCOPE_owner", "SCOPE_staff")
+                        .requestMatchers(OWNER_ENDPOINTS).hasAnyAuthority("SCOPE_admin", "SCOPE_owner")
+                        .requestMatchers(ADMIN_ENDPOINTS).hasAuthority("SCOPE_admin")
+                        .anyRequest().authenticated())
+                .csrf().disable()
+                .httpBasic().disable()
+                .formLogin().disable();
 
-        http.oauth2ResourceServer(oauth2->oauth2.jwt(jwtConfigurer->jwtConfigurer.decoder(CustomJwtDecoder)));
-            
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(CustomJwtDecoder)));
 
         return http.build();
     }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(PUBLIC_ENDPOINTS);
     }
     // @Bean
     // public JwtDecoder jwtDecoder() {
-    //     // Khóa bí mật giống như trong quá trình ký token
-    //     SecretKeySpec secretKey = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
+    // // Khóa bí mật giống như trong quá trình ký token
+    // SecretKeySpec secretKey = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
 
-    //     // Cấu hình JwtDecoder với thuật toán HS512
-    //     return NimbusJwtDecoder
-    //             .withSecretKey(secretKey)  // Cung cấp khóa bí mật
-    //             .macAlgorithm(MacAlgorithm.HS512)  // Sử dụng thuật toán HMAC-SHA512
-    //             .build();  // Xây dựng JwtDecoder với thuật toán HmacSHA512
+    // // Cấu hình JwtDecoder với thuật toán HS512
+    // return NimbusJwtDecoder
+    // .withSecretKey(secretKey) // Cung cấp khóa bí mật
+    // .macAlgorithm(MacAlgorithm.HS512) // Sử dụng thuật toán HMAC-SHA512
+    // .build(); // Xây dựng JwtDecoder với thuật toán HmacSHA512
     // }
 
-        
 }

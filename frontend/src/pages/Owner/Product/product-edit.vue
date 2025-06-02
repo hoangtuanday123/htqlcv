@@ -98,6 +98,8 @@ import api, {
   Guarantee,
   GuaranteeRequest
 } from '../../../services/api';
+import * as ui from '../../../utils/ui'
+
 const route = useRoute();
 const loading = ref(false);
 const categoryOptions = ref([]);
@@ -133,91 +135,126 @@ const columns = [
   { name: 'actions', label: 'Actions', align: 'right' as const, field: '', sortable: false }
 ];
 async function save() {
-  loading.value = true;
-  const productRequest = {
-    name: product.name,
-    capitalPrice: product.capitalPrice,
-    salePrice: product.salePrice,
-    stockQuantity: product.stockQuantity,
-    categoryId: product.category.id,
-    branchProductId: product.branchProduct.id,
-    businessId: product.businessId
-  };
-  await api.api.product.updateProduct(
-    route.params.id as string,
-    productRequest
-  );
-  loading.value = false;
+  try {
+    loading.value = true;
+    const productRequest = {
+      name: product.name,
+      capitalPrice: product.capitalPrice,
+      salePrice: product.salePrice,
+      stockQuantity: product.stockQuantity,
+      categoryId: product.category.id,
+      branchProductId: product.branchProduct.id,
+      businessId: product.businessId
+    };
+    await api.api.product.updateProduct(
+      route.params.id as string,
+      productRequest
+    );
+    loading.value = false;
+    ui.success("save sucessfull")
+  }
+  catch {
+    ui.error("unknown")
+  }
 }
 async function fetch() {
-  loading.value = true;
-  const categoryRes = await api.api.category.getCategories(userInfo.value.businessId);
-  categoryOptions.value = categoryRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }));
+  try {
+    loading.value = true;
+    const categoryRes = await api.api.category.getCategories(userInfo.value.businessId);
+    categoryOptions.value = categoryRes.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }));
 
-  const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId);
-  branchProductOptions.value = branchProductRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }));
-  const res = await api.api.product.getProduct(route.params.id as string);
-  Object.assign(product, res);
-  if (product.category ==null){
-    product.category={id:null,name:'',businessId: null}
+    const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId));
+    branchProductOptions.value = branchProductRes.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }));
+    const res = await api.api.product.getProduct(route.params.id as string);
+    Object.assign(product, res);
+    if (product.category == null) {
+      product.category = { id: null, name: '', businessId: null }
+    }
+    if (product.branchProduct == null) {
+      product.branchProduct = { id: null, name: '', businessId: null }
+    }
+    const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
+    guarantees.value = guaranteeRes;
+    loading.value = false;
   }
-  if (product.branchProduct ==null){
-    product.branchProduct={id:null,name:'',businessId: null}
+  catch {
+    ui.error("unknown")
   }
-  const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
-  guarantees.value = guaranteeRes;
-  loading.value = false;
 }
 
 async function addCategory(scope) {
-  loading.value = true;
-  const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId });
-  const categoryRes = await api.api.category.getCategories(userInfo.value.businessId);
-  categoryOptions.value = categoryRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }));
-  product.category.id = res;
-  loading.value = false;
+  try {
+    loading.value = true;
+    const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId });
+    const categoryRes = await api.api.category.getCategories(userInfo.value.businessId);
+    categoryOptions.value = categoryRes.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }));
+    product.category.id = res;
+    loading.value = false;
+    ui.success("add sucessfull")
+  }
+  catch {
+    ui.error("unknown")
+  }
 }
 
 async function addBranchProduct(scope) {
-  loading.value = true;
-  const res = await api.api.branchProduct.createBranchProduct({
-    name: scope.value,
-    businessId: userInfo.value.businessId
-  });
-  const branchProductRes = await api.api.branchProduct.getBranchProducts(userInfo.value.businessId);
-  branchProductOptions.value = branchProductRes.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }));
-  product.branchProduct.id = res;
-  loading.value = false;
+  try {
+    loading.value = true;
+    const res = await api.api.branchProduct.createBranchProduct({
+      name: scope.value,
+      businessId: userInfo.value.businessId
+    });
+    const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId));
+    branchProductOptions.value = branchProductRes.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }));
+    product.branchProduct.id = res;
+    loading.value = false;
+    ui.success("add sucessfull")
+  }
+  catch {
+    ui.error("unknown")
+  }
 }
 
 async function deleteGuarantee(guarantee) {
-  loading.value = true;
-  await api.api.guarantee.deleteGuarantee(guarantee.id);
-  const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
-  guarantees.value = guaranteeRes;
-  loading.value = false;
+  try {
+    loading.value = true;
+    await api.api.guarantee.deleteGuarantee(guarantee.id);
+    const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
+    guarantees.value = guaranteeRes;
+    loading.value = false;
+    ui.success("delete sucessfull")
+  }
+  catch {
+    ui.error("unknown")
+  }
 }
 
 async function createGuarantee() {
-  loading.value = true;
-  guaranteeRequest.productId = Number(route.params.id);
-  await api.api.guarantee.createGuarantee(guaranteeRequest);
-  dialog.value = false;
-  const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
-  guarantees.value = guaranteeRes;
-  loading.value = false;
+  try {
+    loading.value = true;
+    guaranteeRequest.productId = Number(route.params.id);
+    await api.api.guarantee.createGuarantee(guaranteeRequest);
+    dialog.value = false;
+    const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
+    guarantees.value = guaranteeRes;
+    loading.value = false;
+    ui.success("create sucessfull")
+  }
+  catch {
+    ui.error("unknown")
+  }
 }
 onMounted(async () => {
   await fetch();

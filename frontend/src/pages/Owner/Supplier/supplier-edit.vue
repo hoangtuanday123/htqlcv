@@ -24,6 +24,8 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import api, { SupplierRequest } from '../../../services/api'
+import * as ui from '../../../utils/ui'
+
 const route = useRoute()
 const loading = ref(false)
 
@@ -40,16 +42,24 @@ let supplier: SupplierRequest = reactive({
 })
 
 async function fetch() {
-    loading.value = true;
-    const res = await api.api.supplier.getSupplier(route.params.id as string)
-    Object.assign(supplier, res)
-    loading.value = false;
+    try{
+        loading.value = true;
+        const res = await api.api.supplier.getSupplier(route.params.id as string)
+        Object.assign(supplier, res)
+        loading.value = false;
+    } catch {
+        ui.error("unknown")
+    }
 }
 async function save() {
-
-    loading.value = true
-    await api.api.supplier.updateSupplier(route.params.id as string, supplier)
-    loading.value = false
+    try{
+        loading.value = true
+        await api.api.supplier.updateSupplier(route.params.id as string, supplier)
+        loading.value = false
+        ui.success("save sucessfull")
+    } catch {
+        ui.error("unknown")
+    }
 }
 onMounted(async () => {
     await fetch()

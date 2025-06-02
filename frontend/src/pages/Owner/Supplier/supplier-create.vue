@@ -23,6 +23,8 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import * as ui from '../../../utils/ui'
+
 import api, { SupplierRequest } from '../../../services/api'
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
@@ -43,11 +45,13 @@ let supplier: SupplierRequest = reactive({
 })
 
 async function save() {
-
-    loading.value = true
-
-    await api.api.supplier.createSupplier(supplier)
-    loading.value = false
-    router.push({ path: '../suppliers' })
+    try{
+        loading.value = true
+        await api.api.supplier.createSupplier(supplier)
+        loading.value = false
+        router.push({ path: '../suppliers' })
+    } catch {
+        ui.error("unknown")
+    }
 }
 </script>

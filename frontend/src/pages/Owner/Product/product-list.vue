@@ -24,6 +24,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import api, { Product } from '../../../services/api';
+import * as ui from '../../../utils/ui'
+
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
@@ -43,18 +45,29 @@ function search(rows, terms) {
     return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : products
 }
 async function fetchProducts() {
-    loading.value = true;
-    const res = await api.api.product.getProducts(userInfo.value.businessId);
-    console.log(res)
-    products.value = res;
-    loading.value = false;
+    try {
+        loading.value = true;
+        const res = await api.api.product.getProducts(String(userInfo.value.businessId));
+        console.log(res)
+        products.value = res;
+        loading.value = false;
+    }
+    catch {
+        ui.error("unknown")
+    }
 }
 
 async function deleteProduct(product) {
-    loading.value = true;
-    await api.api.product.deleteProduct(product.id);
-    fetchProducts();
-    loading.value = false;
+    try {
+        loading.value = true;
+        await api.api.product.deleteProduct(product.id);
+        await fetchProducts();
+        loading.value = false;
+        ui.success("delete sucessfull")
+    }
+    catch {
+        ui.error("unknown")
+    }
 }
 onMounted(async () => {
     await fetchProducts()

@@ -25,6 +25,8 @@
 import { onMounted, ref } from 'vue';
 import api, { Customer } from '../../../services/api';
 import { useCurrentuser } from '../../../share/currentuser';
+import * as ui from '../../../utils/ui'
+
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 const loading = ref(false)
@@ -49,17 +51,27 @@ function search(rows, terms) {
   return lowerTerms != "" ? rows.filter(row => row.phone.includes(lowerTerms)) : customers
 }
 async function fetchCustomers() {
-  loading.value = true;
-  const res = await api.api.customer.getCustomers(userInfo.value.businessId);
-  customers.value = res;
-  loading.value = false;
+  try {
+    loading.value = true;
+    const res = await api.api.customer.getCustomers(userInfo.value.businessId);
+    customers.value = res;
+    loading.value = false;
+
+  } catch {
+    ui.error("unknown")
+  }
 }
 
 async function deleteCustomer(customer) {
-  loading.value = true;
-  await api.api.customer.deleteCustomer(customer.id);
-  fetchCustomers();
-  loading.value = false;
+  try {
+    loading.value = true;
+    await api.api.customer.deleteCustomer(customer.id);
+    await fetchCustomers();
+    loading.value = false;
+    ui.success("delete sucessfull")
+  } catch {
+    ui.error("unknown")
+  }
 }
 onMounted(async () => {
   await fetchCustomers()
