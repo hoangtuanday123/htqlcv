@@ -48,8 +48,8 @@ const columns = [
 ];
 
 function search(rows, terms) {
-  const lowerTerms = terms ? terms.toLowerCase() : ""
-  return lowerTerms != "" ? rows.filter(row => row.phone.includes(lowerTerms)) : customers
+  const lowerTerms = terms ? terms.toLowerCase() : ''
+  return lowerTerms != '' ? rows.filter(row => row.phone.includes(lowerTerms)) : customers
 }
 async function fetchCustomers() {
   try {
@@ -69,7 +69,7 @@ async function deleteCustomer(customer) {
     await api.api.customer.deleteCustomer(customer.id);
     await fetchCustomers();
     loading.value = false;
-    ui.success("delete sucessfull")
+    ui.success('delete sucessfull')
   } catch {
     ui.error(t('error.unknown'))
   }

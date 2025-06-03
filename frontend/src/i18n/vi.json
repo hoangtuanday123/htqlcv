@@ -25,7 +25,8 @@
   "success": {
     "add": "Thêm thành công",
     "save": "Lưu thành công",
-    "delete": "Xóa thành công"
+    "delete": "Xóa thành công",
+    "refund": "Hoàn trả thành công"
   },
   "error": {
     "unknown": "lỗi "
@@ -192,6 +193,7 @@
     "search": "Tìm kiếm",
     "add": "Thêm",
     "create": "Tạo",
-    "view_order": "Xem Đơn hàng"
+    "view_order": "Xem Đơn hàng",
+    "refund": "Hoàn trả"
   }
 }

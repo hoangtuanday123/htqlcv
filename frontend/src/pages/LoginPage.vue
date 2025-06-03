@@ -3,16 +3,16 @@
 
         <q-card>
             <q-card-section>
-                <div class="text-h6">{{t('login.title')}}</div>
+                <div class="text-h6">{{ t('login.title') }}</div>
 
             </q-card-section>
             <q-card-section>
                 <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-                    <q-input filled v-model="username" :label="t('login.username')" :hint="t('login.username')" lazy-rules
-                        :rules="[val => val && val.length > 0 || t('login.invalid')]" />
+                    <q-input filled v-model="username" :label="t('login.username')" :hint="t('login.username')"
+                        lazy-rules :rules="[val => val && val.length > 0 || t('login.invalid')]" />
 
-                    <q-input filled v-model="password" :label="t('login.password')" :hint="t('login.password')" lazy-rules
-                        :rules="[val => val && val.length > 0 || t('login.invalid')]" />
+                    <q-input filled v-model="password" :label="t('login.password')" :hint="t('login.password')"
+                        lazy-rules :rules="[val => val && val.length > 0 || t('login.invalid')]" />
 
                     <!-- <q-toggle v-model="accept" label="I accept the license and terms" /> -->
 
@@ -60,10 +60,16 @@ async function onSubmit() {
             const user = await api.api.user.getCurrentUser()
 
             _userStore.saveUserInfo({ id: user['id'], username: user['username'], email: user['email'], phoneNumber: user['phoneNumber'], roles: user['roles'], businessId: user['businessId'] })
-            router.push({ path: '/home' })
+            if (user['roles'][0] == 'owner' || user['roles'][0] == 'staff') {
+                router.push({ path: '/owner/dashboard' })
+            }
+            else {
+                router.push({ path: '/home' })
+            }
+
         }
     }
-    catch  {
+    catch {
         ui.error(t('error.unknown'))
     }
     finally {

@@ -4,11 +4,14 @@
 
     <div class="info">
       <strong>Mã:</strong> {{ props.saleOrderId }}<br />
-      <strong v-if="customer.customerType=='individual'">{{ t('customer.title') }}:</strong> {{ customer.name }}<br v-if="customer.customerType=='individual'"/>
-      <strong v-if="customer.customerType=='companyCustomer'">{{ t('customer.company_name') }}:</strong> {{ customer.companyName }}<br v-if="customer.customerType=='companyCustomer'"/>
-      <strong v-if="customer.customerType=='companyCustomer'">{{ t('customer.tax_code') }}:</strong> {{ customer.companyName }}:</strong> {{ customer.mst }}<br v-if="customer.customerType=='companyCustomer'"/>
-      <strong>{{ t('customer.phone') }}:</strong> {{ customer.companyName }}:</strong> {{ customer.phone }}<br />
-      <strong>{{ t('customer.address') }}:</strong> {{ customer.companyName }}:</strong> {{ customer.address }}<br />
+      <strong v-if="customer.customerType == 'individual'">{{ t('customer.title') }}:</strong> {{ customer.name }}<br
+        v-if="customer.customerType == 'individual'" />
+      <strong v-if="customer.customerType == 'companyCustomer'">{{ t('customer.company_name') }}:</strong> {{
+        customer.companyName }}<br v-if="customer.customerType == 'companyCustomer'" />
+      <strong v-if="customer.customerType == 'companyCustomer'">{{ t('customer.tax_code') }}:</strong> {{ customer.mst
+      }}<br v-if="customer.customerType == 'companyCustomer'" />
+      <strong>{{ t('customer.phone') }}:</strong> {{ customer.phone }}<br />
+      <strong>{{ t('customer.address') }}:</strong> {{ customer.address }}<br />
       <strong>{{ t('sale_order.created_date') }}:</strong> {{ createDate }}
     </div>
 
@@ -45,10 +48,10 @@
     </div>
     <div class="total">
 
-    <strong>{{ t('sale_order.dept') }}: {{ formatCurrency(totalAmount-props.paid) }}</strong>
+      <strong>{{ t('sale_order.dept') }}: {{ formatCurrency(totalAmount - props.paid) }}</strong>
     </div>
 
-    <div class="print-button" >
+    <div class="print-button">
       <button @click="downloadPdf" :loading="loading">{{ t('sale_order.download_pdf') }}</button>
       <button @click="printInvoice" :loading="loading">{{ t('sale_order.print') }}</button>
     </div>
@@ -63,14 +66,14 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro';
-import api, { SaleOrderRequest,Customer } from '../services/api';
-const loading=ref(false)
+import api, { SaleOrderRequest, Customer } from '../services/api';
+const loading = ref(false)
 const props = defineProps<{
   saleOrderId: string
-  paid:number
-  businessId:string
+  paid: number
+  businessId: string
 }>()
-const customer=ref<Customer>({
+const customer = ref<Customer>({
   id: null,
   name: null,
   phone: null,
@@ -88,8 +91,8 @@ let saleOrder: SaleOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   customerId: null,
-  subStatus: "None",
-  status: "None",
+  subStatus: 'None',
+  status: 'None',
   saleOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -101,7 +104,7 @@ let saleOrder: SaleOrderRequest = reactive({
   businessId: null
 });
 const saleOrderItems = ref([])
-const createDate=ref(null)
+const createDate = ref(null)
 
 
 const totalAmount = computed(() => {
@@ -119,13 +122,13 @@ function formatCurrency(value: number): string {
   return value.toLocaleString('vi-VN') + ' ₫'
 }
 
-async function fetch(){
-  try{
+async function fetch() {
+  try {
     loading.value = true;
     const saleOrderRes = await api.api.saleOrder.getSaleOrder(String(props.saleOrderId))
     Object.assign(saleOrder, saleOrderRes)
-    customer.value=saleOrder['customer']
-    createDate.value= new Date(saleOrderRes['createdAt']).toLocaleDateString()
+    customer.value = saleOrder['customer']
+    createDate.value = new Date(saleOrderRes['createdAt']).toLocaleDateString()
     const saleOrderItemsRes = await api.api.saleOrderItem.getSaleItemsbySaleOrder(String(props.saleOrderId))
     saleOrderItems.value = saleOrderItemsRes.map((item) => ({
       id: item.id,
@@ -142,13 +145,13 @@ async function fetch(){
       item.name = productRes.find(product => product.id === item.productId)?.name || '';
     });
     loading.value = false;
-    } catch {
-   ui.error(t('error.unknown'))
+  } catch {
+    ui.error(t('error.unknown'))
   }
 }
 async function downloadPdf() {
-  try{
-    loading.value=true
+  try {
+    loading.value = true
     const printButton = document.querySelector('.print-button') as HTMLElement
     const element = document.querySelector('.invoice-wrapper') as HTMLElement;
     if (printButton) printButton.style.display = 'none'
@@ -170,14 +173,14 @@ async function downloadPdf() {
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`HoaDon_${props.saleOrderId}.pdf`);
     printButton.style.display = 'block'
-    loading.value=false
-    ui.success("download sucessfull")
+    loading.value = false
+    ui.success('download sucessfull')
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 function printInvoice() {
-  try{
+  try {
     const printWindow = window.open('', '_blank')
     if (!printWindow) return
 
@@ -260,9 +263,9 @@ function printInvoice() {
       printWindow.print()
       printWindow.close()
     }, 500)
-    ui.success("print sucessfull")
+    ui.success('print sucessfull')
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

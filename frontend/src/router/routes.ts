@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true },
         children: [
           {
-            path: "categories",
+            path: 'categories',
             children: [
               {
                 path: '',
@@ -50,7 +50,7 @@ const routes: RouteRecordRaw[] = [
             ]
           },
           {
-            path: "branchProduct",
+            path: 'branchProduct',
             children: [
               {
                 path: '',
@@ -76,7 +76,7 @@ const routes: RouteRecordRaw[] = [
             ]
           },
           {
-            path: "customers",
+            path: 'customers',
             children: [
               {
                 path: '',
@@ -110,7 +110,7 @@ const routes: RouteRecordRaw[] = [
             ]
           },
           {
-            path: "saleOrders",
+            path: 'saleOrders',
             children: [
               {
                 path: '',
@@ -127,7 +127,7 @@ const routes: RouteRecordRaw[] = [
             ]
           },
           {
-            path: "purchaseOrders",
+            path: 'purchaseOrders',
             children: [
               {
                 path: '',
@@ -160,6 +160,15 @@ const routes: RouteRecordRaw[] = [
               }
             ]
 
+          },
+          {
+            path: 'dashboard',
+            children: [
+              {
+                path: '',
+                component: () => import('pages/Owner/Dashboard/dashboard-view.vue')
+              }
+            ]
           }
         ]
       },

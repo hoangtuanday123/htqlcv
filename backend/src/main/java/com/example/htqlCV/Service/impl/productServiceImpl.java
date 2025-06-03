@@ -76,4 +76,8 @@ public class productServiceImpl implements productServices {
     public void deleteProduct(UUID id) {
         productRespository.deleteById(id);
     }
+    @Override
+    public Integer getTotalStockQuantityByBusinessId(UUID businessId){
+        return productRespository.getTotalStockQuantityByBusinessId(businessId);
+    }
 }

@@ -45,7 +45,7 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();

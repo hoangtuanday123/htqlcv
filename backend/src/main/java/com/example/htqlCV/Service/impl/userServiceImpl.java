@@ -215,5 +215,9 @@ public class userServiceImpl implements userSevices {
             throw new RuntimeException("Old password is incorrect");
         }
     }
-    
+    @Override
+    public Integer countUserByBusiness(UUID businessId){
+        business business_value=businessRespository.findById(businessId).orElse(null);
+        return userRepository.countUserByBusiness(business_value);
+    }
 }

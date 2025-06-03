@@ -50,8 +50,8 @@ const columns = [
 ];
 
 function search(rows, terms) {
-  const lowerTerms = terms ? terms.toLowerCase() : ""
-  return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : purchaseOrders
+  const lowerTerms = terms ? terms.toLowerCase() : ''
+  return lowerTerms != '' ? rows.filter(row => row.name.includes(lowerTerms)) : purchaseOrders
 }
 async function fetchPurchaseOrders() {
   try {
@@ -69,7 +69,7 @@ async function deletepurchaseOrder(purchaseOrder) {
     await api.api.purchaseOrder.deletePurchaseOrder(purchaseOrder.id);
     fetchPurchaseOrders();
     loading.value = false;
-    ui.success("delete sucessfull")
+    ui.success('delete sucessfull')
   } catch {
     ui.error(t('error.unknown'))
   }

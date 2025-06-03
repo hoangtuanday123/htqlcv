@@ -11,4 +11,7 @@ public interface saleOrdersServices {
     UUID createSaleOrder(saleOrdersRequestDTO saleOrdersRequestDTO);
     void updateSaleOrder(UUID id,saleOrdersRequestDTO saleOrdersRequestDTO);
     void deleteSaleOrder(UUID id);
+    Long getTotalAmountThisMonthByBusinessId(UUID businessId);
+    Long getMonthlyProfitByBusinessId(UUID businessId);
+    void refundSaleOrder(UUID id,saleOrdersRequestDTO saleOrdersRequestDTO);
 }

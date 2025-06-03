@@ -22,7 +22,7 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import api, { Product } from '../../../services/api';
 import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
@@ -42,8 +42,8 @@ const columns = [
 ];
 
 function search(rows, terms) {
-    const lowerTerms = terms ? terms.toLowerCase() : ""
-    return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : products
+    const lowerTerms = terms ? terms.toLowerCase() : ''
+    return lowerTerms != '' ? rows.filter(row => row.name.includes(lowerTerms)) : products
 }
 async function fetchProducts() {
     try {
@@ -64,7 +64,7 @@ async function deleteProduct(product) {
         await api.api.product.deleteProduct(product.id);
         await fetchProducts();
         loading.value = false;
-        ui.success("delete sucessfull")
+        ui.success('delete sucessfull')
     }
     catch {
         ui.error(t('error.unknown'))

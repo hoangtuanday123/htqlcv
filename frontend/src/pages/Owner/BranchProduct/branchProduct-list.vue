@@ -42,7 +42,7 @@ const branchProducts = ref<BranchProduct[]>([])
 const keyword = ref('')
 const openDiaglog = ref(false)
 import { useCurrentuser } from '../../../share/currentuser';
-import { mdiButtonCursor } from '@quasar/extras/mdi-v6';
+
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 const branchProduct_request = ref<BranchProductRequest>({ name: '', businessId: userInfo.value.businessId })
@@ -52,8 +52,8 @@ const columns = [
 ];
 
 function search(rows, terms) {
-  const lowerTerms = terms ? terms.toLowerCase() : ""
-  return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : branchProducts
+  const lowerTerms = terms ? terms.toLowerCase() : ''
+  return lowerTerms != '' ? rows.filter(row => row.name.includes(lowerTerms)) : branchProducts
 }
 async function fetchBranchProducts() {
   try {

@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>{{t('sale_order.create')}}</h1>
+    <h1>{{ t('sale_order.create') }}</h1>
     <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
       spellcheck="false">
       <div class="row">
@@ -44,8 +44,8 @@
             <q-card>
               <q-card-section class="q-pt-none">
                 <q-input v-model="productAdd.name" :label="t('sale_order.product_name')" required />
-                <q-select v-model="productAdd.categoryId" :options="categoryOptions" :label="t('sale_order.product_category')" map-options
-                  emit-value>
+                <q-select v-model="productAdd.categoryId" :options="categoryOptions"
+                  :label="t('sale_order.product_category')" map-options emit-value>
                   <template v-slot:append>
                     <q-btn round dense flat icon="add" @click="openPopupCategory = true" />
                     <q-popup-edit v-model="newCategoryName" v-model:opened="openPopupCategory" v-slot="scope">
@@ -62,8 +62,8 @@
                   </template>
                 </q-select>
 
-                <q-select v-model="productAdd.branchProductId" :options="branchProductOptions" :label="t('sale_order.product_branch_product')"
-                  map-options emit-value>
+                <q-select v-model="productAdd.branchProductId" :options="branchProductOptions"
+                  :label="t('sale_order.product_branch_product')" map-options emit-value>
                   <template v-slot:append>
                     <q-btn round dense flat icon="add" @click="openPopupBranchProduct = true" />
                     <q-popup-edit v-model="newBranchProductName" v-model:opened="openPopupBranchProduct" v-slot="scope">
@@ -90,17 +90,19 @@
         </div>
         <div class="col-1"></div>
         <div class="col-4">
-          <q-select v-model="SaleOrder.customerId" :options="customerOptions" :label="t('customer.title')" map-options emit-value
-            use-input :filter="customFilter" input-debounce="300" :rules="[val => !!val || t('customer.required')]">
+          <q-select v-model="SaleOrder.customerId" :options="customerOptions" :label="t('customer.title')" map-options
+            emit-value use-input :filter="customFilter" input-debounce="300"
+            :rules="[val => !!val || t('customer.required')]">
           </q-select>
           <q-input v-model="SaleOrder.totalAmount" :label="t('sale_order.total_amound')" type="number" readonly />
           <q-input v-model="SaleOrder.totalAmountPaid" :label="t('sale_order.total_amound_paid')" type="number" />
-          <q-input :model-value="SaleOrder.totalAmount - SaleOrder.totalAmountPaid" :label="t('sale_order.dept')" type="number"
-            readonly />
-          <q-select v-model="SaleOrder.subStatus" :options="subStatusOptions" :label="t('sale_order.sub_status')" map-options emit-value>
+          <q-input :model-value="SaleOrder.totalAmount - SaleOrder.totalAmountPaid" :label="t('sale_order.dept')"
+            type="number" readonly />
+          <q-select v-model="SaleOrder.subStatus" :options="subStatusOptions" :label="t('sale_order.sub_status')"
+            map-options emit-value>
           </q-select>
-          <q-select v-model="SaleOrder.status" :options="statusOptions" :label="t('sale_order.status')" map-options emit-value
-            :disable="isDisabled">
+          <q-select v-model="SaleOrder.status" :options="statusOptions" :label="t('sale_order.status')" map-options
+            emit-value :disable="isDisabled">
           </q-select>
         </div>
       </div>
@@ -117,7 +119,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import api, { SaleOrderRequest, Product, ProductRequest } from '../../../services/api';
+import api, { SaleOrderRequest, ProductRequest } from '../../../services/api';
 import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
@@ -127,8 +129,8 @@ const userInfo = currentUser.info
 const route = useRouter();
 const loading = ref(false);
 const customerOptions = ref([])
-const subStatusOptions = ["None", "Not Paid"]
-const statusOptions = ["None", "Processing", "Completed", "Cancelled"]
+const subStatusOptions = ['None', 'Not Paid']
+const statusOptions = ['None', 'Processing', 'Completed', 'Cancelled']
 const categoryOptions = ref([])
 const branchProductOptions = ref([])
 const openPopupCategory = ref(false)
@@ -140,8 +142,8 @@ let SaleOrder: SaleOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   customerId: null,
-  subStatus: "None",
-  status: "None",
+  subStatus: 'None',
+  status: 'None',
   saleOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -193,7 +195,7 @@ watch(totalAmount, (newTotal) => {
   SaleOrder.totalAmount = newTotal;
 });
 async function fetch() {
-  try{
+  try {
     loading.value = true;
     const CustomerRes = await api.api.customer.getCustomers(userInfo.value.businessId)
     customerOptions.value = CustomerRes.map((item) => ({
@@ -220,11 +222,11 @@ async function fetch() {
     }))
     loading.value = false;
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 async function save() {
-  try{
+  try {
     loading.value = true;
     SaleOrder.saleOrderItemsRequestDTO = saleOrderItems.value.map((item) => ({
       id: item.id,
@@ -236,29 +238,29 @@ async function save() {
     }))
     console.log(SaleOrder)
     await api.api.saleOrder.createSaleOrder(SaleOrder)
-    if (SaleOrder.status == "Completed") {
-      SaleOrder.saleOrderItemsRequestDTO.forEach(async (item) => {
-        const product_value = await api.api.product.getProduct(String(item.productId))
-        const increase_quantity = product_value['stockQuantity'] + item.quantity
-        await api.api.product.updateProduct(String(item.productId), {
-          name: product_value['name'],
-          capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
-          categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
-          businessId: userInfo.value.businessId
-        })
-      })
+    if (SaleOrder.status == 'Completed') {
+      // SaleOrder.saleOrderItemsRequestDTO.forEach(async (item) => {
+      //   const product_value = await api.api.product.getProduct(String(item.productId))
+      //   const increase_quantity = product_value['stockQuantity'] + item.quantity
+      //   await api.api.product.updateProduct(String(item.productId), {
+      //     name: product_value['name'],
+      //     capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
+      //     categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
+      //     businessId: userInfo.value.businessId
+      //   })
+      // })
       isDisabled.value = true
     }
     ui.success(t('success.save'))
     loading.value = false;
     route.push({ path: '../saleOrders' })
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 
 async function deleteSaleItem(item) {
-  try{
+  try {
     const index = saleOrderItems.value.indexOf(item);
     if (index > -1) {
       saleOrderItems.value.splice(index, 1);
@@ -269,13 +271,13 @@ async function deleteSaleItem(item) {
         value: item.productId,
       });
     }
-    ui.success("delete sucessfull")
+    ui.success('delete sucessfull')
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 async function onProductSelect() {
-  try{
+  try {
     if (!product.value) return;
 
     const selectedProduct = productOptions.value.find((item) => item.value === product.value);
@@ -286,7 +288,7 @@ async function onProductSelect() {
       productId: product.value,
       name: selectedProduct.label,
       quantity: 0,
-      unitPrice: (await p).capitalPrice,
+      unitPrice: (await p).salePrice,
       note: null,
     });
     // Loại bỏ sản phẩm vừa chọn khỏi productOptions
@@ -295,12 +297,12 @@ async function onProductSelect() {
     // Reset product selection
     product.value = null;
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 
 async function addCategory(scope) {
-  try{
+  try {
     loading.value = true
     const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId })
     const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
@@ -312,13 +314,13 @@ async function addCategory(scope) {
     loading.value = false
     ui.success(t('success.add'))
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 
 
 async function addBranchProduct(scope) {
-  try{
+  try {
     loading.value = true
     const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
     const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
@@ -330,12 +332,12 @@ async function addBranchProduct(scope) {
     loading.value = false
     ui.success(t('success.add'))
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 
 async function AddProduct() {
-  try{
+  try {
     loading.value = true
     const productId = await api.api.product.createProduct(productAdd)
     const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
@@ -354,7 +356,7 @@ async function AddProduct() {
     loading.value = false
     ui.success(t('success.add'))
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

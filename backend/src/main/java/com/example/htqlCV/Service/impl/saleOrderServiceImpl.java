@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.saleOrdersRequestDTO;
 import com.example.htqlCV.Model.business;
+import com.example.htqlCV.Model.product;
 import com.example.htqlCV.Model.saleOrders;
 import com.example.htqlCV.Respository.businessRespository;
 import com.example.htqlCV.Respository.customerRespository;
+import com.example.htqlCV.Respository.productRespository;
 import com.example.htqlCV.Respository.saleOrderItemsRespository;
 import com.example.htqlCV.Respository.saleOrdersRespository;
 import com.example.htqlCV.Service.saleOrderItemsServices;
@@ -24,6 +26,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
     private final saleOrderItemsServices saleOrderItemsServices;
     private final saleOrderItemsRespository saleOrderItemsRespository;
     private final businessRespository businessRespository;
+    private final productRespository productRespository;
     @Override
     public List<saleOrders> getAllSaleOrders(UUID businessId){
         business business_value=businessRespository.findById(businessId).orElse(null);
@@ -51,6 +54,13 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         for (var item:saleOrdersRequestDTO.getSaleOrderItemsRequestDTO()){
             item.setSaleOrdersId(saleOrderId);
             saleOrderItemsServices.createSaleOrderItems(item);
+            if("Completed".equals(saleOrdersRequestDTO.getStatus())){
+                product product_value=productRespository.findById(item.getProductId()).orElse(null);
+                Long decreaseQuantity=product_value.getStockQuantity()-item.getQuantity();
+                product_value.setStockQuantity(decreaseQuantity);
+                productRespository.save(product_value);
+                
+            }
         }
         return saleOrderId;
     } 
@@ -73,7 +83,28 @@ public class saleOrderServiceImpl implements saleOrdersServices{
                 else{
                     saleOrderItemsServices.createSaleOrderItems(item);
                 }
+                if("Completed".equals(saleOrdersRequestDTO.getStatus())){
+                    product product_value=productRespository.findById(item.getProductId()).orElse(null);
+                    Long decreaseQuantity=product_value.getStockQuantity()-item.getQuantity();
+                    product_value.setStockQuantity(decreaseQuantity);
+                    productRespository.save(product_value);
+                }
             }
+        }
+    }
+
+    @Override
+    public void refundSaleOrder(UUID id,saleOrdersRequestDTO saleOrdersRequestDTO){
+        if("Refunded".equals(saleOrdersRequestDTO.getStatus())){
+            for (var item:saleOrdersRequestDTO.getSaleOrderItemsRequestDTO()){
+                product product_value=productRespository.findById(item.getProductId()).orElse(null);
+                Long increaseQuantity=product_value.getStockQuantity()+item.getQuantity();
+                product_value.setStockQuantity(increaseQuantity);
+                productRespository.save(product_value);
+            }
+            saleOrders saleOrders_value=saleOrdersRespository.findById(id).orElse(null);
+            saleOrders_value.setStatus(saleOrdersRequestDTO.getStatus());
+            saleOrdersRespository.save(saleOrders_value);
         }
     }
     @Override
@@ -83,5 +114,17 @@ public class saleOrderServiceImpl implements saleOrdersServices{
             saleOrderItemsRespository.deleteById(item.getId());
         }
         saleOrdersRespository.deleteById(id);
+    }
+    @Override
+    public Long getTotalAmountThisMonthByBusinessId(UUID businessId){
+        var total= saleOrdersRespository.getTotalAmountThisMonthByBusinessId(businessId);
+        if (total==null){
+            return (long) 0;
+        }
+        return total;
+    }
+    @Override
+    public Long getMonthlyProfitByBusinessId(UUID businessId){
+        return saleOrdersRespository.getMonthlyProfitByBusinessId(businessId);
     }
 }

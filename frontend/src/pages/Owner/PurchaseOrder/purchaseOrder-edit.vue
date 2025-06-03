@@ -5,13 +5,13 @@
       spellcheck="false">
       <div class="row">
         <div class="col-7">
-          <q-select v-model="product" :options="productOptions" :label="t('purchase_order.product')" map-options emit-value
-            @update:model-value="onProductSelect" :disable="isDisabled">
+          <q-select v-model="product" :options="productOptions" :label="t('purchase_order.product')" map-options
+            emit-value @update:model-value="onProductSelect" :disable="isDisabled">
             <template v-slot:append>
               <q-btn round dense flat icon="add" @click="openDiaglog = true" />
             </template>
           </q-select>
-          <q-table :rows="purchaseOrderItems" :columns="columns" :loading="loading" row-key="id">
+          <q-table :rows="purchaseOrderItems" :columns="columns" :loading="loading" row-key='id'>
             <template v-slot:body-cell-quantity="props">
               <q-td :props="props">
                 <q-input v-model.number="props.row.quantity" type="number" dense borderless
@@ -45,9 +45,9 @@
           <q-dialog v-model="openDiaglog">
             <q-card>
               <q-card-section class="q-pt-none">
-                <q-input v-model="productAdd.name" :label=" t('purchase_order.product_name')" required />
-                <q-select v-model="productAdd.categoryId" :options="categoryOptions" :label=" t('purchase_order.product_category')" map-options
-                  emit-value>
+                <q-input v-model="productAdd.name" :label="t('purchase_order.product_name')" required />
+                <q-select v-model="productAdd.categoryId" :options="categoryOptions"
+                  :label="t('purchase_order.product_category')" map-options emit-value>
                   <template v-slot:append>
                     <q-btn round dense flat icon="add" @click="openPopupCategory = true" />
                     <q-popup-edit v-model="newCategoryName" v-model:opened="openPopupCategory" v-slot="scope">
@@ -64,8 +64,8 @@
                   </template>
                 </q-select>
 
-                <q-select v-model="productAdd.branchProductId" :options="branchProductOptions" :label="t('purchase_order.product_branch_product')"
-                  map-options emit-value>
+                <q-select v-model="productAdd.branchProductId" :options="branchProductOptions"
+                  :label="t('purchase_order.product_branch_product')" map-options emit-value>
                   <template v-slot:append>
                     <q-btn round dense flat icon="add" @click="openPopupBranchProduct = true" />
                     <q-popup-edit v-model="newBranchProductName" v-model:opened="openPopupBranchProduct" v-slot="scope">
@@ -92,25 +92,29 @@
         </div>
         <div class="col-1"></div>
         <div class="col-4">
-          <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions" :label="t('purchase_order.product_supplier')" map-options
-            emit-value use-input :filter="customFilter" input-debounce="300"
-            :rules="[val => !!val || t('category.required')]">
+          <q-select v-model="purchaseOrder.supplierId" :options="supplierOptions"
+            :label="t('purchase_order.product_supplier')" map-options emit-value use-input :filter="customFilter"
+            input-debounce="300" :rules="[val => !!val || t('category.required')]">
           </q-select>
-          <q-input v-model="purchaseOrder.totalAmount" :label="t('purchase_order.total_amound')" type="number" readonly />
-          <q-input v-model="purchaseOrder.totalAmountPaid" :label="t('purchase_order.total_amound_paid')" type="number" />
-          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid" :label="t('purchase_order.dept')" type="number"
+          <q-input v-model="purchaseOrder.totalAmount" :label="t('purchase_order.total_amound')" type="number"
             readonly />
-          <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions" :label="t('purchase_order.sub_status')">
+          <q-input v-model="purchaseOrder.totalAmountPaid" :label="t('purchase_order.total_amound_paid')"
+            type="number" />
+          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid"
+            :label="t('purchase_order.dept')" type="number" readonly />
+          <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions"
+            :label="t('purchase_order.sub_status')">
           </q-select>
-          <q-select v-model="purchaseOrder.status" :options="statusOptions" :label="t('purchase_order.status')" map-options emit-value
-            :disable="isDisabled">
+          <q-select v-model="purchaseOrder.status" :options="statusOptions" :label="t('purchase_order.status')"
+            map-options emit-value :disable="isDisabled">
           </q-select>
         </div>
       </div>
       <q-dialog v-model="openDiaglogOrder">
         <q-card style="width: 66vw; max-width: 90vw">
           <q-card-section class="q-pt-none">
-            <order :purchaseOrderId="route.params.id as string" :paid="purchaseOrder.totalAmountPaid" :businessId="String(userInfo.businessId)"></order>
+            <order :purchaseOrderId="route.params.id as string" :paid="purchaseOrder.totalAmountPaid"
+              :businessId="String(userInfo.businessId)"></order>
           </q-card-section>
           <q-card-actions align="right" class="text-primary">
             <q-btn flat label="Close" v-close-popup />
@@ -121,8 +125,10 @@
       <div class="row">
         <div class="col q-gutter-md">
           <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
-          <q-btn :label="t('button.close')" icon="close" type="button" to="../../purchaseOrders" outline color="grey-9" />
-          <q-btn :label="t('button.view_order')" @click="openDiaglogOrder = true" type="button" outline color="grey-9" />
+          <q-btn :label="t('button.close')" icon="close" type="button" to="../../purchaseOrders" outline
+            color="grey-9" />
+          <q-btn :label="t('button.view_order')" @click="openDiaglogOrder = true" type="button" outline
+            color="grey-9" />
         </div>
       </div>
     </q-form>
@@ -142,8 +148,8 @@ import Order from '../../../components/OrderPurchaseInvoice.vue'
 const route = useRoute();
 const loading = ref(false);
 const supplierOptions = ref([])
-const subStatusOptions = ["None", "Not Paid"]
-const statusOptions = ["None", "Processing", "Completed", "Cancelled"]
+const subStatusOptions = ['None', 'Not Paid']
+const statusOptions = ['None', 'Processing', 'Completed', 'Cancelled']
 const categoryOptions = ref([])
 const branchProductOptions = ref([])
 const openPopupCategory = ref(false)
@@ -156,8 +162,8 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   supplierId: null,
-  subStatus: "None",
-  status: "None",
+  subStatus: 'None',
+  status: 'None',
   purchaseOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -209,7 +215,7 @@ watch(totalAmount, (newTotal) => {
 
 });
 async function fetch() {
-  try{
+  try {
     loading.value = true;
     const SupplierRes = await api.api.supplier.getSuppiers(userInfo.value.businessId);
     supplierOptions.value = SupplierRes.map((item) => ({
@@ -232,10 +238,10 @@ async function fetch() {
 
     const purchaseOrderRes = await api.api.purchaseOrder.getPurchaseOrder(route.params.id as string)
     Object.assign(purchaseOrder, purchaseOrderRes)
-    if (["Completed", "Cancelled"].includes(purchaseOrder.status)) {
+    if (['Cancelled', 'Cancelled'].includes(purchaseOrder.status)) {
       isDisabled.value = true
     }
-    purchaseOrder.supplierId = purchaseOrderRes["supplier"]["id"]
+    purchaseOrder.supplierId = purchaseOrderRes['supplier']['id']
     const purchaseOrderItemsRes = await api.api.purchaseOrderItem.getPurchaseOrderItemsbyPurchaseOrder(route.params.id as string)
     purchaseOrderItems.value = purchaseOrderItemsRes.map((item) => ({
       id: item.id,
@@ -261,13 +267,13 @@ async function fetch() {
     });
     loading.value = false;
   }
-  catch{
-   ui.error(t('error.unknown'))
+  catch {
+    ui.error(t('error.unknown'))
   }
 
 }
 async function save() {
-  try{
+  try {
     loading.value = true;
     purchaseOrder.purchaseOrderItemsRequestDTO = purchaseOrderItems.value.map((item) => ({
       id: item.id,
@@ -279,7 +285,7 @@ async function save() {
     }))
 
     await api.api.purchaseOrder.updatePurchaseOrder(route.params.id as string, purchaseOrder)
-    if (purchaseOrder.status == "Completed") {
+    if (purchaseOrder.status == 'Cancelled') {
       purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
         const product_value = await api.api.product.getProduct(String(item.productId))
         const increase_quantity = product_value['stockQuantity'] + item.quantity
@@ -292,13 +298,13 @@ async function save() {
       })
       isDisabled.value = true
     }
-    if (purchaseOrder.status == "Cancelled") {
+    if (purchaseOrder.status == 'Cancelled') {
       isDisabled.value = false
     }
     loading.value = false;
     ui.success(t('success.save'))
-    } catch {
-   ui.error(t('error.unknown'))
+  } catch {
+    ui.error(t('error.unknown'))
   }
 }
 
@@ -306,9 +312,9 @@ async function deletePurchaseItem(item) {
   loading.value = true
   try {
     await api.api.purchaseOrderItem.deletePurchaseOrderItems(item.id)
-    ui.success("delete sucessfull")
-  } catch  {
-   ui.error(t('error.unknown'))
+    ui.success('delete sucessfull')
+  } catch {
+    ui.error(t('error.unknown'))
   }
   finally {
     const index = purchaseOrderItems.value.indexOf(item);
@@ -327,7 +333,7 @@ async function deletePurchaseItem(item) {
   }
 }
 async function onProductSelect() {
-  try{
+  try {
     if (!product.value) return;
 
     const selectedProduct = productOptions.value.find((item) => item.value === product.value);
@@ -347,13 +353,13 @@ async function onProductSelect() {
 
     // Reset product selection
     product.value = null;
-    } catch {
-   ui.error(t('error.unknown'))
+  } catch {
+    ui.error(t('error.unknown'))
   }
 }
 
 async function addCategory(scope) {
-  try{
+  try {
     loading.value = true
     const res = await api.api.category.createCategory({ name: scope.value, businessId: userInfo.value.businessId })
     const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
@@ -365,13 +371,13 @@ async function addCategory(scope) {
     loading.value = false
     ui.success(t('success.add'))
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 
 
 async function addBranchProduct(scope) {
-  try{
+  try {
     loading.value = true
     const res = await api.api.branchProduct.createBranchProduct({ name: scope.value, businessId: userInfo.value.businessId })
     const branchProductRes = await api.api.branchProduct.getBranchProducts(String(userInfo.value.businessId))
@@ -383,12 +389,12 @@ async function addBranchProduct(scope) {
     loading.value = false
     ui.success(t('success.add'))
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 
 async function AddProduct() {
-  try{
+  try {
     loading.value = true
     const productId = await api.api.product.createProduct(productAdd)
     const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
@@ -407,7 +413,7 @@ async function AddProduct() {
     loading.value = false
     ui.success(t('success.add'))
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

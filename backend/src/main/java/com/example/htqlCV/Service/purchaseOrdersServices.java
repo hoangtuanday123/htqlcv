@@ -11,4 +11,5 @@ public interface  purchaseOrdersServices {
     UUID createPurchaseOrders(purchaseOrdersRequestDTO purchaseOrders);
     void updatePurchaseOrders(UUID id, purchaseOrdersRequestDTO purchaseOrders);
     void deletePurchaseOrders(UUID id);
+    Long getTotalAmountThisMonthByBusinessId(UUID businessId);
 }

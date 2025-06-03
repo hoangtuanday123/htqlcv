@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>{{t('supplier.create')}}</h1>
+        <h1>{{ t('supplier.create') }}</h1>
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
             <q-input v-model="supplier.company" :label="t('supplier.company')" />
@@ -14,14 +14,15 @@
             <div class="row">
                 <div class="col q-gutter-md">
                     <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
-                    <q-btn :label="t('button.close')" icon="close" type="button" to="../suppliers" outline color="grey-9" />
+                    <q-btn :label="t('button.close')" icon="close" type="button" to="../suppliers" outline
+                        color="grey-9" />
                 </div>
             </div>
         </q-form>
     </q-page>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
@@ -46,13 +47,13 @@ let supplier: SupplierRequest = reactive({
 })
 
 async function save() {
-    try{
+    try {
         loading.value = true
         await api.api.supplier.createSupplier(supplier)
         loading.value = false
         router.push({ path: '../suppliers' })
     } catch {
-       ui.error(t('error.unknown'))
+        ui.error(t('error.unknown'))
     }
 }
 </script>

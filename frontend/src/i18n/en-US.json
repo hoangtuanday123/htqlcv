@@ -25,7 +25,8 @@
   "success": {
     "add": "Add successfull",
     "save": "Save successfull",
-    "delete": "Delete successfull"
+    "delete": "Delete successfull",
+    "refund": "Refund successfull"
   },
   "error": {
     "unknown": "Unknown"
@@ -192,6 +193,7 @@
     "search": "Search",
     "add": "Add",
     "create": "Create",
-    "view_order": "View Order"
+    "view_order": "View Order",
+    "refund": "Refund"
   }
 }

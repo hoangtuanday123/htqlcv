@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>{{t('supplier.title')}}</h1>
+        <h1>{{ t('supplier.title') }}</h1>
         <div class="row q-gutter-md q-mb-md">
             <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
                 <template v-slot:append>
@@ -22,7 +22,7 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import api, { Supplier } from '../../../services/api';
 import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
@@ -45,29 +45,29 @@ const columns = [
 ];
 
 function search(rows, terms) {
-    const lowerTerms = terms ? terms.toLowerCase() : ""
-    return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : suppliers
+    const lowerTerms = terms ? terms.toLowerCase() : ''
+    return lowerTerms != '' ? rows.filter(row => row.name.includes(lowerTerms)) : suppliers
 }
 async function fetchSuppliers() {
-    try{
+    try {
         loading.value = true;
         const res = await api.api.supplier.getSuppiers(userInfo.value.businessId);
         suppliers.value = res;
         loading.value = false;
     } catch {
-       ui.error(t('error.unknown'))
+        ui.error(t('error.unknown'))
     }
 }
 
 async function deleteSupplier(supplier) {
-    try{
+    try {
         loading.value = true;
         await api.api.supplier.deleteSupplier(supplier.id);
         fetchSuppliers();
         loading.value = false;
-        ui.success("delete sucessfull")
+        ui.success('delete sucessfull')
     } catch {
-       ui.error(t('error.unknown'))
+        ui.error(t('error.unknown'))
     }
 }
 onMounted(async () => {

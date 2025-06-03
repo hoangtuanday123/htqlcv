@@ -22,7 +22,7 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import api, { Role } from '../../../services/api';
 const loading = ref(false)
 const roles = ref<Role[]>([])
@@ -33,8 +33,8 @@ const columns = [
 ];
 
 function search(rows, terms) {
-    const lowerTerms = terms ? terms.toLowerCase() : ""
-    return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : roles
+    const lowerTerms = terms ? terms.toLowerCase() : ''
+    return lowerTerms != '' ? rows.filter(row => row.name.includes(lowerTerms)) : roles
 }
 async function fetchRoles() {
     loading.value = true;

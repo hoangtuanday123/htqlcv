@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>{{t('sale_order.title')}}</h1>
+    <h1>{{ t('sale_order.title') }}</h1>
     <div class="row q-gutter-md q-mb-md">
       <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
         <template v-slot:append>
@@ -21,14 +21,14 @@
         <q-td :props="props" auto-width style="min-width: 120px;">
           <q-btn icon="edit" :to="'./saleOrders/' + props.row.id + '/edit'" round text-color="grey-7" />
           <q-btn icon="delete" @click="deletesaleOrder(props.row)" round class="q-ml-sm" text-color="grey-7"
-            v-if="!['Completed', 'Cancelled'].includes(props.row.status)" />
+            v-if="!['Completed', 'Cancelled', 'Refunded'].includes(props.row.status)" />
         </q-td>
       </template>
     </q-table>
   </q-page>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import api, { SaleOrder } from '../../../services/api';
 import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
@@ -50,28 +50,28 @@ const columns = [
 ];
 
 function search(rows, terms) {
-  const lowerTerms = terms ? terms.toLowerCase() : ""
-  return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : SaleOrders
+  const lowerTerms = terms ? terms.toLowerCase() : ''
+  return lowerTerms != '' ? rows.filter(row => row.name.includes(lowerTerms)) : SaleOrders
 }
 async function fetchSaleOrders() {
-  try{
+  try {
     loading.value = true;
     const res = await api.api.saleOrder.getSaleOrders(String(userInfo.value.businessId));
     SaleOrders.value = res;
     loading.value = false;
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 async function deletesaleOrder(saleOrder) {
-  try{
+  try {
     loading.value = true;
     await api.api.saleOrder.deleteSaleOrder(saleOrder.id);
     fetchSaleOrders();
     loading.value = false;
-    ui.success("delete sucessfull")
+    ui.success('delete sucessfull')
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 onMounted(async () => {

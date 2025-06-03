@@ -66,5 +66,11 @@ public class supplierServiceImpl implements supplierServices {
     public void deleteSupplier(UUID id) {
         supplierRespository.deleteById(id);
     }
+
+    @Override
+    public Integer countSupplierByBusiness(UUID businessId){
+        business business_value=businessRespository.findById(businessId).orElse(null);
+        return supplierRespository.countSupplierByBusiness(business_value);
+    }
     
 }

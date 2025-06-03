@@ -128,8 +128,8 @@ import api, { PurchaseOrderRequest, ProductRequest } from '../../../services/api
 const route = useRouter();
 const loading = ref(false);
 const supplierOptions = ref([])
-const subStatusOptions = ["None", "Not Paid"]
-const statusOptions = ["None", "Processing", "Completed", "Cancelled"]
+const subStatusOptions = ['None', 'Not Paid']
+const statusOptions = ['None', 'Processing', 'Completed', 'Cancelled']
 const categoryOptions = ref([])
 const branchProductOptions = ref([])
 const openPopupCategory = ref(false)
@@ -144,8 +144,8 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   supplierId: null,
-  subStatus: "None",
-  status: "None",
+  subStatus: 'None',
+  status: 'None',
   purchaseOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -236,7 +236,7 @@ async function save() {
     }))
     console.log(purchaseOrder)
     await api.api.purchaseOrder.createPurchaseOrder(purchaseOrder)
-    if (purchaseOrder.status == "Completed") {
+    if (purchaseOrder.status == 'Completed') {
       purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
         const product_value = await api.api.product.getProduct(String(item.productId))
         const increase_quantity = product_value['stockQuantity'] + item.quantity
@@ -270,7 +270,7 @@ async function deletePurchaseItem(item) {
         value: item.productId,
       });
     }
-    ui.success("delete sucessfull")
+    ui.success('delete sucessfull')
   }
   catch {
     ui.error(t('error.unknown'))

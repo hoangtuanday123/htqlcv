@@ -51,8 +51,8 @@ const columns = [
 ];
 
 function search(rows, terms) {
-  const lowerTerms = terms ? terms.toLowerCase() : ""
-  return lowerTerms != "" ? rows.filter(row => row.name.includes(lowerTerms)) : categories
+  const lowerTerms = terms ? terms.toLowerCase() : ''
+  return lowerTerms != '' ? rows.filter(row => row.name.includes(lowerTerms)) : categories
 }
 async function fetchCategory() {
   try {

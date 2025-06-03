@@ -87,8 +87,8 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   supplierId: null,
-  subStatus: "None",
-  status: "None",
+  subStatus: 'None',
+  status: 'None',
   purchaseOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -124,10 +124,10 @@ async function fetch() {
     loading.value = true;
     const purchaseOrderRes = await api.api.purchaseOrder.getPurchaseOrder(String(props.purchaseOrderId))
     Object.assign(purchaseOrder, purchaseOrderRes)
-    supplier.value.name = purchaseOrderRes["supplier"]["name"]
-    supplier.value.phone = purchaseOrderRes["supplier"]["phone"]
-    supplier.value.address = purchaseOrderRes["supplier"]["address"]
-    supplier.value.mst = purchaseOrderRes["supplier"]["mst"]
+    supplier.value.name = purchaseOrderRes['supplier']['name']
+    supplier.value.phone = purchaseOrderRes['supplier']['phone']
+    supplier.value.address = purchaseOrderRes['supplier']['address']
+    supplier.value.mst = purchaseOrderRes['supplier']['mst']
     createDate.value = new Date(purchaseOrderRes['createdAt']).toLocaleDateString()
     const purchaseOrderItemsRes = await api.api.purchaseOrderItem.getPurchaseOrderItemsbyPurchaseOrder(String(props.purchaseOrderId))
     purchaseOrderItems.value = purchaseOrderItemsRes.map((item) => ({
@@ -173,7 +173,7 @@ async function downloadPdf() {
     pdf.save(`HoaDon_${props.purchaseOrderId}.pdf`);
     printButton.style.display = 'block'
     loading.value = false
-    ui.success("download sucessfull")
+    ui.success('download sucessfull')
   } catch {
     ui.error(t('error.unknown'))
   }
@@ -262,7 +262,7 @@ function printInvoice() {
       printWindow.print()
       printWindow.close()
     }, 500)
-    ui.success("print sucessfull")
+    ui.success('print sucessfull')
   } catch {
     ui.error(t('error.unknown'))
   }

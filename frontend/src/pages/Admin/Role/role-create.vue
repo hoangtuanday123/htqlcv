@@ -16,7 +16,7 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { RoleRequest } from '../../../services/api'
 const router = useRouter()

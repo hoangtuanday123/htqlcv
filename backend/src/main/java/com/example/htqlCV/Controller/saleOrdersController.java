@@ -41,6 +41,10 @@ public class saleOrdersController {
     public void updateSaleOrder(@PathVariable UUID id, @RequestBody saleOrdersRequestDTO saleOrdersRequestDTO) {
         saleOrdersServices.updateSaleOrder(id, saleOrdersRequestDTO);
     }
+    @PutMapping("/{id}/refund")
+    public void refundSaleOrder(@PathVariable UUID id, @RequestBody saleOrdersRequestDTO saleOrdersRequestDTO) {
+        saleOrdersServices.refundSaleOrder(id, saleOrdersRequestDTO);
+    }
     @DeleteMapping("/{id}/delete")
     public void deleteSaleOrder(@PathVariable UUID id){
         saleOrdersServices.deleteSaleOrder(id);

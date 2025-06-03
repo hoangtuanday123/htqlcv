@@ -11,4 +11,5 @@ public interface  customerServices {
     UUID createCustomer(customerRequestDTO customer);
     void updateCustomer(UUID id, customerRequestDTO customer);
     void deleteCustomer(UUID id);
+    Integer countCustomerByBusiness(UUID businessId);
 }

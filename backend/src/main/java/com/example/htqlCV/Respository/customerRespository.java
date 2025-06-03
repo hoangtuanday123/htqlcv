@@ -11,4 +11,5 @@ import com.example.htqlCV.Model.customer;
 @Repository
 public interface  customerRespository extends JpaRepository<customer, UUID> {
     List<customer> findByBusiness(business business);
+    Integer countCustomerByBusiness(business business);
 }

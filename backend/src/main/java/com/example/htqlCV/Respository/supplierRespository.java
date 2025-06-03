@@ -11,5 +11,6 @@ import com.example.htqlCV.Model.supplier;
 @Repository
 public interface  supplierRespository extends JpaRepository<supplier, UUID> {
     List<supplier> findByBusiness(business business);
+    Integer countSupplierByBusiness(business business);
 
 }

@@ -237,7 +237,7 @@ async function deleteGuarantee(guarantee) {
     const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
     guarantees.value = guaranteeRes;
     loading.value = false;
-    ui.success("delete sucessfull")
+    ui.success('delete sucessfull')
   }
   catch {
     ui.error(t('error.unknown'))
@@ -253,7 +253,7 @@ async function createGuarantee() {
     const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
     guarantees.value = guaranteeRes;
     loading.value = false;
-    ui.success("create sucessfull")
+    ui.success('create sucessfull')
   }
   catch {
     ui.error(t('error.unknown'))

@@ -11,4 +11,5 @@ public interface productServices {
     UUID createProduct(productRequestDTO product);
     void updateProduct(UUID id, productRequestDTO product);
     void deleteProduct(UUID id);
+    Integer getTotalStockQuantityByBusinessId(UUID businessId);
 }

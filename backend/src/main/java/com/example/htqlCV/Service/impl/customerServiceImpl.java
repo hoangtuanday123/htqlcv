@@ -73,4 +73,10 @@ public class customerServiceImpl implements customerServices {
     public void deleteCustomer(UUID id){
         customerRespository.deleteById(id);
     }
+
+    @Override
+    public Integer countCustomerByBusiness(UUID businessId){
+        business business_value=businessRespository.findById(businessId).orElse(null);
+        return customerRespository.countCustomerByBusiness(business_value);
+    }
 }

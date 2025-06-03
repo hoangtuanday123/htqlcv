@@ -20,4 +20,5 @@ public interface  userSevices {
     void deleteUser(UUID id);
     currentUser getCurrentUser(String username);
     void changePassword(changePasswordRequestDTO changePasswordRequestDTO, String username);
+    Integer countUserByBusiness(UUID businessId);
 }

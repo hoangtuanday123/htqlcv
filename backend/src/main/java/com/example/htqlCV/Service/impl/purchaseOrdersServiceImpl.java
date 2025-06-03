@@ -83,4 +83,13 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         }
         purchaseOrdersRespository.deleteById(id);
     }
+    @Override
+    public Long getTotalAmountThisMonthByBusinessId(UUID businessId){
+        var total= purchaseOrdersRespository.getTotalAmountThisMonthByBusinessId(businessId);
+        if (total==null){
+            return (long) 0;
+        }
+        return total;
+    }
+    
 }

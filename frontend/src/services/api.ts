@@ -244,6 +244,16 @@ export interface ChangePassword {
   newPassword: string;
   confirmPassword: string;
 }
+
+export interface DashBoard {
+  totalCustomer: number;
+  totalStaff: number;
+  totalSupplier: number;
+  totalAmoundThisMonth: number;
+  totalAmoundPurchaseThisMonth: number;
+  totalProfit: number;
+  stockQuantity: number;
+}
 axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
@@ -312,8 +322,8 @@ const user = {
   deleteUser: (id: string) => request.delete<void>(`/user/${id}/delete`),
   getCurrentUser: () => request.get<string>('/user/current_user'),
   ChangePassword: (data: ChangePassword) => request.put<void>('/user/changePassword', data),
-  createStaff:(data: User) => request.post<void>('/user/createStaff', data),
-  getStaffs: (businessId:string) => request.get<User[]>(`/user/staffs?businessId=${businessId}`),
+  createStaff: (data: User) => request.post<void>('/user/createStaff', data),
+  getStaffs: (businessId: string) => request.get<User[]>(`/user/staffs?businessId=${businessId}`),
 }
 
 const role = {
@@ -324,6 +334,7 @@ const role = {
   deleteRole: (id: string) => request.delete<void>(`/role/${id}/delete`),
 
 }
+
 
 const customer = {
   getCustomers: (businessId: number) => request.get<Customer[]>(`/customer?businessId=${businessId}`),
@@ -404,6 +415,7 @@ const saleOrder = {
   createSaleOrder: (data: SaleOrderRequest) => request.post<number>('/saleOrders/', data),
   deleteSaleOrder: (id: string) => request.delete<void>(`/saleOrders/${id}/delete`),
   updateSaleOrder: (id: string, data: SaleOrderRequest) => request.put<void>(`/saleOrders/${id}/update`, data),
+  refundSaleOrder: (id: string, data: SaleOrderRequest) => request.put<void>(`/saleOrders/${id}/refund`, data),
 
 }
 
@@ -415,6 +427,11 @@ const business = {
   blockBusiness: (id: string) => request.put<void>(`/businesses/${id}/block`, {}),
   openBlockBusiness: (id: string) => request.put<void>(`/businesses/${id}/open`, {}),
 }
+
+const dashboard = {
+  getDashboard: (businessId: string) => request.get<DashBoard>(`/dashboard?businessId=${businessId}`)
+}
+
 const api = {
   auth,
   user,
@@ -429,7 +446,8 @@ const api = {
   purchaseOrderItem,
   saleOrderItem,
   saleOrder,
-  business
+  business,
+  dashboard
 };
 
 export default { api };

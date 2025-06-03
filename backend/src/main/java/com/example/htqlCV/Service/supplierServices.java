@@ -11,4 +11,5 @@ public interface  supplierServices {
     UUID createSupplier(supplierRequestDTO supplier);
     void updateSupplier(UUID id, supplierRequestDTO supplier);
     void deleteSupplier(UUID id);
+    Integer countSupplierByBusiness(UUID businessId);
 }
