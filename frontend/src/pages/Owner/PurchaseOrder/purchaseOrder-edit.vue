@@ -129,6 +129,8 @@
             color="grey-9" />
           <q-btn :label="t('button.view_order')" @click="openDiaglogOrder = true" type="button" outline
             color="grey-9" />
+          <q-btn :label="t('button.refund')" @click="refund" type="button" outline color="grey-9"
+            v-if="purchaseOrder.status == 'Completed'" />
         </div>
       </div>
     </q-form>
@@ -238,7 +240,7 @@ async function fetch() {
 
     const purchaseOrderRes = await api.api.purchaseOrder.getPurchaseOrder(route.params.id as string)
     Object.assign(purchaseOrder, purchaseOrderRes)
-    if (['Cancelled', 'Cancelled'].includes(purchaseOrder.status)) {
+    if (['Completed', 'Cancelled', 'Refunded'].includes(purchaseOrder.status)) {
       isDisabled.value = true
     }
     purchaseOrder.supplierId = purchaseOrderRes['supplier']['id']
@@ -285,17 +287,17 @@ async function save() {
     }))
 
     await api.api.purchaseOrder.updatePurchaseOrder(route.params.id as string, purchaseOrder)
-    if (purchaseOrder.status == 'Cancelled') {
-      purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
-        const product_value = await api.api.product.getProduct(String(item.productId))
-        const increase_quantity = product_value['stockQuantity'] + item.quantity
-        await api.api.product.updateProduct(String(item.productId), {
-          name: product_value['name'],
-          capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
-          categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
-          businessId: userInfo.value.businessId
-        })
-      })
+    if (purchaseOrder.status == 'Completed') {
+      // purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
+      //   const product_value = await api.api.product.getProduct(String(item.productId))
+      //   const increase_quantity = product_value['stockQuantity'] + item.quantity
+      //   await api.api.product.updateProduct(String(item.productId), {
+      //     name: product_value['name'],
+      //     capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
+      //     categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
+      //     businessId: userInfo.value.businessId
+      //   })
+      // })
       isDisabled.value = true
     }
     if (purchaseOrder.status == 'Cancelled') {
@@ -308,6 +310,25 @@ async function save() {
   }
 }
 
+async function refund() {
+  try {
+    loading.value = true;
+    purchaseOrder.status = 'Refunded'
+    purchaseOrder.purchaseOrderItemsRequestDTO = purchaseOrderItems.value.map((item) => ({
+      id: item.id,
+      productId: item.productId,
+      purchaseOrdersId: null,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      note: item.note
+    }))
+    await api.api.purchaseOrder.refundPurchaseOrder(route.params.id as string, purchaseOrder)
+    loading.value = false;
+    ui.success(t('success.refund'))
+  } catch {
+    ui.error(t('error.unknown'))
+  }
+}
 async function deletePurchaseItem(item) {
   loading.value = true
   try {

@@ -195,5 +195,16 @@
     "create": "Create",
     "view_order": "View Order",
     "refund": "Refund"
+  },
+  "dashboard": {
+    "customer": "Customer",
+    "staff": "Staff",
+    "supplier": "Supplier",
+    "monthly_income": "Monthly Income",
+    "monthly_profit": "Monthly Profit",
+    "monthly_purchase_capital": "Monthly Purchase Capital",
+    "stock_quantity": "Stock Quantity",
+    "product_sale_title": "Product Sales Stats",
+    "product_sale_body": "Monthly sales of each product"
   }
 }

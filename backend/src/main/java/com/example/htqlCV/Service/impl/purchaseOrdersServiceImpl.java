@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.purchaseOrdersRequestDTO;
 import com.example.htqlCV.Model.business;
+import com.example.htqlCV.Model.product;
 import com.example.htqlCV.Model.purchaseOrders;
 import com.example.htqlCV.Respository.businessRespository;
+import com.example.htqlCV.Respository.productRespository;
 import com.example.htqlCV.Respository.purchaseOrderItemRespository;
 import com.example.htqlCV.Respository.purchaseOrdersRespository;
 import com.example.htqlCV.Respository.supplierRespository;
@@ -24,6 +26,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
     private final purchaseOrderItemsServices purchaseOrderItemsServices;
     private final purchaseOrderItemRespository purchaseOrderItemRespository;
     private final businessRespository businessRespository;
+    private final productRespository productRespository;
     @Override
     public List<purchaseOrders> getAllPurchaseOrders(UUID businessId) {
         business business_value=businessRespository.findById(businessId).orElse(null);
@@ -50,6 +53,12 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         for (var item : purchaseOrdersRequestDTO.getPurchaseOrderItemsRequestDTO()) {
             item.setPurchaseOrdersId(purchaseOrdersId);
             purchaseOrderItemsServices.createPurchaseOrderItems(item);
+            if("Completed".equals(purchaseOrdersRequestDTO.getStatus())){
+                product product_value=productRespository.findById(item.getProductId()).orElse(null);
+                Long increaseQuantity=product_value.getStockQuantity()+item.getQuantity();
+                product_value.setStockQuantity(increaseQuantity);
+                productRespository.save(product_value);
+            }
         }
         return purchaseOrdersId;
     }
@@ -72,6 +81,12 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
                 } else {
                     purchaseOrderItemsServices.createPurchaseOrderItems(item);
                 }
+                if("Completed".equals(purchaseOrdersRequestDTO.getStatus())){
+                    product product_value=productRespository.findById(item.getProductId()).orElse(null);
+                    Long increaseQuantity=product_value.getStockQuantity()+item.getQuantity();
+                    product_value.setStockQuantity(increaseQuantity);
+                    productRespository.save(product_value);
+                }
             }
         }
     }
@@ -91,5 +106,18 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         }
         return total;
     }
-    
+    @Override
+    public void refundPurchaseOrder(UUID id,purchaseOrdersRequestDTO purchaseOrdersRequestDTO){
+        if("Refunded".equals(purchaseOrdersRequestDTO.getStatus())){
+            for (var item:purchaseOrdersRequestDTO.getPurchaseOrderItemsRequestDTO()){
+                product product_value=productRespository.findById(item.getProductId()).orElse(null);
+                Long decreaseQuantity=product_value.getStockQuantity()-item.getQuantity();
+                product_value.setStockQuantity(decreaseQuantity);
+                productRespository.save(product_value);
+            }
+            purchaseOrders purchaseOrders_value=purchaseOrdersRespository.findById(id).orElse(null);
+            purchaseOrders_value.setStatus(purchaseOrdersRequestDTO.getStatus());
+            purchaseOrdersRespository.save(purchaseOrders_value);
+        }
+    }
 }

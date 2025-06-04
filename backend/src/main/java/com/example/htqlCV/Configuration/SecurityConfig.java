@@ -47,17 +47,17 @@ public class SecurityConfig {
             "/user/current_user", "/user/changePassword"
     };
     private final String[] ADMIN_ENDPOINTS = {
-            "/role/**", "/user/{id}", "/user/{id}/update", "/user/{id}delete", "/user/createStaff", "/user/staffs","/dashboard"
+            "/role/**", "/user/{id}", "/user/{id}/update", "/user/{id}delete", "/user/createStaff", "/user/staffs","/dashboard","/dashboard/**"
 
     };
     private final String[] OWNER_ENDPOINTS = {
             "/category/**", "/branchProduct/**", "/supplier/**", "/customer/**", "/product/**",
             "/saleOrderItems/**", "/saleOrders/**", "/purchaseOrders/**", "/purchaseOrderItems/**",
-            "/user/createStaff", "/user/staffs", "/user/{id}/update", "/user/{id}", "/product","/dashboard"
+            "/user/createStaff", "/user/staffs", "/user/{id}/update", "/user/{id}", "/product","/dashboard","/dashboard/**"
     };
     private final String[] STAFF_ENDPOINTS = {
             "/category/**", "/branchProduct/**", "/supplier/**", "/customer/**", "/product/**",
-            "/saleOrderItems/**", "/saleOrders/**", "/purchaseOrders/**", "/purchaseOrderItems/**", "/product","/dashboard"
+            "/saleOrderItems/**", "/saleOrders/**", "/purchaseOrders/**", "/purchaseOrderItems/**", "/product","/dashboard","/dashboard/**"
     };
 
     @Bean

@@ -45,5 +45,9 @@ public class purchaseOrdersController {
     public void updatePurchaseOrders(@PathVariable UUID id, @RequestBody purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
         purchaseOrdersServices.updatePurchaseOrders(id, purchaseOrdersRequestDTO);
     }
+    @PutMapping("/{id}/refund")
+    public void refundPurchaseOrder(@PathVariable UUID id, @RequestBody purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
+        purchaseOrdersServices.refundPurchaseOrder(id, purchaseOrdersRequestDTO);
+    }
     
 }

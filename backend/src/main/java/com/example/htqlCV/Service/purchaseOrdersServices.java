@@ -12,4 +12,5 @@ public interface  purchaseOrdersServices {
     void updatePurchaseOrders(UUID id, purchaseOrdersRequestDTO purchaseOrders);
     void deletePurchaseOrders(UUID id);
     Long getTotalAmountThisMonthByBusinessId(UUID businessId);
+    void refundPurchaseOrder(UUID id,purchaseOrdersRequestDTO purchaseOrdersRequestDTO);
 }

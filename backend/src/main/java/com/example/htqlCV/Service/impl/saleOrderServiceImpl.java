@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.saleOrdersRequestDTO;
+import com.example.htqlCV.DAO.response.RevenueByProductAndMonth;
 import com.example.htqlCV.Model.business;
 import com.example.htqlCV.Model.product;
 import com.example.htqlCV.Model.saleOrders;
@@ -126,5 +127,10 @@ public class saleOrderServiceImpl implements saleOrdersServices{
     @Override
     public Long getMonthlyProfitByBusinessId(UUID businessId){
         return saleOrdersRespository.getMonthlyProfitByBusinessId(businessId);
+    }
+
+    @Override  
+    public List<RevenueByProductAndMonth> getMonthlyRevenueNative(Integer currentYear,UUID businessId){
+        return saleOrdersRespository.getMonthlyRevenueNative(currentYear, businessId);
     }
 }

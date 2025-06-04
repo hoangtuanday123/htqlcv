@@ -237,16 +237,16 @@ async function save() {
     console.log(purchaseOrder)
     await api.api.purchaseOrder.createPurchaseOrder(purchaseOrder)
     if (purchaseOrder.status == 'Completed') {
-      purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
-        const product_value = await api.api.product.getProduct(String(item.productId))
-        const increase_quantity = product_value['stockQuantity'] + item.quantity
-        await api.api.product.updateProduct(String(item.productId), {
-          name: product_value['name'],
-          capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
-          categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
-          businessId: userInfo.value.businessId
-        })
-      })
+      // purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
+      //   const product_value = await api.api.product.getProduct(String(item.productId))
+      //   const increase_quantity = product_value['stockQuantity'] + item.quantity
+      //   await api.api.product.updateProduct(String(item.productId), {
+      //     name: product_value['name'],
+      //     capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
+      //     categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
+      //     businessId: userInfo.value.businessId
+      //   })
+      // })
       isDisabled.value = true
     }
     ui.success(t('success.save'))

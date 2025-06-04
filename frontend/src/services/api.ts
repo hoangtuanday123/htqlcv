@@ -254,6 +254,12 @@ export interface DashBoard {
   totalProfit: number;
   stockQuantity: number;
 }
+
+export interface RevenueByProductAndMonth {
+  productName: string,
+  month: number,
+  totalRevenue: number
+}
 axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
@@ -390,7 +396,7 @@ const purchaseOrder = {
   createPurchaseOrder: (data: PurchaseOrderRequest) => request.post<number>('/purchaseOrders/', data),
   deletePurchaseOrder: (id: string) => request.delete<void>(`/purchaseOrders/${id}/delete`),
   updatePurchaseOrder: (id: string, data: PurchaseOrderRequest) => request.put<void>(`/purchaseOrders/${id}/update`, data),
-
+  refundPurchaseOrder: (id: string, data: PurchaseOrderRequest) => request.put<void>(`/purchaseOrders/${id}/refund`, data),
 }
 
 const purchaseOrderItem = {
@@ -398,7 +404,6 @@ const purchaseOrderItem = {
   createPurchaseOrderItems: (data: PurchaseOrderItemRequest) => request.post<number>('/purchaseOrderItems/', data),
   updatePurchaseOrderItems: (id: string, data: PurchaseOrderItemRequest) => request.put<void>(`/purchaseOrderItems/${id}/update`, data),
   deletePurchaseOrderItems: (id: string) => request.delete<void>(`/purchaseOrderItems/${id}/delete`),
-
 }
 
 const saleOrderItem = {
@@ -429,7 +434,8 @@ const business = {
 }
 
 const dashboard = {
-  getDashboard: (businessId: string) => request.get<DashBoard>(`/dashboard?businessId=${businessId}`)
+  getDashboard: (businessId: string) => request.get<DashBoard>(`/dashboard?businessId=${businessId}`),
+  getRevenue: (businessId: string) => request.get<RevenueByProductAndMonth[]>(`/dashboard/revenueMonthly?businessId=${businessId}`)
 }
 
 const api = {

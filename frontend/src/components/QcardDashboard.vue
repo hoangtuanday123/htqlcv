@@ -62,49 +62,49 @@ async function fetch() {
         dashboard.value = res
         console.log(dashboard.value.totalAmoundThisMonth)
         items.value.push({
-            title: 'My Customer',
+            title: t('dashboard.customer'),
             icon: 'person',
             value: dashboard.value.totalCustomer,
             color1: '#5064b5',
             color2: '#3e51b5'
         })
         items.value.push({
-            title: 'My Staff',
+            title: t('dashboard.staff'),
             icon: 'person',
             value: dashboard.value.totalStaff - 1,
             color1: '#f37169',
             color2: '#f34636'
         })
         items.value.push({
-            title: 'My Supplier',
+            title: t('dashboard.supplier'),
             icon: 'person',
             value: dashboard.value.totalSupplier,
             color1: '#ea6a7f',
             color2: '#ea4b64'
         })
         items.value.push({
-            title: 'Monthly Income',
+            title: t('dashboard.monthly_income'),
             icon: 'money',
             value: formatCurrency(dashboard.value.totalAmoundThisMonth),
             color1: '#a270b1',
             color2: '#9f52b1'
         })
         items.value.push({
-            title: 'Monthly Profit',
+            title: t('dashboard.monthly_profit'),
             icon: 'trending_up',
             value: formatCurrency(dashboard.value.totalProfit),
             color1: '#546bfa',
             color2: '#3e51b5'
         })
         items.value.push({
-            title: 'Monthly purchase capital',
+            title: t('dashboard.monthly_purchase_capital'),
             icon: 'money',
             value: formatCurrency(dashboard.value.totalAmoundPurchaseThisMonth),
             color1: '#3a9688',
             color2: '#3e51b5'
         })
         items.value.push({
-            title: 'Stock Quantity',
+            title: t('dashboard.stock_quantity'),
             icon: 'shopping_bag',
             value: dashboard.value.stockQuantity,
             color1: '#7cb342',

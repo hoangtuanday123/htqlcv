@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.example.htqlCV.DAO.request.saleOrdersRequestDTO;
+import com.example.htqlCV.DAO.response.RevenueByProductAndMonth;
 import com.example.htqlCV.Model.saleOrders;
 public interface saleOrdersServices {
     List<saleOrders> getAllSaleOrders(UUID businessId);
@@ -14,4 +15,5 @@ public interface saleOrdersServices {
     Long getTotalAmountThisMonthByBusinessId(UUID businessId);
     Long getMonthlyProfitByBusinessId(UUID businessId);
     void refundSaleOrder(UUID id,saleOrdersRequestDTO saleOrdersRequestDTO);
+    List<RevenueByProductAndMonth> getMonthlyRevenueNative(Integer currentYear,UUID businessId);
 }

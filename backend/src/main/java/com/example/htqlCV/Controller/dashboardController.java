@@ -1,5 +1,7 @@
 package com.example.htqlCV.Controller;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.htqlCV.DAO.response.RevenueByProductAndMonth;
 import com.example.htqlCV.DAO.response.dashboardResponse;
 import com.example.htqlCV.Service.customerServices;
 import com.example.htqlCV.Service.productServices;
@@ -47,6 +50,13 @@ public class dashboardController {
         dashboard.setStockQuantity(stock);
         return dashboard;
     }
+
+    @GetMapping("/revenueMonthly")
+    public List<RevenueByProductAndMonth> getMonthlyRevenueNative(@RequestParam UUID businessId) {
+        int currentYear = LocalDate.now().getYear();
+        return saleOrdersServices.getMonthlyRevenueNative(currentYear, businessId);
+    }
+    
     
 
 }
