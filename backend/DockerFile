@@ -3,4 +3,4 @@ ARG FILE_JAR=target/*.jar
 ADD ${FILE_JAR} api-service.jar
 ENV SPRING_PROFILES_ACTIVE=prod
 ENTRYPOINT ["java","-jar","api-service.jar"]
-EXPOSE 80
+EXPOSE 8080
