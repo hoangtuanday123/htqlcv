@@ -17,4 +17,6 @@ public class dashboardResponse {
     private Long totalAmoundPurchaseThisMonth;
     private Long totalProfit;
     private int stockQuantity;
+    private Long totalAmoundThisdaily;
+    private Long totalProfitDaily;
 }

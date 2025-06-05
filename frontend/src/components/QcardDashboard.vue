@@ -23,11 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import api, { DashBoard } from '../services/api';
 import * as ui from '../utils/ui'
 import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
+const { locale, t } = useI18n();
 import { useCurrentuser } from '../share/currentuser';
 const loading = ref(false)
 const currentUser = useCurrentuser()
@@ -39,7 +39,9 @@ const dashboard = ref<DashBoard>({
     totalAmoundThisMonth: 0,
     totalAmoundPurchaseThisMonth: 0,
     totalProfit: 0,
-    stockQuantity: 0
+    stockQuantity: 0,
+    totalAmoundThisdaily: 0,
+    totalProfitDaily: 0
 })
 type DashboardItem = {
     title: string
@@ -110,12 +112,30 @@ async function fetch() {
             color1: '#7cb342',
             color2: '#3e51b5'
         })
+        items.value.push({
+            title: t('dashboard.daily_income'),
+            icon: 'shopping_bag',
+            value: formatCurrency(dashboard.value.totalAmoundThisdaily),
+            color1: '#7cb342',
+            color2: '#3e51b5'
+        })
+        items.value.push({
+            title: t('dashboard.daily_profit'),
+            icon: 'shopping_bag',
+            value: formatCurrency(dashboard.value.totalProfitDaily),
+            color1: '#f88c2b',
+            color2: '#3e51b5'
+        })
         loading.value = false
     }
     catch {
         ui.error(t('error.unknown'))
     }
 }
+watch(locale, async () => {
+    items.value = []
+    await fetch();
+});
 onMounted(async () => {
     await fetch()
 })

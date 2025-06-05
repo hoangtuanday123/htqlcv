@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.htqlCV.DAO.request.authRequestDTO;
-import com.example.htqlCV.DAO.request.changePasswordRequestDTO;
 import com.example.htqlCV.DAO.request.invalidTokenRequest;
 import com.example.htqlCV.DAO.request.refreshTokenDTO;
 import com.example.htqlCV.Model.invalidTokenRedis;
@@ -138,6 +137,28 @@ public class authServiceimpl implements authServices {
         }
     }
 
+    private SignedJWT verifyTokenForRefresh(String token){
+        try {
+            JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            // Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            var verified=signedJWT.verify(verifier);
+            System.out.println("verified: " + verified);
+            if(!verified ){
+                return null;
+                // throw new RuntimeException("Failed to verify JWT");
+            }
+            String jti = signedJWT.getJWTClaimsSet().getJWTID();
+            if(invalidTokenRespository.existsById(jti)){
+               return null;
+                // throw new RuntimeException("Token is invalidated");
+            }
+            return signedJWT;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to verify JWT", e);
+        }
+    }
+
     @Override
     public void logout(invalidTokenRequest invalidTokenRequest){
         try {
@@ -158,16 +179,16 @@ public class authServiceimpl implements authServices {
     @Override
     public String refreshToken(refreshTokenDTO refreshTokenDTO) {
         try {
-            var signedJWT=verifyToken(refreshTokenDTO.getToken());
-            var jti = signedJWT.getJWTClaimsSet().getJWTID();
-            var expireTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            var signedJWT=verifyTokenForRefresh(refreshTokenDTO.getToken());
+            // var jti = signedJWT.getJWTClaimsSet().getJWTID();
+            // var expireTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
             //logout for token
-            invalidTokenRedis tokenEntity = invalidTokenRedis.builder()
-                .id(jti)
-                .expiryTime(expireTime)
-                .build();
-            invalidTokenRespository.save(tokenEntity);
+            // invalidTokenRedis tokenEntity = invalidTokenRedis.builder()
+            //     .id(jti)
+            //     .expiryTime(expireTime)
+            //     .build();
+            // invalidTokenRespository.save(tokenEntity);
 
             var username=signedJWT.getJWTClaimsSet().getSubject();
             user user_value=userRepository.findByUsername(username);

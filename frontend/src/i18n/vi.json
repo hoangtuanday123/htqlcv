@@ -205,6 +205,8 @@
     "monthly_purchase_capital": "Vốn mua hàng tháng này",
     "stock_quantity": "Số lượng hàng tồn kho",
     "product_sale_title": "Thống kê doanh số sản phẩm",
-    "product_sale_body": "Doanh số bán hàng hàng tháng của từng sản phẩm "
+    "product_sale_body": "Doanh số bán hàng hàng tháng của từng sản phẩm ",
+    "daily_income": "Thu nhập hàng ngày",
+    "daily_profit": "Lợi nhuận hàng ngày"
   }
 }

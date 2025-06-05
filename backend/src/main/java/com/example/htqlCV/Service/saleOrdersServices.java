@@ -16,4 +16,6 @@ public interface saleOrdersServices {
     Long getMonthlyProfitByBusinessId(UUID businessId);
     void refundSaleOrder(UUID id,saleOrdersRequestDTO saleOrdersRequestDTO);
     List<RevenueByProductAndMonth> getMonthlyRevenueNative(Integer currentYear,UUID businessId);
+   Long getTotalAmountThisDailyByBusinessId(UUID businessId);
+   Long getDailyProfitByBusinessId(UUID businessId);
 }

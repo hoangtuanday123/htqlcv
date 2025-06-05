@@ -133,4 +133,20 @@ public class saleOrderServiceImpl implements saleOrdersServices{
     public List<RevenueByProductAndMonth> getMonthlyRevenueNative(Integer currentYear,UUID businessId){
         return saleOrdersRespository.getMonthlyRevenueNative(currentYear, businessId);
     }
+    @Override
+    public Long getTotalAmountThisDailyByBusinessId(UUID businessId){
+        var total= saleOrdersRespository.getTotalAmountThisDailyByBusinessId(businessId);
+        if (total==null){
+            return (long) 0;
+        }
+        return total;
+    }
+    @Override
+    public Long getDailyProfitByBusinessId(UUID businessId){
+        var total= saleOrdersRespository.getDailyProfitByBusinessId(businessId);
+        if (total==null){
+            return (long) 0;
+        }
+        return total;
+    }
 }

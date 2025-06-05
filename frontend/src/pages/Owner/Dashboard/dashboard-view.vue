@@ -8,7 +8,7 @@
                 </q-item-section>
 
                 <q-item-section>
-                    <div class="text-h6">{{ t('dashboard.product_sale_title') }}</div>
+                    <div class="text-h6">{{ t('dashboard.product_sale_title') }} - {{ new Date().getFullYear() }}</div>
                 </q-item-section>
             </q-item>
         </q-card-section>
@@ -51,7 +51,7 @@ const chartOptions = {
     plugins: {
         title: {
             display: true,
-            text: `${t('dashboard.product_sale_body')} ${new Date().getFullYear()}`
+            // text: `${t('dashboard.product_sale_body')} ${new Date().getFullYear()}`
         }
     },
     scales: {

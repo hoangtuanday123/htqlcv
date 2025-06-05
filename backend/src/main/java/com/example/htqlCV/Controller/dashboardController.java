@@ -40,6 +40,8 @@ public class dashboardController {
         Long totalAmoundPurchaseThisMonth=purchaseOrdersServices.getTotalAmountThisMonthByBusinessId(businessId);
         Long profitThisMonth=saleOrdersServices.getMonthlyProfitByBusinessId(businessId);
         Integer stock=productServices.getTotalStockQuantityByBusinessId(businessId);
+        Long totalAmoundThisdaily=saleOrdersServices.getTotalAmountThisDailyByBusinessId(businessId);
+        Long totalProfitDaily=saleOrdersServices.getDailyProfitByBusinessId(businessId);
         dashboardResponse dashboard=new dashboardResponse();
         dashboard.setTotalCustomer(totalCustomer);
         dashboard.setTotalStaff(totalStaff);
@@ -48,6 +50,8 @@ public class dashboardController {
         dashboard.setTotalAmoundPurchaseThisMonth(totalAmoundPurchaseThisMonth);
         dashboard.setTotalProfit(profitThisMonth);
         dashboard.setStockQuantity(stock);
+        dashboard.setTotalAmoundThisdaily(totalAmoundThisdaily);
+        dashboard.setTotalProfitDaily(totalProfitDaily);
         return dashboard;
     }
 

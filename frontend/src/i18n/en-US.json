@@ -205,6 +205,8 @@
     "monthly_purchase_capital": "Monthly Purchase Capital",
     "stock_quantity": "Stock Quantity",
     "product_sale_title": "Product Sales Stats",
-    "product_sale_body": "Monthly sales of each product"
+    "product_sale_body": "Monthly sales of each product",
+    "daily_income": "Daily Income",
+    "daily_profit": "Daily Profit"
   }
 }

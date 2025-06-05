@@ -14,6 +14,7 @@ import com.example.htqlCV.Model.saleOrders;
 @Repository
 public interface  saleOrdersRespository extends JpaRepository<saleOrders, UUID>{
     List<saleOrders> findByBusiness(business business);
+    
     @Query("""
     SELECT SUM(s.totalAmount)
     FROM saleOrders s
@@ -22,8 +23,8 @@ public interface  saleOrdersRespository extends JpaRepository<saleOrders, UUID>{
       AND s.business.id = :businessId AND s.status='Completed'
       AND s.isDeleted = false
     """)
-    
     Long getTotalAmountThisMonthByBusinessId(@Param("businessId") UUID businessId);
+    
     @Query(value = """
     SELECT COALESCE(SUM((soi.unit_price - p.capital_price) * soi.quantity), 0)
     FROM tbl_sale_orders so
@@ -53,8 +54,26 @@ public interface  saleOrdersRespository extends JpaRepository<saleOrders, UUID>{
         p.name, EXTRACT(MONTH FROM so.created_at)
     ORDER BY 
         p.name, EXTRACT(MONTH FROM so.created_at)
-  """, nativeQuery = true)
-  List<RevenueByProductAndMonth> getMonthlyRevenueNative(@Param("currentYear") int currentYear,@Param("businessId") UUID businessId);
+    """, nativeQuery = true)
+    List<RevenueByProductAndMonth> getMonthlyRevenueNative(@Param("currentYear") int currentYear,@Param("businessId") UUID businessId);
 
+    @Query("""
+    SELECT SUM(s.totalAmount)
+    FROM saleOrders s
+    WHERE DATE(s.createdAt) = CURRENT_DATE
+      AND s.business.id = :businessId AND s.status='Completed'
+      AND s.isDeleted = false
+    """)
+    Long getTotalAmountThisDailyByBusinessId(@Param("businessId") UUID businessId);
 
+    @Query(value = """
+    SELECT COALESCE(SUM((soi.unit_price - p.capital_price) * soi.quantity), 0)
+    FROM tbl_sale_orders so
+    JOIN tbl_sale_order_items soi ON soi.sale_orders_id = so.id
+    JOIN tbl_product p ON soi.product_id = p.id
+    WHERE so.business_id = :businessId AND so.status='Completed'
+      AND DATE(so.created_at) = CURRENT_DATE
+      AND so.is_deleted = false
+    """, nativeQuery = true)
+    Long getDailyProfitByBusinessId(@Param("businessId") UUID businessId);
   }

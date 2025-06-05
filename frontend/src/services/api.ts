@@ -253,6 +253,8 @@ export interface DashBoard {
   totalAmoundPurchaseThisMonth: number;
   totalProfit: number;
   stockQuantity: number;
+  totalAmoundThisdaily: number;
+  totalProfitDaily: number;
 }
 
 export interface RevenueByProductAndMonth {
