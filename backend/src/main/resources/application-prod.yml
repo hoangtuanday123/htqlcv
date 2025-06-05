@@ -3,7 +3,7 @@ server:
 spring:
     config:
         activate:
-            on-profile: dev
+            on-profile: prod
     jpa:
         hibernate:
             ddl-auto: update
@@ -12,11 +12,11 @@ spring:
                 dialect: org.hibernate.dialect.MySQL8Dialect
     data:
         redis:
-            host: localhost
+            host: redis
             port: 6379
     datasource:
-        url: jdbc:mysql://localhost:3306/htqlcv
-        username: root
+        url: jdbc:mysql://mysql:3306/htqlcv
+        username: htqlcv
         password: 12345678
         driver-class-name: com.mysql.cj.jdbc.Driver
     mail:
