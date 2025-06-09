@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 import pinia from '../stores/index';
 
 import ChangePassword from 'src/pages/Account/change-password.vue';
+
 const _userStore = userStore(pinia())
 
 const { authToken } = storeToRefs(_userStore);
@@ -264,7 +265,8 @@ export interface RevenueByProductAndMonth {
   month: number,
   totalRevenue: number
 }
-axios.defaults.baseURL = process.env.API_HOST;
+axios.defaults.baseURL = import.meta.env.VITE_API_HOST;
+console.log('API Host:', import.meta.env);
 axios.interceptors.request.use((config) => {
   config.headers['Content-Type'] = 'application/json'
 

@@ -43,6 +43,10 @@ public class userServiceImpl implements userSevices {
             if(userRequestDTO.getBusinessId()!=null){
                 business_value=businessRespository.findById(userRequestDTO.getBusinessId()).orElse(null);
             }
+            var existingUser = userRepository.findByUsername(userRequestDTO.getUsername());
+            if (existingUser != null) {
+                throw new RuntimeException("Username already exists");
+            }
             user user_value = user.builder()
                 .username(userRequestDTO.getUsername())
                 .password(passwordEncoder.encode(userRequestDTO.getPassword()))

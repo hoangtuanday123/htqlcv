@@ -18,5 +18,5 @@ COPY . .
 # build app for production with minification
 RUN npm run build
 
-EXPOSE 9000
-CMD [ "serve","-s", "dist", "-l", "9000" ]
+EXPOSE 8088
+CMD [ "serve","-s", "dist", "-l", "8088" ]

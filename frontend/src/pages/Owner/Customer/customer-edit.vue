@@ -47,16 +47,16 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import api, { CustomerRequest } from '../../../services/api'
+import api from '../../../services/api'
 const route = useRoute()
 const loading = ref(false)
 import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
-let customer: CustomerRequest = reactive({
+let customer = reactive({
     name: '',
     phone: '',
-    dob: null as Date | null,
+    dob: '', // Use string for dob to match v-model requirements
     address: '',
     customerType: 'individual',
     mst: '',
@@ -77,7 +77,11 @@ async function fetch() {
 async function save() {
     try {
         loading.value = true
-        await api.api.customer.updateCustomer(route.params.id as string, customer)
+        const customerToSend = {
+            ...customer,
+            dob: customer.dob ? new Date(customer.dob) : null
+        }
+        await api.api.customer.updateCustomer(route.params.id as string, customerToSend)
         loading.value = false
         ui.success(t('success.save'))
     } catch {

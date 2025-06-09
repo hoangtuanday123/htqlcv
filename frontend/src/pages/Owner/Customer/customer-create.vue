@@ -49,7 +49,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
-import api, { CustomerRequest } from '../../../services/api'
+import api from '../../../services/api'
 import * as ui from '../../../utils/ui'
 const router = useRouter()
 const loading = ref(false)
@@ -57,10 +57,10 @@ import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 
-let customer: CustomerRequest = reactive({
+let customer = reactive({
     name: '',
     phone: '',
-    dob: null as Date | null,
+    dob: '', // Use string for dob to match v-model requirements
     address: '',
     customerType: 'individual',
     mst: '',
@@ -74,7 +74,12 @@ let customer: CustomerRequest = reactive({
 async function save() {
     try {
         loading.value = true
-        await api.api.customer.createCustomer(customer)
+        // Convert dob string to Date object for API
+        const customerToSend = {
+            ...customer,
+            dob: customer.dob ? new Date(customer.dob) : null
+        }
+        await api.api.customer.createCustomer(customerToSend)
         loading.value = false
         ui.success(t('success.save'))
         router.push({ path: '../customers' })

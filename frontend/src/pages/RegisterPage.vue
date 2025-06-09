@@ -3,12 +3,14 @@
     <q-stepper v-model="step" ref="stepper" color="primary" animated>
       <q-step :name="1" :title="t('register.register_business')" icon="business_center" :done="step > 1">
         <q-form ref="formStep1">
-          <q-input filled v-model="business.name" :label="t('register.business_name')" :hint="t('register.business_name')" lazy-rules
+          <q-input filled v-model="business.name" :label="t('register.business_name')"
+            :hint="t('register.business_name')" lazy-rules
             :rules="[val => val && val.length > 0 || t('register.invalid')]" />
 
-          <q-input filled v-model="business.mst" :label="t('register.tax_code') " :hint="t('register.tax-code')" />
-          <q-input filled v-model="business.email" :label="t('register.email') " :hint="t('register.email')" />
-          <q-input filled v-model="business.phone" :label="t('register.phone_number')" :hint="t('register.phone_number')" lazy-rules
+          <q-input filled v-model="business.mst" :label="t('register.tax_code')" :hint="t('register.tax-code')" />
+          <q-input filled v-model="business.email" :label="t('register.email')" :hint="t('register.email')" />
+          <q-input filled v-model="business.phone" :label="t('register.phone_number')"
+            :hint="t('register.phone_number')" lazy-rules
             :rules="[val => val && val.length > 0 || t('register.invalid')]" />
         </q-form>
       </q-step>
@@ -28,7 +30,8 @@
       <template v-slot:navigation>
         <q-stepper-navigation>
           <q-btn @click="next()" color="primary" :label="step === 2 ? t('register.finish') : t('register.continue')" />
-          <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" :label="t('register.back')" class="q-ml-sm" />
+          <q-btn v-if="step > 1" flat color="primary" @click="stepper?.previous()" :label="t('register.back')"
+            class="q-ml-sm" />
         </q-stepper-navigation>
       </template>
     </q-stepper>
@@ -46,9 +49,11 @@ import api, { BusinessRequest, User } from '../services/api';
 import { useRouter } from 'vue-router';
 import { QForm } from 'quasar';
 const route = useRouter();
+import { QStepper } from 'quasar';
 const step = ref(1);
 const formStep1 = ref<QForm | null>(null)
 const formStep2 = ref<QForm | null>(null)
+const stepper = ref<QStepper | null>(null)
 let business: BusinessRequest = reactive({
   name: '',
   email: '',
@@ -67,7 +72,7 @@ let user: User = reactive({
 })
 
 async function next() {
-  try{
+  try {
     if (step.value === 1) {
       const isValid = await formStep1.value.validate()
       if (!isValid) return
