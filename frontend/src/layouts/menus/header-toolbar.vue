@@ -19,56 +19,6 @@
         </q-toolbar-title>
         <!-- desktop -->
         <template v-if="$q.screen.gt.sm">
-
-            <!-- <q-btn :label="t('menu.home')" to="/home" class="q-ml-md" stretch flat></q-btn> -->
-            <!-- <template v-if="currentUser.hasRole('admin') || currentUser.hasRole('Staff')">
-                <q-btn-dropdown :label="t('menu.products')" stretch flat no-caps>
-                    <q-list style="min-width: 180px">
-                        <q-item v-if="currentUser.hasPermission('products:manage')" to="/admin/products" clickable>
-                            <q-item-section>{{ t('menu.products') }}</q-item-section>
-                        </q-item>
-                        <q-item v-if="currentUser.hasPermission('product_data:manage')" to="/admin/products_data"
-                            clickable>
-                            <q-item-section>{{ t('menu.products_data') }}</q-item-section>
-                        </q-item>
-                        <q-item v-if="currentUser.hasPermission('requests:manage')" to="/admin/requests" clickable>
-                            <q-item-section>{{ t('menu.requests') }}</q-item-section>
-                        </q-item>
-                    </q-list>
-                </q-btn-dropdown>
-                <q-btn-dropdown :label="t('menu.agreements')" stretch flat no-caps>
-                    <q-list style="min-width: 180px">
-                        <q-item v-if="currentUser.hasPermission('agreements:manage')" to="/admin/agreements" clickable>
-                            <q-item-section>{{ t('menu.agreements') }}</q-item-section>
-                        </q-item>
-                        <q-item to="/admin/user_agreements" clickable>
-                            <q-item-section>{{ t('menu.user_agreements') }}</q-item-section>
-                        </q-item>
-                    </q-list>
-                </q-btn-dropdown>
-                <q-btn-dropdown
-                    v-if="currentUser.hasPermission('users:manage') || currentUser.hasPermission('users:manage') || currentUser.hasPermission('user_activities:manage')"
-                    :label="t('menu.users')" stretch flat no-caps>
-                    <q-list style="min-width: 180px">
-                        <q-item v-if="currentUser.hasPermission('users:manage')" to="/admin/users" clickable>
-                            <q-item-section>{{ t('menu.users') }}</q-item-section>
-                        </q-item>
-                        <q-item v-if="currentUser.hasPermission('roles:manage')" to="/admin/roles" clickable>
-                            <q-item-section>{{ t('menu.roles') }}</q-item-section>
-                        </q-item>
-                        <q-item v-if="currentUser.hasPermission('user_activities:manage')" to="/admin/user_activities"
-                            clickable>
-                            <q-item-section>{{ t('menu.user_activities') }}</q-item-section>
-                        </q-item>
-                    </q-list>
-                </q-btn-dropdown>
-                <q-btn stretch flat :label="t('menu.system_settings')" to="/admin/system_settings" v-if="currentUser.hasRole('Admin')" />
-
-            </template> -->
-            <!-- <template v-else>
-                <q-btn stretch flat :label="t('menu.products')" to="/products/product_intro" />
-                <q-btn stretch flat :label="t('menu.contact_us')" to="/contact" />
-            </template> -->
             <template v-if="currentUser.hasRole('admin')">
                 <q-btn-dropdown label="User" stretch flat no-caps>
                     <q-list style="min-width: 180px">
@@ -203,11 +153,7 @@ const localeOptions = [
 
 import { useCurrentuser } from '../../share/currentuser';
 import Avatar from '../../components/UserAvatar.vue';
-// import Notifications from './notifications.vue';
-// import { CONFIG } from '@/config'
-// import * as ui from '@/utils/ui';
-// import  api  from '@/services/api';
-// const { t } = useI18n();
+
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 

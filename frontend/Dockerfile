@@ -18,4 +18,4 @@ COPY . .
 RUN quasar build
 
 EXPOSE 9000
-CMD [ "quasar","serve", "dist/spa", "--history","--port", "9000" ]
+CMD [ "serve","-s", "dist/spa", "-l", "9000" ]
