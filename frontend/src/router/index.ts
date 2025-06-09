@@ -57,9 +57,11 @@ router.beforeEach(async (to, from, next) => {
     const check_token = async () => {
       return await api.api.auth.checkToken(authToken.value);
     };
-    const tokenCheckResult = await check_token();
-    if (tokenCheckResult == 'Token is invalid') {
 
+    const tokenCheckResult = await check_token();
+    console.log('Checking token validity...' + tokenCheckResult);
+    if (tokenCheckResult == 'Token is invalid') {
+      console.log('Checking token validity...');
       const new_token = await api.api.auth.refreshToken({ token: authToken.value });
       _userStore.saveToken(new_token)
       const user = await api.api.user.getCurrentUser()

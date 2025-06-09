@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>{{ t('customer.create') }}</h1>
+        <h2>{{ t('customer.create') }}</h2>
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
             <q-input v-model="customer.name" :label="t('customer.name')" required />

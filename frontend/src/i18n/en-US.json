@@ -1,4 +1,6 @@
 {
+  "home": "Home",
+  "scanner": "Scan QR Code",
   "login": {
     "title": "Login",
     "username": "Your username",
@@ -26,7 +28,9 @@
     "add": "Add successfull",
     "save": "Save successfull",
     "delete": "Delete successfull",
-    "refund": "Refund successfull"
+    "refund": "Refund successfull",
+    "create_qrcode": "Create QR Code successfull",
+    "download_qrcode": "Download QR Code successfull"
   },
   "error": {
     "unknown": "Unknown"
@@ -45,7 +49,9 @@
     "guarantee": {
       "name": "Name",
       "time": "Guarantee Time (month)"
-    }
+    },
+    "create_qrcode": "Create QR Code",
+    "download_qrcode": "Download QR Code"
   },
   "branch_product": {
     "title": "Branch Product",

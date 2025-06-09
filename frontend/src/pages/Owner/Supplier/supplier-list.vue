@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>{{ t('supplier.title') }}</h1>
+        <h2>{{ t('supplier.title') }}</h2>
         <div class="row q-gutter-md q-mb-md">
             <q-input outlined debounce="300" v-model="keyword" :placeholder="t('button.search')">
                 <template v-slot:append>

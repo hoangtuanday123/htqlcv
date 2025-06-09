@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>{{ t('account.title') }}</h1>
+        <h2>{{ t('account.title') }}</h2>
         <div class="row justify-end">
             <q-btn :label="t('account.change_password')" icon="refresh" type="button" to="/account/password"
                 color="accent" />

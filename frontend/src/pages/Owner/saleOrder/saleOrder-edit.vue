@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>{{ t('sale_order.update') }}</h1>
+    <h2>{{ t('sale_order.update') }}</h2>
     <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
       spellcheck="false">
       <div class="row">

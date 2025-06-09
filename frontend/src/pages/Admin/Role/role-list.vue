@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Roles</h1>
+        <h2>Roles</h2>
         <div class="row q-gutter-md q-mb-md">
             <q-input outlined debounce="300" v-model="keyword" placeholder="Search">
                 <template v-slot:append>

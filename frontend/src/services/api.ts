@@ -124,6 +124,7 @@ export interface Product {
   category: Category;
   branchProduct: BranchProduct;
   businessId: number;
+  qrcodeUrl?: string;
 }
 
 export interface ProductRequest {
@@ -134,6 +135,7 @@ export interface ProductRequest {
   categoryId: number;
   branchProductId: number;
   businessId: number;
+  qrcodeUrl?: string;
 }
 
 export interface Guarantee {
@@ -262,8 +264,7 @@ export interface RevenueByProductAndMonth {
   month: number,
   totalRevenue: number
 }
-axios.defaults.baseURL = 'http://localhost:8080';
-
+axios.defaults.baseURL = process.env.API_HOST;
 axios.interceptors.request.use((config) => {
   config.headers['Content-Type'] = 'application/json'
 

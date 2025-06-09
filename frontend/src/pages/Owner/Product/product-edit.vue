@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <h1>Update Product</h1>
+    <h2>Update Product</h2>
     <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" narrow-indicator
       align="left">
       <q-tab name="infomations" label="Infomations" />
@@ -55,6 +55,10 @@
           <div class="row">
             <div class="col q-gutter-md">
               <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
+              <q-btn :label="t('product.create_qrcode')" icon="check" :loading="loading" type="button"
+                @click="createQRCode" color="primary" />
+              <q-btn :label="t('product.download_qrcode')" icon="check" :loading="loading" type="button"
+                @click="downloadQRCode" color="primary" v-if="product.qrcodeUrl" />
               <q-btn :label="t('button.close')" icon="close" type="button" to="../../products" outline color="grey-9" />
             </div>
           </div>
@@ -101,6 +105,7 @@ import api, {
   GuaranteeRequest
 } from '../../../services/api';
 import * as ui from '../../../utils/ui'
+import * as until from '../../../utils/untils'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const route = useRoute();
@@ -130,7 +135,8 @@ let product: Product = reactive({
   stockQuantity: 0,
   category: { id: null, name: '', businessId: null },
   branchProduct: { id: null, name: '', businessId: null },
-  businessId: null
+  businessId: null,
+  qrcodeUrl: null,
 });
 const columns = [
   { name: 'name', label: t('product.guarantee.name'), align: 'left' as const, field: 'name', sortable: true },
@@ -147,7 +153,8 @@ async function save() {
       stockQuantity: product.stockQuantity,
       categoryId: product.category.id,
       branchProductId: product.branchProduct.id,
-      businessId: product.businessId
+      businessId: product.businessId,
+      qrcodeUrl: product.qrcodeUrl
     };
     await api.api.product.updateProduct(
       route.params.id as string,
@@ -259,6 +266,47 @@ async function createGuarantee() {
     ui.error(t('error.unknown'))
   }
 }
+async function createQRCode() {
+  try {
+    loading.value = true;
+    const productUrl = window.location.href;
+    const dataUrl = await until.generateQRcode(productUrl);
+    const productRequest = {
+      name: product.name,
+      capitalPrice: product.capitalPrice,
+      salePrice: product.salePrice,
+      stockQuantity: product.stockQuantity,
+      categoryId: product.category.id,
+      branchProductId: product.branchProduct.id,
+      businessId: product.businessId,
+      qrcodeUrl: dataUrl
+    };
+
+    await api.api.product.updateProduct(
+      route.params.id as string,
+      productRequest
+    );
+    product.qrcodeUrl = dataUrl;
+    loading.value = false;
+    ui.success(t('success.create_qrcode'))
+  }
+  catch {
+    ui.error(t('error.unknown'))
+  }
+}
+
+async function downloadQRCode() {
+  try {
+    loading.value = true;
+    await until.downloadQRcode(product.qrcodeUrl, `${product.name}.png`);
+    loading.value = false;
+  }
+  catch {
+    ui.error(t('error.unknown'))
+  }
+}
+
+
 onMounted(async () => {
   await fetch();
 });

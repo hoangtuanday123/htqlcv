@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Edit User</h1>
+        <h2>Edit User</h2>
         <q-form class="q-gutter-md" @submit="save" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
 
@@ -40,7 +40,7 @@ let user: User = reactive({
     roles: [] as string[],
     phoneNumber: '',
     password: ' ',
-    businessId:null
+    businessId: null
 })
 
 async function fetch() {

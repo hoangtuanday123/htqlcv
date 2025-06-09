@@ -49,7 +49,7 @@ public class productServiceImpl implements productServices {
                 .name(productRequestDTO.getName())
                 .capitalPrice(productRequestDTO.getCapitalPrice())
                 .salePrice(productRequestDTO.getSalePrice())
-                .stockQuantity(productRequestDTO.getStockQuantity())
+                .qrcodeUrl(null)
                 .branchProduct(branchProduct)
                 .category(category)
                 .business(business_value)
@@ -66,7 +66,7 @@ public class productServiceImpl implements productServices {
             product_value.setName(productRequestDTO.getName());
             product_value.setCapitalPrice(productRequestDTO.getCapitalPrice());
             product_value.setSalePrice(productRequestDTO.getSalePrice());
-            product_value.setStockQuantity(productRequestDTO.getStockQuantity());
+            product_value.setQrcodeUrl(productRequestDTO.getQrcodeUrl());
             product_value.setBranchProduct(branchProduct);
             product_value.setCategory(category);
             productRespository.save(product_value);

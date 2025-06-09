@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>{{ t('account.change_password') }}</h1>
+        <h2>{{ t('account.change_password') }}</h2>
         <q-form class="q-gutter-md" @submit="save" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
 

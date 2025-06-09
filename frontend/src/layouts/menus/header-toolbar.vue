@@ -6,10 +6,15 @@
             <a href="/home" style="display: flex; align-items: center;" v-if="currentUser.hasRole('admin')">
                 <img alt="Logo" src="../../assets/image.png" style="height: 60px; width: auto; margin-right: 12px" />
             </a>
+
             <a href="/owner/dashboard" style="display: flex; align-items: center;"
-                v-if="currentUser.hasRole('owner') || currentUser.hasRole('staff')">
+                v-else-if="currentUser.hasRole('owner') || currentUser.hasRole('staff')">
                 <img alt="Logo" src="../../assets/image.png" style="height: 60px; width: auto; margin-right: 12px" />
             </a>
+            <a href="/" style="display: flex; align-items: center;" v-else>
+                <img alt="Logo" src="../../assets/image.png" style="height: 60px; width: auto; margin-right: 12px" />
+            </a>
+
 
         </q-toolbar-title>
         <!-- desktop -->
@@ -76,42 +81,6 @@
 
                     </q-list>
                 </q-btn-dropdown>
-                <!-- <q-btn-dropdown label="Products" stretch flat no-caps>
-                    <q-list style="min-width: 180px">
-                        <q-item to="/owner/products" clickable>
-                            <q-item-section>Products</q-item-section>
-                        </q-item>
-                        <q-item to="/owner/branchProduct" clickable>
-                            <q-item-section>Branch Product</q-item-section>
-                        </q-item>
-                        <q-item to="/owner/categories" clickable>
-                            <q-item-section>Categories</q-item-section>
-                        </q-item>
-                    </q-list>
-                </q-btn-dropdown>
-                <q-btn-dropdown label="Partner" stretch flat no-caps>
-                    <q-list style="min-width: 180px">
-                        <q-item to="/owner/customers" clickable>
-                            <q-item-section>Customer</q-item-section>
-                        </q-item>
-                        <q-item to="/owner/suppliers" clickable>
-                            <q-item-section>Supplier</q-item-section>
-                        </q-item>
-
-                    </q-list>
-                </q-btn-dropdown>
-                <q-btn-dropdown label="Transactions" stretch flat no-caps>
-                    <q-list style="min-width: 180px">
-                        <q-item to="/owner/purchaseOrders" clickable>
-                            <q-item-section>Purchase Orders</q-item-section>
-                        </q-item>
-                        <q-item to="/owner/saleOrders" clickable>
-                            <q-item-section>Sale Orders</q-item-section>
-                        </q-item>
-
-
-                    </q-list>
-                </q-btn-dropdown> -->
                 <q-space />
             </template>
             <template v-if="currentUser.hasRole('owner') || currentUser.hasRole('staff')">
@@ -160,6 +129,10 @@
 
                     </q-list>
                 </q-btn-dropdown>
+
+            </template>
+            <template v-else>
+                <q-btn stretch flat :label="t('home')" to="/" />
 
             </template>
             <q-space />

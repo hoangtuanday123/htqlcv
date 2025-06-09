@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>{{t('supplier.update')}}</h1>
+        <h2>{{ t('supplier.update') }}</h2>
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
             <q-input v-model="supplier.company" :label="t('supplier.company')" />
@@ -14,7 +14,8 @@
             <div class="row">
                 <div class="col q-gutter-md">
                     <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
-                    <q-btn :label="t('button.close')" icon="close" type="button" to="../../suppliers" outline color="grey-9" />
+                    <q-btn :label="t('button.close')" icon="close" type="button" to="../../suppliers" outline
+                        color="grey-9" />
                 </div>
             </div>
         </q-form>
@@ -43,23 +44,23 @@ let supplier: SupplierRequest = reactive({
 })
 
 async function fetch() {
-    try{
+    try {
         loading.value = true;
         const res = await api.api.supplier.getSupplier(route.params.id as string)
         Object.assign(supplier, res)
         loading.value = false;
     } catch {
-       ui.error(t('error.unknown'))
+        ui.error(t('error.unknown'))
     }
 }
 async function save() {
-    try{
+    try {
         loading.value = true
         await api.api.supplier.updateSupplier(route.params.id as string, supplier)
         loading.value = false
         ui.success(t('success.save'))
     } catch {
-       ui.error(t('error.unknown'))
+        ui.error(t('error.unknown'))
     }
 }
 onMounted(async () => {

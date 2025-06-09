@@ -12,4 +12,5 @@ public class productRequestDTO {
     private UUID categoryId;
     private UUID branchProductId;
     private UUID businessId;
+    private String qrcodeUrl;
 }

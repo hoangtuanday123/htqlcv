@@ -1,4 +1,6 @@
 {
+  "home": "Trang chủ",
+  "scanner": "Quet vạch",
   "login": {
     "title": "Đăng nhập",
     "username": "Tên đăng nhập",
@@ -26,7 +28,9 @@
     "add": "Thêm thành công",
     "save": "Lưu thành công",
     "delete": "Xóa thành công",
-    "refund": "Hoàn trả thành công"
+    "refund": "Hoàn trả thành công",
+    "create_qrcode": "Tạo mã vạch thành công",
+    "download_qrcode": "Tải mã vạch thành công"
   },
   "error": {
     "unknown": "lỗi "
@@ -45,7 +49,9 @@
     "guarantee": {
       "name": "Tên",
       "time": "Thời gian bảo hành (tháng)"
-    }
+    },
+    "create_qrcode": "Tạo mã vạch",
+    "download_qrcode": "Tải mã vạch"
   },
   "branch_product": {
     "title": "Nhãn hiệu",

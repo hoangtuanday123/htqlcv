@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Create User</h1>
+        <h2>Create User</h2>
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
             <q-input stack-label v-model="user.username" label="Username" required />
@@ -39,7 +39,7 @@ let user: User = reactive({
     email: '',
     phoneNumber: '',
     roles: [],
-    businessId:null
+    businessId: null
 })
 
 
@@ -54,7 +54,7 @@ async function save() {
 
     await api.api.user.createUser(user)
     loading.value = false
-    router.push({path:'../users'})
+    router.push({ path: '../users' })
 }
 
 onMounted(async () => {

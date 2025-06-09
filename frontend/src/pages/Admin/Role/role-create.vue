@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <h1>Create Role</h1>
+        <h2>Create Role</h2>
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
             <q-input v-model="role.name" label="Name" required />

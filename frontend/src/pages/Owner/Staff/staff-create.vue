@@ -1,25 +1,25 @@
 <template>
   <q-page class="q-pa-md">
-      <h1>{{t('staff.create')}}</h1>
-      <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
-          spellcheck="false">
-          <q-input stack-label v-model="user.username" :label="t('staff.username')" required />
+    <h2>{{ t('staff.create') }}</h2>
+    <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
+      spellcheck="false">
+      <q-input stack-label v-model="user.username" :label="t('staff.username')" required />
 
-          <q-input type="email" v-model="user.email" :label="t('staff.email')" />
+      <q-input type="email" v-model="user.email" :label="t('staff.email')" />
 
-          <q-input type="password" v-model="user.password" :label="t('staff.password')" />
+      <q-input type="password" v-model="user.password" :label="t('staff.password')" />
 
-          <div class="row">
-              <div class="col q-gutter-md">
-                  <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
-                  <q-btn :label="t('button.close')" icon="close" type="button" to="../staffs" outline text-color="text-color" />
-              </div>
-          </div>
-      </q-form>
+      <div class="row">
+        <div class="col q-gutter-md">
+          <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
+          <q-btn :label="t('button.close')" icon="close" type="button" to="../staffs" outline text-color="text-color" />
+        </div>
+      </div>
+    </q-form>
   </q-page>
 </template>
 <script setup lang="ts">
-import {  reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { User } from '../../../services/api';
 import * as ui from '../../../utils/ui'
@@ -39,20 +39,20 @@ let user: User = reactive({
   email: '',
   phoneNumber: '',
   roles: [],
-  businessId:null
+  businessId: null
 })
 
 
 async function save() {
-  try{
+  try {
     loading.value = true
-    user.businessId=userInfo.value.businessId
+    user.businessId = userInfo.value.businessId
     await api.api.user.createStaff(user)
     loading.value = false
     ui.success(t('success.save'))
-    router.push({path:'../staffs'})
+    router.push({ path: '../staffs' })
   } catch {
-   ui.error(t('error.unknown'))
+    ui.error(t('error.unknown'))
   }
 }
 
