@@ -1,8 +1,7 @@
 FROM node:lts-alpine
 
 # install simple http server for serving static content
-RUN npm install -g serve
-
+RUN npm install -g serve quasar-cli@0.6.5
 # make the 'frontend' folder the current working directory
 WORKDIR /frontend
 
@@ -16,7 +15,7 @@ RUN npm install
 COPY . .
 
 # build app for production with minification
-RUN npm run build
+RUN quasar build
 
-EXPOSE 8088
-CMD [ "serve","-s", "dist", "-l", "8088" ]
+EXPOSE 9000
+CMD [ "quasar","serve", "dist/spa", "--history","--port", "9000" ]

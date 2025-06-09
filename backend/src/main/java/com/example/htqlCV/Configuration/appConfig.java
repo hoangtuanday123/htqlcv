@@ -16,6 +16,7 @@ public class appConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:9000");
+        config.addAllowedOrigin("https://hethongquanlybanle.xyz");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
