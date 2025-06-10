@@ -8,8 +8,19 @@
         </template>
       </q-input>
       <q-space></q-space>
+      <q-btn color="accent" icon="qr_code_scanner" :label="t('scanner')" @click="showScanner = true" />
       <q-btn color="accent" icon="add" to="./saleOrders/create" :label="t('sale_order.create')" />
     </div>
+    <q-dialog v-model="showScanner" persistent>
+      <q-card style="min-width: 350px; max-width: 400px">
+        <q-card-section>
+          <qr-code-scanner @scanned="onScanned" @close="showScanner = false" />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Đóng" color="negative" @click="showScanner = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-table :rows="SaleOrders" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
       row-key="id">
       <template v-slot:body-cell-dept="props">
@@ -34,10 +45,13 @@ import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 import { useCurrentuser } from '../../../share/currentuser';
+import QrCodeScanner from '../../../components/QrCodeScanner.vue';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
 const loading = ref(false)
 const SaleOrders = ref<SaleOrder[]>([])
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const keyword = ref('')
 const columns = [
   { name: 'id', label: 'ID', align: 'left' as const, field: 'id', sortable: true },
@@ -48,7 +62,8 @@ const columns = [
   { name: 'status', label: t('sale_order.status'), align: 'left' as const, field: 'status', sortable: true },
   { name: 'actions', label: t('sale_order.action'), align: 'right' as const, field: '', sortable: false }
 ];
-
+const showScanner = ref(false);
+const scannedResult = ref('');
 function search(rows, terms) {
   const lowerTerms = terms ? terms.toLowerCase() : ''
   return lowerTerms != '' ? rows.filter(row => row.name.includes(lowerTerms)) : SaleOrders
@@ -74,6 +89,13 @@ async function deletesaleOrder(saleOrder) {
     ui.error(t('error.unknown'))
   }
 }
+const onScanned = (text) => {
+  scannedResult.value = text;
+  console.log('Scanned result:', text);
+  const url = `${import.meta.env.VITE_API_HOST}owner/saleOrders/${text}/edit`;
+  showScanner.value = false;
+  router.push({ path: url })
+};
 onMounted(async () => {
   await fetchSaleOrders()
 })

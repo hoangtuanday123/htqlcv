@@ -47,6 +47,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         .totalAmountPaid(saleOrdersRequestDTO.getTotalAmountPaid())
         .status(saleOrdersRequestDTO.getStatus())
         .SubStatus(saleOrdersRequestDTO.getSubStatus())
+        .qrcodeId(null)
         .customer(customer)
         .business(business_value)
         .build();
@@ -75,6 +76,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
             saleOrders_value.setStatus(saleOrdersRequestDTO.getStatus());
             saleOrders_value.setSubStatus(saleOrdersRequestDTO.getSubStatus());
             saleOrders_value.setCustomer(customer);
+            saleOrders_value.setQrcodeId(saleOrdersRequestDTO.getQrcodeId());
             saleOrdersRespository.save(saleOrders_value);
             for (var item:saleOrdersRequestDTO.getSaleOrderItemsRequestDTO()){
                 item.setSaleOrdersId(id);
