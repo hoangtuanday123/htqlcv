@@ -101,7 +101,8 @@ let saleOrder: SaleOrderRequest = reactive({
     unitPrice: 0,
     note: null
   }],
-  businessId: null
+  businessId: null,
+  qrcodeId: null
 });
 const saleOrderItems = ref([])
 const createDate = ref(null)
