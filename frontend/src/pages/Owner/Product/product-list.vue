@@ -47,6 +47,8 @@ const products = ref<Product[]>([])
 const keyword = ref('')
 const showScanner = ref(false);
 const scannedResult = ref('');
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const columns = [
     { name: 'name', label: t('product.name'), align: 'left' as const, field: 'name', sortable: true },
     { name: 'capitalPrice', label: t('product.capital_price'), align: 'left' as const, field: 'capitalPrice', sortable: true },
@@ -57,7 +59,9 @@ const columns = [
 const onScanned = (text) => {
     scannedResult.value = text;
     console.log('Scanned result:', text);
+    const url = `${import.meta.env.VITE_API_HOST}owner/products/${text}/edit`;
     showScanner.value = false;
+    router.push({ path: url })
 };
 function search(rows, terms) {
     const lowerTerms = terms ? terms.toLowerCase() : ''

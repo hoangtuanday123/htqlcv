@@ -58,7 +58,7 @@
               <q-btn :label="t('product.create_qrcode')" icon="check" :loading="loading" type="button"
                 @click="createQRCode" color="primary" />
               <q-btn :label="t('product.download_qrcode')" icon="check" :loading="loading" type="button"
-                @click="downloadQRCode" color="primary" v-if="product.qrcodeUrl" />
+                @click="downloadQRcode" color="primary" v-if="product.qrcodeUrl" />
               <q-btn :label="t('button.close')" icon="close" type="button" to="../../products" outline color="grey-9" />
             </div>
           </div>
@@ -269,8 +269,8 @@ async function createGuarantee() {
 async function createQRCode() {
   try {
     loading.value = true;
-    const productUrl = window.location.href;
-    const dataUrl = await until.generateQRcode(productUrl);
+    // const productUrl = window.location.href;
+    const dataUrl = await until.generateQRcode(route.params.id as string);
     const productRequest = {
       name: product.name,
       capitalPrice: product.capitalPrice,
@@ -281,6 +281,7 @@ async function createQRCode() {
       businessId: product.businessId,
       qrcodeUrl: dataUrl
     };
+    console.log(dataUrl)
 
     await api.api.product.updateProduct(
       route.params.id as string,
@@ -295,7 +296,7 @@ async function createQRCode() {
   }
 }
 
-async function downloadQRCode() {
+async function downloadQRcode() {
   try {
     loading.value = true;
     await until.downloadQRcode(product.qrcodeUrl, `${product.name}.png`);

@@ -121,6 +121,10 @@
         <div class="col q-gutter-md">
           <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
           <q-btn :label="t('button.close')" icon="close" type="button" to="../../saleOrders" outline color="grey-9" />
+          <q-btn :label="t('product.create_qrcode')" icon="check" :loading="loading" type="button" @click="createQRCode"
+            color="primary" />
+          <q-btn :label="t('product.download_qrcode')" icon="check" :loading="loading" type="button"
+            @click="downloadQRcode" color="primary" v-if="saleOrder.qrcodeId" />
           <q-btn :label="t('button.view_order')" @click="openDiaglogOrder = true" type="button" outline
             color="grey-9" />
           <q-btn :label="t('button.refund')" @click="refund" type="button" outline color="grey-9"
@@ -137,6 +141,7 @@ import api, { SaleOrderRequest, ProductRequest } from '../../../services/api';
 import { useCurrentuser } from '../../../share/currentuser';
 import Order from '../../../components/OrderSaleInvoice.vue'
 import * as ui from '../../../utils/ui'
+import * as until from '../../../utils/untils'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const currentUser = useCurrentuser()
@@ -168,7 +173,8 @@ let saleOrder: SaleOrderRequest = reactive({
     unitPrice: 0,
     note: null
   }],
-  businessId: userInfo.value.businessId
+  businessId: userInfo.value.businessId,
+  qrcodeId: null
 });
 const product = ref(null)
 const productOptions = ref([])
@@ -429,6 +435,35 @@ async function AddProduct() {
     loading.value = false
     ui.success(t('success.add'))
   } catch {
+    ui.error(t('error.unknown'))
+  }
+}
+
+async function createQRCode() {
+  try {
+    loading.value = true;
+    // const productUrl = window.location.href;
+    const dataUrl = await until.generateQRcode(route.params.id as string);
+    saleOrder.qrcodeId = dataUrl;
+    console.log(dataUrl)
+
+    await api.api.saleOrder.updateSaleOrder(route.params.id as string, saleOrder)
+
+    loading.value = false;
+    ui.success(t('success.create_qrcode'))
+  }
+  catch {
+    ui.error(t('error.unknown'))
+  }
+}
+
+async function downloadQRcode() {
+  try {
+    loading.value = true;
+    await until.downloadQRcode(saleOrder.qrcodeId, `${route.params.id}.png`);
+    loading.value = false;
+  }
+  catch {
     ui.error(t('error.unknown'))
   }
 }

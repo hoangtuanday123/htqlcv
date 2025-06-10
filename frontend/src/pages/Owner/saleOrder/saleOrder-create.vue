@@ -152,7 +152,8 @@ let SaleOrder: SaleOrderRequest = reactive({
     unitPrice: 0,
     note: null
   }],
-  businessId: userInfo.value.businessId
+  businessId: userInfo.value.businessId,
+  qrcodeId: null
 });
 const product = ref(null)
 const productOptions = ref([])

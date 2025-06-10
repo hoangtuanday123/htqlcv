@@ -195,6 +195,7 @@ export interface SaleOrderItem {
   quantity: number;
   unitPrice: number;
   note: string;
+
 }
 
 export interface SaleOrderItemRequest {
@@ -203,6 +204,7 @@ export interface SaleOrderItemRequest {
   quantity: number;
   unitPrice: number;
   note: string;
+
 }
 
 export interface SaleOrder {
@@ -214,7 +216,7 @@ export interface SaleOrder {
   status: string;
   saleOrderItemsRequestDTO: SaleOrderItem[];
   businessId: number;
-
+  qrcodeId: string;
 }
 
 export interface SaleOrderRequest {
@@ -225,6 +227,7 @@ export interface SaleOrderRequest {
   status: string;
   saleOrderItemsRequestDTO: SaleOrderItem[];
   businessId: number;
+  qrcodeId: string;
 }
 
 export interface Business {

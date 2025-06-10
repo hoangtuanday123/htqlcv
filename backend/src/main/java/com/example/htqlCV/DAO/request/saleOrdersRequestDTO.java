@@ -13,4 +13,5 @@ public class saleOrdersRequestDTO {
     private String SubStatus;
     private List<saleOrderItemsRequestDTO>saleOrderItemsRequestDTO;
     private UUID businessId;
+    private String qrcodeId;
 }

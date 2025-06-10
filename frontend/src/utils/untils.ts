@@ -1,10 +1,10 @@
 import QRCode from 'qrcode';
-export async function generateQRcode(productUrl) {
+export async function generateQRcode(productid) {
     try {
         // const now = new Date();
         // const timestamp = now.toISOString().replace(/[-:.TZ]/g, '').slice(0, 15);
         // const outputPath = `${process.env.QRCODE_PRODUCT_FOLDER}/${product_id}_${timestamp}.png`;
-        const dataUrl = await QRCode.toDataURL(productUrl, {
+        const dataUrl = await QRCode.toDataURL(productid, {
             errorCorrectionLevel: 'low',
             margin: 1,
             scale: 4,
@@ -27,3 +27,4 @@ export async function downloadQRcode(dataUrl, fileName) {
         console.error('❌ Error downloading QR code:', err);
     }
 }
+
