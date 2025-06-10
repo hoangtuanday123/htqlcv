@@ -59,7 +59,7 @@ const columns = [
 const onScanned = (text) => {
     scannedResult.value = text;
     console.log('Scanned result:', text);
-    const url = `${import.meta.env.VITE_API_HOST}owner/products/${text}/edit`;
+    const url = `./products/${text}/edit`;
     showScanner.value = false;
     router.push({ path: url })
 };
