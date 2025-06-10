@@ -11,6 +11,7 @@ import com.example.htqlCV.DAO.request.roleRequestDTO;
 import com.example.htqlCV.DAO.request.userRequestDTO;
 import com.example.htqlCV.Model.role;
 import com.example.htqlCV.Model.user;
+import com.example.htqlCV.Respository.userRepository;
 import com.example.htqlCV.Service.roleServices;
 import com.example.htqlCV.Service.userHasRoleServices;
 import com.example.htqlCV.Service.userSevices;
@@ -25,11 +26,14 @@ public class commonController {
     private final userSevices userSevices;
     private final roleServices roleServices;
     private final userHasRoleServices userHasRoleServices;
+    private final userRepository userRepository;
     @PostMapping("/setup")
     public String setup(@RequestParam String secure_code) {
         // try {
             if(secure_code.equals("ttt")) {
-                roleRequestDTO adminRole=new roleRequestDTO();
+                var userAdmin = userRepository.findByUsername("admin");
+                if(userAdmin==null) {
+                    roleRequestDTO adminRole=new roleRequestDTO();
                 adminRole.setName("admin");
                 role adminRoleId=roleServices.createRole(adminRole);
     
@@ -50,7 +54,10 @@ public class commonController {
                 admin.setAddress("Hà Nội");
                 admin.setRoles(Arrays.asList(adminRoleId.getId()));
                 user adminId=userSevices.createUser(admin);
-                return "Setup user admin successfully";
+                return "Database successfully";
+                }
+                return "Database already setup";
+                
             }
             return "Setup user admin failed";
             
