@@ -51,6 +51,7 @@ public class productServiceImpl implements productServices {
                 .salePrice(productRequestDTO.getSalePrice())
                 .qrcodeUrl(null)
                 .branchProduct(branchProduct)
+                .stockQuantity(productRequestDTO.getStockQuantity())
                 .category(category)
                 .business(business_value)
                 .build();
@@ -69,6 +70,7 @@ public class productServiceImpl implements productServices {
             product_value.setQrcodeUrl(productRequestDTO.getQrcodeUrl());
             product_value.setBranchProduct(branchProduct);
             product_value.setCategory(category);
+            product_value.setStockQuantity(productRequestDTO.getStockQuantity());
             productRespository.save(product_value);
         }
     }

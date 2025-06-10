@@ -190,7 +190,8 @@
     "tax_code": "Tax Code",
     "email": "Email",
     "phone": "Phone Number",
-    "invalid": "Please type something"
+    "invalid": "Please type something",
+    "close":"Close"
   },
   "button": {
     "save": "Save",
