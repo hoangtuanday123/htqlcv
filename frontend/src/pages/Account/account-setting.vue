@@ -19,7 +19,7 @@
 
                     <q-input v-model="user.username" readonly :label="t('account.username')" />
 
-                    <q-input type="email" v-model="user.email" readonly :label="t('account.email')" />
+                    <q-input type="email" v-model="user.email" :label="t('account.email')" />
                     <q-input type="text" v-model="user.phoneNumber" :label="t('account.phone_number')" />
 
 
@@ -27,8 +27,13 @@
                         <div class="col q-gutter-md">
                             <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit"
                                 color="primary" />
+<<<<<<< HEAD
+                            <q-btn :label="t('button.close')" icon="close" type="button" to="/owner/dashboard" outline
+                                color="white" text-color="black" />
+=======
                             <q-btn :label="t('button.close')" icon="close" type="button" to="/owner/dashboard" outline color="white"
                                 text-color="black" />
+>>>>>>> origin/main
                         </div>
                     </div>
                 </q-form>

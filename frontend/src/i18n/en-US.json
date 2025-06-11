@@ -6,7 +6,12 @@
     "username": "Your username",
     "password": "Your password",
     "invalid": "Please type something",
-    "reset": "Reset"
+    "reset": "Reset",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "email": "Email",
+    "newPassword": "New Password",
+    "newPasswordConfirm": "Confirm New Password"
   },
   "register": {
     "register_business": "Register Business",
@@ -30,10 +35,13 @@
     "delete": "Delete successfull",
     "refund": "Refund successfull",
     "create_qrcode": "Create QR Code successfull",
-    "download_qrcode": "Download QR Code successfull"
+    "download_qrcode": "Download QR Code successfull",
+    "forgot_password": "Please check your email to reset your password",
+    "reset_password": "Reset password successfull, please login again"
   },
   "error": {
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "password_mismatch": "Password does not match"
   },
   "product": {
     "title": "Products",

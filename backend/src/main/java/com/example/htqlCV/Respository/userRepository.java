@@ -13,6 +13,7 @@ public interface  userRepository extends  JpaRepository<user, UUID> {
     List<user> findByBusiness(business business);
     public user findByUsername(String username);
     Integer countUserByBusiness(business business);
-    
-    
+    user findByEmail(String email);
+
+
 }

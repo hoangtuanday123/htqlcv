@@ -1,5 +1,7 @@
 package com.example.htqlCV.Controller;
 
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.htqlCV.DAO.request.EmailRequest;
 import com.example.htqlCV.DAO.request.authRequestDTO;
 import com.example.htqlCV.DAO.request.invalidTokenRequest;
 import com.example.htqlCV.DAO.request.refreshTokenDTO;
+import com.example.htqlCV.DAO.request.reserPasswordRequestDTO;
 import com.example.htqlCV.Service.authServices;
 import com.example.htqlCV.Service.mailService;
 
@@ -51,5 +55,19 @@ public class authController {
     @PostMapping("/refresh-token")
     public String refreshToken(@RequestBody refreshTokenDTO refreshToken) {
         return authService.refreshToken(refreshToken);
+    }
+
+    @PostMapping("/forgot_password")
+    public void forgotPassword(@RequestBody EmailRequest email) throws MessagingException {
+        authService.forgotPassword(email.getEmail());
+    }
+    @GetMapping("/get_token")
+    public String getToken(@RequestParam UUID verification_id, @RequestParam String token) {
+        return authService.getToken(verification_id, token);
+    }
+
+    @PostMapping("/reset_password")
+    public void resetPassword(@RequestBody reserPasswordRequestDTO reserPasswordRequestDTO) {
+        authService.resetPassword(reserPasswordRequestDTO);
     }
 }
