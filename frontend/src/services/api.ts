@@ -143,13 +143,13 @@ export interface Guarantee {
   id: number;
   name: string;
   guaranteeTime: number;
-  productId: number;
+  productId: string;
 }
 
 export interface GuaranteeRequest {
   name: string;
   guaranteeTime: number;
-  productId: number;
+  productId: string;
 }
 export interface PurchaseOrderItem {
   id: number;

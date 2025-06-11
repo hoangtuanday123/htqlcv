@@ -60,7 +60,9 @@
       "time": "Thời gian bảo hành (tháng)"
     },
     "create_qrcode": "Tạo mã vạch",
-    "download_qrcode": "Tải mã vạch"
+    "download_qrcode": "Tải mã vạch",
+    "download_pdf_qrcode": "Tải mã vạch PDF",
+    "print_qrcode": "In mã vạch"
   },
   "branch_product": {
     "title": "Nhãn hiệu",

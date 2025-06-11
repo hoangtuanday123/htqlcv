@@ -59,6 +59,8 @@
                 @click="createQRCode" color="primary" /> -->
               <q-btn :label="t('product.download_qrcode')" icon="check" :loading="loading" type="button"
                 @click="downloadQRcode" color="primary" v-if="product.qrcodeUrl" />
+              <q-btn :label="t('product.download_pdf_qrcode')" icon="check" :loading="loading" type="button"
+                @click="printPDFQRcode" color="primary" v-if="product.qrcodeUrl" />
               <q-btn :label="t('button.close')" icon="close" type="button" to="../../products" outline color="grey-9" />
             </div>
           </div>
@@ -254,7 +256,8 @@ async function deleteGuarantee(guarantee) {
 async function createGuarantee() {
   try {
     loading.value = true;
-    guaranteeRequest.productId = Number(route.params.id);
+    guaranteeRequest.productId = String(route.params.id);
+
     await api.api.guarantee.createGuarantee(guaranteeRequest);
     dialog.value = false;
     const guaranteeRes = await api.api.guarantee.getGuaranteeProduct(route.params.id as string);
@@ -307,6 +310,16 @@ async function downloadQRcode() {
   }
 }
 
+async function printPDFQRcode() {
+  try {
+    loading.value = true;
+    await until.printQRcodeAsPDF(product.qrcodeUrl, product.name, product.stockQuantity);
+    loading.value = false;
+  }
+  catch {
+    ui.error(t('error.unknown'))
+  }
+}
 
 onMounted(async () => {
   await fetch();

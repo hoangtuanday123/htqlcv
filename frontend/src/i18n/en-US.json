@@ -59,7 +59,9 @@
       "time": "Guarantee Time (month)"
     },
     "create_qrcode": "Create QR Code",
-    "download_qrcode": "Download QR Code"
+    "download_qrcode": "Download QR Code",
+    "print_qrcode": "Print QR Code",
+    "download_pdf_qrcode": "Download QR Code PDF"
   },
   "branch_product": {
     "title": "Branch Product",
@@ -199,7 +201,7 @@
     "email": "Email",
     "phone": "Phone Number",
     "invalid": "Please type something",
-    "close":"Close"
+    "close": "Close"
   },
   "button": {
     "save": "Save",
