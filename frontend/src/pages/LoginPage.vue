@@ -15,7 +15,10 @@
                         lazy-rules :rules="[val => val && val.length > 0 || t('login.invalid')]" />
 
                     <!-- <q-toggle v-model="accept" label="I accept the license and terms" /> -->
-
+                    <div class="row justify-end">
+                        <a class="text-h7" href="forgot_password">{{ t('login.forgotPassword') }}
+                        </a>
+                    </div>
                     <div>
                         <q-btn :label="t('login.title')" type="submit" :loading="loading" color="primary" />
                         <q-btn :label="t('login.reset')" type="reset" color="primary" flat class="q-ml-sm" />

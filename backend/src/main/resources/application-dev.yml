@@ -31,4 +31,6 @@ spring:
                     auth: true
                     starttls:
                         enable: true
+frontend:
+    url: http://localhost:9000
 

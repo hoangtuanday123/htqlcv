@@ -1,5 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
@@ -12,11 +14,15 @@ import org.springframework.stereotype.Service;
 import com.example.htqlCV.DAO.request.authRequestDTO;
 import com.example.htqlCV.DAO.request.invalidTokenRequest;
 import com.example.htqlCV.DAO.request.refreshTokenDTO;
+import com.example.htqlCV.DAO.request.reserPasswordRequestDTO;
 import com.example.htqlCV.Model.invalidTokenRedis;
 import com.example.htqlCV.Model.user;
+import com.example.htqlCV.Model.verificationCode;
 import com.example.htqlCV.Respository.invalidTokenRespository;
 import com.example.htqlCV.Respository.userRepository;
+import com.example.htqlCV.Respository.verificationCodeRespository;
 import com.example.htqlCV.Service.authServices;
+import com.example.htqlCV.Service.mailService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -28,6 +34,7 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.NonFinal;
 
@@ -36,6 +43,8 @@ import lombok.experimental.NonFinal;
 public class authServiceimpl implements authServices {
     private final userRepository userRepository;
     private final invalidTokenRespository invalidTokenRespository;
+    private final verificationCodeRespository verificationCodeRespository;
+    private final mailService mailService;
     @NonFinal
     protected static final String SIGNER_KEY="DMACF1qWXznHLOloAZYRi2UtxXsIv8fZlemlOO8riEGInGO8MFK3+1CQE/STr+K0";
     // @Autowired
@@ -198,5 +207,69 @@ public class authServiceimpl implements authServices {
         catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        email = email.toLowerCase();
+        user user_value = userRepository.findByEmail(email);
+        if (user_value == null) {
+            throw new RuntimeException("User not found with email: " + email);
+        }
+        int EXPIRE_IN_MINUTES = 15;
+        Instant now = Instant.now();
+        Instant expire = now.plus(Duration.ofMinutes(EXPIRE_IN_MINUTES));
+        String token = UUID.randomUUID().toString().replace("-", "");
+        verificationCode verificationCode_value = verificationCode.builder()
+                .type("forgot_password")
+                .code(token)
+                .username(user_value.getUsername())
+                .phone(user_value.getPhoneNumber())
+                .email(email)
+                .expirationTime(expire.atZone(java.time.ZoneId.systemDefault()).toLocalDateTime())
+                .max_attempts(3)
+                .failed_attempts(0)
+                .is_active(true)
+                .build();
+        verificationCodeRespository.save(verificationCode_value);
+        try {
+            mailService.sendForgotPasswordEmail(
+                    user_value.getEmail(),
+                    verificationCode_value.getId(),
+                    token,
+                    EXPIRE_IN_MINUTES
+            );
+        } catch (MessagingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    verificationCode _get_verification_code(UUID verification_id, String token) {
+        verificationCode verificationCode_value = verificationCodeRespository.findById(verification_id).orElse(null);
+        if (verificationCode_value == null) {
+            throw new RuntimeException("Verification code not found");
+        }
+        if(verificationCode_value.getExpirationTime().isBefore(java.time.LocalDateTime.now())) {
+            throw new RuntimeException("Verification code has expired");
+        }
+        if(verificationCode_value.getIs_active()== false) {
+            throw new RuntimeException("Verification code is not active");
+        }
+        return verificationCode_value;
+    }
+
+    @Override
+    public String getToken(UUID verification_id, String token) {
+        verificationCode verificationCode_value = _get_verification_code(verification_id, token);
+        return verificationCode_value.getCode();
+    }
+    @Override
+    public void resetPassword(reserPasswordRequestDTO reserPasswordRequestDTO){
+        verificationCode verificationCode_value = _get_verification_code(reserPasswordRequestDTO.getVerification_id(), reserPasswordRequestDTO.getToken());
+        verificationCode_value.setIs_active(true);
+        verificationCodeRespository.save(verificationCode_value);
+        user user_value = userRepository.findByEmail(verificationCode_value.getEmail());
+        user_value.setPassword(passwordEncoder.encode(reserPasswordRequestDTO.getNewPassword()));
+        userRepository.save(user_value);
     }
 }

@@ -6,7 +6,13 @@
     "username": "Tên đăng nhập",
     "password": "Mật khẩu",
     "invalid": "Làm ơn nhập ký tự",
-    "reset": "Xóa hết"
+    "reset": "Xóa hết",
+    "forgotPassword": "Quên mật khẩu",
+    "resetPassword": "Đặt lại mật khẩu",
+    "email": "Email",
+    "resetPassword": "Đặt lại mật khẩu",
+    "newPassword": "Mật khẩu mới",
+    "newPasswordConfirm": "Xác nhận mật khẩu mới"
   },
   "register": {
     "register_business": "Đăng ký kinh doanh",
@@ -30,10 +36,13 @@
     "delete": "Xóa thành công",
     "refund": "Hoàn trả thành công",
     "create_qrcode": "Tạo mã vạch thành công",
-    "download_qrcode": "Tải mã vạch thành công"
+    "download_qrcode": "Tải mã vạch thành công",
+    "forgot_password": "Làm ơn vào email để đặt lại mật khẩu",
+    "reset_password": "Đặt lại mật khẩu thành công, vui lòng đăng nhập lại"
   },
   "error": {
-    "unknown": "lỗi "
+    "unknown": "lỗi ",
+    "password_mismatch": "Mật khẩu không khớp"
   },
   "product": {
     "title": "Sản phẩm",

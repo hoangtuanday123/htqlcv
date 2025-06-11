@@ -32,4 +32,6 @@ spring:
                     auth: true
                     starttls:
                         enable: true
+frontend:
+    url: http://hethongquanlybanle.xyz/
 

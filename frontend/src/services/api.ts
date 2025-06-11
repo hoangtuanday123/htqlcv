@@ -268,6 +268,13 @@ export interface RevenueByProductAndMonth {
   month: number,
   totalRevenue: number
 }
+
+export interface ResetPassword {
+  verification_id: string;
+  newPassword: string;
+  token: string;
+}
+
 axios.defaults.baseURL = import.meta.env.VITE_API_HOST;
 console.log('API Host:', import.meta.env);
 axios.interceptors.request.use((config) => {
@@ -326,6 +333,9 @@ const auth = {
   logout: (data: invalidTokenRequest) => request.post<void>('/auth/logout', data),
   checkToken: (token: string) => request.get<string>(`/auth/check_token?token=${encodeURIComponent(token)}`),
   refreshToken: (data: refreshTokenDTO) => request.post<string>('/auth/refresh-token', data),
+  forgotPassword: (email: string) => request.post<void>('/auth/forgot_password', { email }),
+  resetPassword: (data: ResetPassword) => request.post<void>('/auth/reset_password', data),
+  getToken: (verification_id: string, token: string) => request.get<string>(`/auth/get_token?verification_id=${encodeURIComponent(verification_id)}&token=${encodeURIComponent(token)}`),
 }
 
 const user = {
