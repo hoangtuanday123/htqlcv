@@ -47,7 +47,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         .totalAmountPaid(saleOrdersRequestDTO.getTotalAmountPaid())
         .status(saleOrdersRequestDTO.getStatus())
         .SubStatus(saleOrdersRequestDTO.getSubStatus())
-        .qrcodeId(null)
+        .qrcodeId(saleOrdersRequestDTO.getQrcodeId())
         .customer(customer)
         .business(business_value)
         .build();

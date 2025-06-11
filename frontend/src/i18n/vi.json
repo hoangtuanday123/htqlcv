@@ -1,6 +1,6 @@
 {
   "home": "Trang chủ",
-  "scanner": "Quet vạch",
+  "scanner": "Quét vạch",
   "login": {
     "title": "Đăng nhập",
     "username": "Tên đăng nhập",
@@ -200,7 +200,7 @@
     "email": "Email",
     "phone": "Số điện thoại",
     "invalid": "Làm ơn nhập ký tự",
-    "close":"Đóng"
+    "close": "Đóng"
   },
   "button": {
     "save": "Lưu",

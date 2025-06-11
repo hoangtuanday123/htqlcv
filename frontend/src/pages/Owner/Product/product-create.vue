@@ -4,9 +4,9 @@
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
             <q-input v-model="product.name" :label="t('product.name')" required />
-            <q-input v-model="product.capitalPrice" :label="t('product.capital_price')" type="number" required/>
-            <q-input v-model="product.salePrice" :label="t('product.sale_price')" type="number" required/>
-            <q-input v-model="product.stockQuantity" :label="t('product.stock_quantity')" type="number" required/>
+            <q-input v-model="product.capitalPrice" :label="t('product.capital_price')" type="number" required />
+            <q-input v-model="product.salePrice" :label="t('product.sale_price')" type="number" required />
+            <q-input v-model="product.stockQuantity" :label="t('product.stock_quantity')" type="number" required />
             <q-select v-model="product.categoryId" :options="categoryOptions" :label="t('product.category')" map-options
                 emit-value>
                 <template v-slot:append>
@@ -56,6 +56,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
+import * as until from '../../../utils/untils'
 import { useRouter } from 'vue-router'
 import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
@@ -79,13 +80,17 @@ let product: ProductRequest = reactive({
     stockQuantity: 0,
     categoryId: null,
     branchProductId: null,
-    businessId: userInfo.value.businessId
+    businessId: userInfo.value.businessId,
+    qrcodeUrl: null
 })
 
 async function save() {
     try {
         loading.value = true
-        await api.api.product.createProduct(product)
+        const res = await api.api.product.createProduct(product)
+        const dataUrl = await until.generateQRcode(res);
+        product.qrcodeUrl = dataUrl
+        await api.api.product.updateProduct(String(res), product)
         loading.value = false
         ui.success(t('success.save'))
         router.push({ path: '../products' })

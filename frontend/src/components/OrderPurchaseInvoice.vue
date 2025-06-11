@@ -1,7 +1,9 @@
 <template>
   <div class="invoice-wrapper">
     <div class="title">{{ t('purchase_order.title') }}</div>
-
+    <div class="qr-code">
+      <img :src="qrCodeUrl" alt="QR Code" width="150" height="150" />
+    </div>
     <div class="info">
       <strong>{{ t('purchase_order.ID') }}:</strong> {{ props.purchaseOrderId }}<br />
       <strong>{{ t('purchase_order.product_supplier') }}:</strong> {{ supplier.name }}<br />
@@ -64,13 +66,14 @@ import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro';
 import api, { PurchaseOrderRequest, Supplier } from '../services/api';
 import * as ui from '../utils/ui'
-
+import QRCode from 'qrcode'
 const loading = ref(false)
 const props = defineProps<{
   purchaseOrderId: string
   paid: number
   businessId: string
 }>()
+const qrCodeUrl = ref('')
 const supplier = ref<Supplier>({
   id: null,
   name: null,
@@ -97,7 +100,8 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
     unitPrice: 0,
     note: null
   }],
-  businessId: null
+  businessId: null,
+  qrcodeId: null
 });
 
 const createDate = ref(null)
@@ -185,6 +189,10 @@ function printInvoice() {
 
     const styles = `
       <style>
+      .qr-code {
+  float: right;
+  margin-left: 16px;
+}
         body {
           font-family: Arial, sans-serif;
           display: flex;
@@ -269,10 +277,16 @@ function printInvoice() {
 }
 onMounted(async () => {
   await fetch()
+  qrCodeUrl.value = await QRCode.toDataURL(String(props.purchaseOrderId))
 })
 </script>
 
 <style scoped>
+.qr-code {
+  float: right;
+  margin-left: 16px;
+}
+
 .invoice-wrapper {
   max-width: 600px;
   margin: 0 auto;

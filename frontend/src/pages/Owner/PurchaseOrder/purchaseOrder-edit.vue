@@ -121,12 +121,25 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
+      <q-dialog v-model="showScanner" persistent>
+        <q-card style="min-width: 350px; max-width: 400px">
+          <q-card-section>
+            <qr-code-scanner @scanned="onScanned" @close="showScanner = false" />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Đóng" color="negative" @click="showScanner = false" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
 
       <div class="row">
         <div class="col q-gutter-md">
           <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
           <q-btn :label="t('button.close')" icon="close" type="button" to="../../purchaseOrders" outline
             color="grey-9" />
+          <q-btn color="accent" icon="qr_code_scanner" :label="t('scanner')" @click="showScanner = true" />
+          <q-btn :label="t('product.download_qrcode')" icon="check" :loading="loading" type="button"
+            @click="downloadQRcode" color="primary" v-if="purchaseOrder.qrcodeId" />
           <q-btn :label="t('button.view_order')" @click="openDiaglogOrder = true" type="button" outline
             color="grey-9" />
           <q-btn :label="t('button.refund')" @click="refund" type="button" outline color="grey-9"
@@ -137,8 +150,10 @@
   </q-page>
 </template>
 <script setup lang="ts">
+import QrCodeScanner from '../../../components/QrCodeScanner.vue';
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import * as until from '../../../utils/untils'
 import api, { PurchaseOrderRequest, ProductRequest } from '../../../services/api';
 import * as ui from '../../../utils/ui'
 import { useI18n } from 'vue-i18n';
@@ -160,6 +175,8 @@ const openPopupBranchProduct = ref(false)
 const newBranchProductName = ref('')
 const isDisabled = ref(false)
 const openDiaglogOrder = ref(false)
+const showScanner = ref(false);
+const scannedResult = ref('');
 let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
@@ -174,7 +191,8 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
     unitPrice: 0,
     note: null
   }],
-  businessId: userInfo.value.businessId
+  businessId: userInfo.value.businessId,
+  qrcodeId: null,
 });
 const product = ref(null)
 const productOptions = ref([])
@@ -378,7 +396,30 @@ async function onProductSelect() {
     ui.error(t('error.unknown'))
   }
 }
+const onScanned = async (text) => {
+  try {
+    scannedResult.value = text;
+    const selectedProduct = productOptions.value.find((item) => item.value === scannedResult.value);
+    if (!selectedProduct) return;
+    var p = await api.api.product.getProduct(scannedResult.value)
+    // Thêm vào danh sách purchaseOrderItems
+    purchaseOrderItems.value.push({
+      productId: scannedResult.value,
+      name: selectedProduct.label,
+      quantity: 0,
+      unitPrice: p.salePrice,
+      note: null,
+    });
+    // Loại bỏ sản phẩm vừa chọn khỏi productOptions
+    productOptions.value = productOptions.value.filter(item => item.value !== scannedResult.value);
 
+    // Reset product selection
+    scannedResult.value = '';
+    showScanner.value = false;
+  } catch {
+    ui.error(t('error.unknown'))
+  }
+};
 async function addCategory(scope) {
   try {
     loading.value = true
@@ -434,6 +475,16 @@ async function AddProduct() {
     loading.value = false
     ui.success(t('success.add'))
   } catch {
+    ui.error(t('error.unknown'))
+  }
+}
+async function downloadQRcode() {
+  try {
+    loading.value = true;
+    await until.downloadQRcode(purchaseOrder.qrcodeId, `${route.params.id}.png`);
+    loading.value = false;
+  }
+  catch {
     ui.error(t('error.unknown'))
   }
 }

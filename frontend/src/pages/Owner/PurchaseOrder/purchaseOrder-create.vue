@@ -108,10 +108,21 @@
           </q-select>
         </div>
       </div>
+      <q-dialog v-model="showScanner" persistent>
+        <q-card style="min-width: 350px; max-width: 400px">
+          <q-card-section>
+            <qr-code-scanner @scanned="onScanned" @close="showScanner = false" />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Đóng" color="negative" @click="showScanner = false" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
 
       <div class="row">
         <div class="col q-gutter-md">
           <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
+          <q-btn color="accent" icon="qr_code_scanner" :label="t('scanner')" @click="showScanner = true" />
           <q-btn :label="t('button.close')" icon="close" type="button" to="../purchaseOrders" outline color="grey-9" />
         </div>
       </div>
@@ -119,8 +130,10 @@
   </q-page>
 </template>
 <script setup lang="ts">
+import QrCodeScanner from '../../../components/QrCodeScanner.vue';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import * as ui from '../../../utils/ui'
+import * as until from '../../../utils/untils'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 import { useRouter } from 'vue-router';
@@ -140,6 +153,8 @@ const isDisabled = ref(false)
 import { useCurrentuser } from '../../../share/currentuser';
 const currentUser = useCurrentuser()
 const userInfo = currentUser.info
+const showScanner = ref(false);
+const scannedResult = ref('');
 let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
@@ -154,7 +169,8 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
     unitPrice: 0,
     note: null
   }],
-  businessId: userInfo.value.businessId
+  businessId: userInfo.value.businessId,
+  qrcodeId: null
 });
 const product = ref(null)
 const productOptions = ref([])
@@ -235,20 +251,13 @@ async function save() {
       note: item.note
     }))
     console.log(purchaseOrder)
-    await api.api.purchaseOrder.createPurchaseOrder(purchaseOrder)
+    const res = await api.api.purchaseOrder.createPurchaseOrder(purchaseOrder)
     if (purchaseOrder.status == 'Completed') {
-      // purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
-      //   const product_value = await api.api.product.getProduct(String(item.productId))
-      //   const increase_quantity = product_value['stockQuantity'] + item.quantity
-      //   await api.api.product.updateProduct(String(item.productId), {
-      //     name: product_value['name'],
-      //     capitalPrice: product_value['capitalPrice'], salePrice: product_value['salePrice'], stockQuantity: increase_quantity,
-      //     categoryId: product_value['category']['id'], branchProductId: product_value['branchProduct']['id'],
-      //     businessId: userInfo.value.businessId
-      //   })
-      // })
       isDisabled.value = true
     }
+    const dataUrl = await until.generateQRcode(res);
+    purchaseOrder.qrcodeId = dataUrl
+    await api.api.purchaseOrder.updatePurchaseOrder(String(res), purchaseOrder)
     ui.success(t('success.save'))
     loading.value = false;
     route.push({ path: '../purchaseOrders' })
@@ -299,6 +308,31 @@ async function onProductSelect() {
     product.value = null;
   }
   catch {
+    ui.error(t('error.unknown'))
+  }
+}
+
+const onScanned = async (text) => {
+  try {
+    scannedResult.value = text;
+    const selectedProduct = productOptions.value.find((item) => item.value === scannedResult.value);
+    if (!selectedProduct) return;
+    var p = await api.api.product.getProduct(scannedResult.value)
+    // Thêm vào danh sách purchaseOrderItems
+    purchaseOrderItems.value.push({
+      productId: scannedResult.value,
+      name: selectedProduct.label,
+      quantity: 0,
+      unitPrice: p.salePrice,
+      note: null,
+    });
+    // Loại bỏ sản phẩm vừa chọn khỏi productOptions
+    productOptions.value = productOptions.value.filter(item => item.value !== scannedResult.value);
+
+    // Reset product selection
+    scannedResult.value = '';
+    showScanner.value = false;
+  } catch {
     ui.error(t('error.unknown'))
   }
 }

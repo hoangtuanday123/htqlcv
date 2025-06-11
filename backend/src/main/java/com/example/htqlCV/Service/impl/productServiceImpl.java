@@ -49,7 +49,7 @@ public class productServiceImpl implements productServices {
                 .name(productRequestDTO.getName())
                 .capitalPrice(productRequestDTO.getCapitalPrice())
                 .salePrice(productRequestDTO.getSalePrice())
-                .qrcodeUrl(null)
+                .qrcodeUrl(productRequestDTO.getQrcodeUrl())
                 .branchProduct(branchProduct)
                 .stockQuantity(productRequestDTO.getStockQuantity())
                 .category(category)

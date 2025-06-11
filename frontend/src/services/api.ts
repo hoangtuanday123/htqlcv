@@ -176,6 +176,7 @@ export interface PurchaseOrder {
   status: string;
   purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
   businessId: number;
+  qrcodeId: string;
 }
 
 export interface PurchaseOrderRequest {
@@ -186,6 +187,7 @@ export interface PurchaseOrderRequest {
   status: string;
   purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
   businessId: number;
+  qrcodeId: string;
 }
 
 export interface SaleOrderItem {

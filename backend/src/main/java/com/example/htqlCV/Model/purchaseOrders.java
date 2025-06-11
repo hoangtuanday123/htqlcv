@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -33,7 +34,9 @@ public class purchaseOrders extends abstractEntity{
     private String status;
     @Column(name="Sub_status")
     private String SubStatus;
-
+    @Column(name="qrcode_id",columnDefinition = "LONGTEXT")
+    @Lob
+    private String qrcodeId;
     @ManyToOne
     @JoinColumn(name = "supplier_id", nullable = true)
     @JsonManagedReference

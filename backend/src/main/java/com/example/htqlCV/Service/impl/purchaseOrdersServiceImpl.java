@@ -45,6 +45,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
                 .totalAmountPaid(purchaseOrdersRequestDTO.getTotalAmountPaid())
                 .status(purchaseOrdersRequestDTO.getStatus())
                 .SubStatus(purchaseOrdersRequestDTO.getSubStatus())
+                .qrcodeId(purchaseOrdersRequestDTO.getQrcodeId())
                 .supplier(supplier)
                 .business(business_value)
                 .build();
@@ -72,6 +73,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
             purchaseOrders_value.setTotalAmountPaid(purchaseOrdersRequestDTO.getTotalAmountPaid());
             purchaseOrders_value.setStatus(purchaseOrdersRequestDTO.getStatus());
             purchaseOrders_value.setSubStatus(purchaseOrdersRequestDTO.getSubStatus());
+            purchaseOrders_value.setQrcodeId(purchaseOrdersRequestDTO.getQrcodeId());
             purchaseOrders_value.setSupplier(supplier);
             purchaseOrdersRespository.save(purchaseOrders_value);
             for (var item : purchaseOrdersRequestDTO.getPurchaseOrderItemsRequestDTO()) {

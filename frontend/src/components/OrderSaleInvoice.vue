@@ -1,6 +1,9 @@
 <template>
   <div class="invoice-wrapper">
     <div class="title">{{ t('sale_order.title') }}</div>
+    <div class="qr-code">
+      <img :src="qrCodeUrl" alt="QR Code" width="150" height="150" />
+    </div>
 
     <div class="info">
       <strong>Mã:</strong> {{ props.saleOrderId }}<br />
@@ -60,6 +63,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, nextTick, reactive, onMounted, watch } from 'vue'
+import QRCode from 'qrcode'
 import { defineProps } from 'vue'
 import * as ui from '../utils/ui'
 import { useI18n } from 'vue-i18n';
@@ -73,6 +77,7 @@ const props = defineProps<{
   paid: number
   businessId: string
 }>()
+const qrCodeUrl = ref('')
 const customer = ref<Customer>({
   id: null,
   name: null,
@@ -187,6 +192,10 @@ function printInvoice() {
 
     const styles = `
       <style>
+      .qr-code {
+  float: right;
+  margin-left: 16px;
+}
         body {
           font-family: Arial, sans-serif;
           display: flex;
@@ -271,10 +280,16 @@ function printInvoice() {
 }
 onMounted(async () => {
   await fetch()
+  qrCodeUrl.value = await QRCode.toDataURL(String(props.saleOrderId))
 })
 </script>
 
 <style scoped>
+.qr-code {
+  float: right;
+  margin-left: 16px;
+}
+
 .invoice-wrapper {
   max-width: 600px;
   margin: 0 auto;

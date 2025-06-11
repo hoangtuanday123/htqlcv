@@ -8,8 +8,19 @@
         </template>
       </q-input>
       <q-space></q-space>
+      <q-btn color="accent" icon="qr_code_scanner" :label="t('scanner')" @click="showScanner = true" />
       <q-btn color="accent" icon="add" to="./purchaseOrders/create" :label="t('purchase_order.create')" />
     </div>
+    <q-dialog v-model="showScanner" persistent>
+      <q-card style="min-width: 350px; max-width: 400px">
+        <q-card-section>
+          <qr-code-scanner @scanned="onScanned" @close="showScanner = false" />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Đóng" color="negative" @click="showScanner = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-table :rows="purchaseOrders" :columns="columns" :loading="loading" :filter="keyword" :filter-method="search"
       row-key="id">
       <template v-slot:body-cell-dept="props">
@@ -29,8 +40,11 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import QrCodeScanner from '../../../components/QrCodeScanner.vue';
 import api, { PurchaseOrder } from '../../../services/api';
 import * as ui from '../../../utils/ui'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 import { useCurrentuser } from '../../../share/currentuser';
@@ -39,6 +53,8 @@ const userInfo = currentUser.info
 const loading = ref(false)
 const purchaseOrders = ref<PurchaseOrder[]>([])
 const keyword = ref('')
+const showScanner = ref(false);
+const scannedResult = ref('');
 const columns = [
   { name: 'id', label: 'ID', align: 'left' as const, field: 'id', sortable: true },
   { name: 'totalAmount', label: t('purchase_order.total_amound'), align: 'left' as const, field: 'totalAmount', sortable: true },
@@ -74,6 +90,12 @@ async function deletepurchaseOrder(purchaseOrder) {
     ui.error(t('error.unknown'))
   }
 }
+const onScanned = (text) => {
+  scannedResult.value = text;
+  const url = `./purchaseOrders/${text}/edit`;
+  showScanner.value = false;
+  router.push({ path: url })
+};
 onMounted(async () => {
   await fetchPurchaseOrders()
 })

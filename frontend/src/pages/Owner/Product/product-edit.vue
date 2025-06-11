@@ -11,9 +11,9 @@
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
           spellcheck="false">
           <q-input v-model="product.name" :label="t('product.name')" required />
-          <q-input v-model="product.capitalPrice" :label="t('product.capital_price')" type="number" required/>
-          <q-input v-model="product.salePrice" :label="t('product.sale_price')" type="number" required/>
-          <q-input v-model="product.stockQuantity" :label="t('product.stock_quantity')" type="number" required/>
+          <q-input v-model="product.capitalPrice" :label="t('product.capital_price')" type="number" required />
+          <q-input v-model="product.salePrice" :label="t('product.sale_price')" type="number" required />
+          <q-input v-model="product.stockQuantity" :label="t('product.stock_quantity')" type="number" required />
           <q-select v-model="product.category.id" :options="categoryOptions" :label="t('product.category')" map-options
             emit-value>
             <template v-slot:append>
@@ -55,8 +55,8 @@
           <div class="row">
             <div class="col q-gutter-md">
               <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit" color="primary" />
-              <q-btn :label="t('product.create_qrcode')" icon="check" :loading="loading" type="button"
-                @click="createQRCode" color="primary" />
+              <!-- <q-btn :label="t('product.create_qrcode')" icon="check" :loading="loading" type="button"
+                @click="createQRCode" color="primary" /> -->
               <q-btn :label="t('product.download_qrcode')" icon="check" :loading="loading" type="button"
                 @click="downloadQRcode" color="primary" v-if="product.qrcodeUrl" />
               <q-btn :label="t('button.close')" icon="close" type="button" to="../../products" outline color="grey-9" />
@@ -266,35 +266,35 @@ async function createGuarantee() {
     ui.error(t('error.unknown'))
   }
 }
-async function createQRCode() {
-  try {
-    loading.value = true;
-    // const productUrl = window.location.href;
-    const dataUrl = await until.generateQRcode(route.params.id as string);
-    const productRequest = {
-      name: product.name,
-      capitalPrice: product.capitalPrice,
-      salePrice: product.salePrice,
-      stockQuantity: product.stockQuantity,
-      categoryId: product.category.id,
-      branchProductId: product.branchProduct.id,
-      businessId: product.businessId,
-      qrcodeUrl: dataUrl
-    };
-    console.log(dataUrl)
+// async function createQRCode() {
+//   try {
+//     loading.value = true;
+//     // const productUrl = window.location.href;
+//     const dataUrl = await until.generateQRcode(route.params.id as string);
+//     const productRequest = {
+//       name: product.name,
+//       capitalPrice: product.capitalPrice,
+//       salePrice: product.salePrice,
+//       stockQuantity: product.stockQuantity,
+//       categoryId: product.category.id,
+//       branchProductId: product.branchProduct.id,
+//       businessId: product.businessId,
+//       qrcodeUrl: dataUrl
+//     };
+//     console.log(dataUrl)
 
-    await api.api.product.updateProduct(
-      route.params.id as string,
-      productRequest
-    );
-    product.qrcodeUrl = dataUrl;
-    loading.value = false;
-    ui.success(t('success.create_qrcode'))
-  }
-  catch {
-    ui.error(t('error.unknown'))
-  }
-}
+//     await api.api.product.updateProduct(
+//       route.params.id as string,
+//       productRequest
+//     );
+//     product.qrcodeUrl = dataUrl;
+//     loading.value = false;
+//     ui.success(t('success.create_qrcode'))
+//   }
+//   catch {
+//     ui.error(t('error.unknown'))
+//   }
+// }
 
 async function downloadQRcode() {
   try {
