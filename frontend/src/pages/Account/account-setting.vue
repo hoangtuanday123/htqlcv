@@ -27,8 +27,13 @@
                         <div class="col q-gutter-md">
                             <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit"
                                 color="primary" />
+<<<<<<< HEAD
                             <q-btn :label="t('button.close')" icon="close" type="button" to="/owner/dashboard" outline
                                 color="white" text-color="black" />
+=======
+                            <q-btn :label="t('button.close')" icon="close" type="button" to="/owner/dashboard" outline color="white"
+                                text-color="black" />
+>>>>>>> origin/main
                         </div>
                     </div>
                 </q-form>
@@ -52,7 +57,7 @@
                         <div class="col q-gutter-md">
                             <q-btn :label="t('button.save')" icon="check" :loading="loading" type="submit"
                                 color="primary" />
-                            <q-btn :label="t('business.close')" icon="close" type="button" to="/" outline color="white"
+                            <q-btn :label="t('business.close')" icon="close" type="button" to="/owner/dashboard" outline color="white"
                                 text-color="black" />
                         </div>
                     </div>

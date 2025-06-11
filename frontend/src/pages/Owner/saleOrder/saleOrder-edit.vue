@@ -445,8 +445,14 @@ async function createQRCode() {
     // const productUrl = window.location.href;
     const dataUrl = await until.generateQRcode(route.params.id as string);
     saleOrder.qrcodeId = dataUrl;
-    console.log(dataUrl)
-
+    saleOrder.saleOrderItemsRequestDTO = saleOrderItems.value.map((item) => ({
+      id: item.id,
+      productId: item.productId,
+      SaleOrdersId: null,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      note: item.note
+    }))
     await api.api.saleOrder.updateSaleOrder(route.params.id as string, saleOrder)
 
     loading.value = false;

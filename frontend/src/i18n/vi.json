@@ -199,7 +199,8 @@
     "tax_code": "Mã số thuế",
     "email": "Email",
     "phone": "Số điện thoại",
-    "invalid": "Làm ơn nhập ký tự"
+    "invalid": "Làm ơn nhập ký tự",
+    "close":"Đóng"
   },
   "button": {
     "save": "Lưu",
