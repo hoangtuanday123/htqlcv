@@ -33,5 +33,5 @@ spring:
                     starttls:
                         enable: true
 frontend:
-    url: http://hethongquanlybanle.xyz/
+    url: http://hethongquanlybanle.xyz
 

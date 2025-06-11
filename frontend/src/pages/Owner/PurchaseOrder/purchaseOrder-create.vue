@@ -256,7 +256,9 @@ async function save() {
       isDisabled.value = true
     }
     const dataUrl = await until.generateQRcode(res);
+    await fetch();
     purchaseOrder.qrcodeId = dataUrl
+    purchaseOrder.purchaseOrderItemsRequestDTO=[]
     await api.api.purchaseOrder.updatePurchaseOrder(String(res), purchaseOrder)
     ui.success(t('success.save'))
     loading.value = false;

@@ -268,6 +268,7 @@ async function fetch() {
       unitPrice: item.unitPrice,
       note: item.note
     }))
+
     const existingProductIds = new Set(saleOrderItems.value.map(item => item.productId));
     const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
     productOptions.value = productRes

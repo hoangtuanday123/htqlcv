@@ -269,7 +269,9 @@ async function save() {
     }
     const dataUrl = await until.generateQRcode(res);
     SaleOrder.qrcodeId = dataUrl;
+    SaleOrder.saleOrderItemsRequestDTO=[]
     await api.api.saleOrder.updateSaleOrder(String(res), SaleOrder)
+    console.log(SaleOrder)
     ui.success(t('success.save'))
     loading.value = false;
     route.push({ path: '../saleOrders' })
