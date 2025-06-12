@@ -90,8 +90,7 @@
 
 
             <template v-if="currentUser.hasloggedIn()">
-                <!-- <q-btn stretch flat :label="t('menu.my_instances')" to="/my_data"
-                    v-if="currentUser.hasRole('Customer')" /> -->
+                <q-btn stretch flat :label="t('AI')" to="/owner/ai-service" />
                 <q-btn round flat>
                     <avatar :user="{ username: userInfo.username, full_name: '', profile_img: '' }" size="28px">
                     </avatar>

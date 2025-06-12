@@ -277,6 +277,14 @@ export interface ResetPassword {
   token: string;
 }
 
+export interface aiServiceRequest {
+  message: string;
+  businessId: string;
+}
+
+export interface aiServiceResponse {
+  message: string;
+}
 axios.defaults.baseURL = import.meta.env.VITE_API_HOST;
 console.log('API Host:', import.meta.env);
 axios.interceptors.request.use((config) => {
@@ -457,6 +465,9 @@ const dashboard = {
   getDashboard: (businessId: string) => request.get<DashBoard>(`/dashboard?businessId=${businessId}`),
   getRevenue: (businessId: string) => request.get<RevenueByProductAndMonth[]>(`/dashboard/revenueMonthly?businessId=${businessId}`)
 }
+const aiService = {
+  getAiService: (data: aiServiceRequest) => request.post<aiServiceResponse>('/ai-service', data)
+}
 
 const api = {
   auth,
@@ -473,7 +484,8 @@ const api = {
   saleOrderItem,
   saleOrder,
   business,
-  dashboard
+  dashboard,
+  aiService
 };
 
 export default { api };

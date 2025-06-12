@@ -89,6 +89,9 @@
 
     <template v-if="currentUser.hasloggedIn()">
       <q-separator />
+      <q-item to="/owner/ai-service">
+        <q-item-section>{{ t('AI') }}</q-item-section>
+      </q-item>
       <q-item to="/account">
         <q-item-section>{{ t('current_user.account') }}</q-item-section>
       </q-item>

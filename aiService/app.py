@@ -10,6 +10,7 @@ from pydantic import BaseModel
 import mysql.connector
 from fastapi.staticfiles import StaticFiles
 import hashlib
+import uuid
 import base64
 def start_app():
     app = FastAPI(
@@ -53,10 +54,14 @@ def start_app():
 
             where_clauses = []
             params = []
+            try:
+                uuid_bytes = uuid.UUID(business_id).bytes
+            except ValueError:
+                raise ValueError("business_id không hợp lệ (không đúng định dạng UUID)")
 
             # Ép buộc lọc theo business_id
             where_clauses.append("`business_id` = %s")
-            params.append(business_id)
+            params.append(uuid_bytes)
 
             for key, value in conditions.items():
                 if key in ["status", "sub_status"] and isinstance(value, list):
@@ -87,10 +92,10 @@ def start_app():
                 return base64.b64encode(value).decode("utf-8")
         return value
 
-    @app.get("/", response_model=str)
+    @app.get("/")
     async def execute(business_id: str,text:str):
+        # print("🔍 Nhận câu truy vấn:", text)
         cursor = mydb.cursor()
-
         os.environ["LANGSMITH_TRACING"] = "true"
         os.environ["LANGSMITH_API_KEY"] = "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"
         os.environ["LANGSMITH_PROJECT"] = "default"
@@ -114,13 +119,14 @@ def start_app():
         "condition": thông tin cần tìm kiếm dưới dạng json,
         }}
         Chỉ trả về đúng JSON.
-        key là "table", "action", "condition".
+        key là "table", "action", "condition","created_at" để trả lời cho câu hỏi ngày tháng năm.
         key của bảng customer là "name","phone","dob","address","companyName","customerType","cmnd","email","mst".
         key của bảng product là "name","capital_price","sale_price","branchProduct","category".
         key của bảng supplier là "name","phone","address","email","company","mst","branch".
         key của bảng purchase_orders là "totalAmount","totalAmountPaid","status" là [Processing, Canceled, Completed, None],"sub_status" là[ None,Not Paid ].
         key của bảng sale_orders là "totalAmount","totalAmountPaid","status" là [Processing, Canceled, Completed, None],"sub_status" là [ None,Not Paid ].
         """
+        
         response = model.invoke(prompt)
         raw_output = response.content.strip()
         if raw_output.startswith("```json"):
@@ -135,13 +141,14 @@ def start_app():
             print("📋 Tham số:", params)
             cursor.execute(query, params)
             results = cursor.fetchall()
+            print("🔍 Kết quả truy vấn:", results)
             columns = [desc[0] for desc in cursor.description]
             # Trả về JSON an toàn
             output = []
             for row in results:
                 row_dict = {col: safe_decode(val) for col, val in zip(columns, row)}
                 output.append(row_dict)
-            response = model.invoke(f"""Dựa trên kết quả {output}, hãy trả lời câu hỏi của người dùng không cần đưa ra 'id','created_at','updated_at' và 'deleted_at','is_blocked',các từ dính chữ id.
+            response = model.invoke(f"""Dựa trên kết quả {output}, hãy trả lời câu hỏi của người dùng không cần TRẢ LỜI 'id','created_at','updated_at' và 'deleted_at','is_blocked',các từ dính chữ id,QR, những từ có tính chất như mã.
                                     nếu {output} là rỗng thì trả lời 'Không tìm thấy kết quả nào' và không cần đưa ra câu hỏi của người dùng.""")
             return {"message":response.content.strip()}
         except json.JSONDecodeError as e:
