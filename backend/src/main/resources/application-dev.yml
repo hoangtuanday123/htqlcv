@@ -33,4 +33,6 @@ spring:
                         enable: true
 frontend:
     url: http://localhost:9000
+aiService:
+    url: http://localhost:8001
 

@@ -44,7 +44,7 @@ public class SecurityConfig {
             "/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/common/**", "/businesses/**", "/user/"
     };
     private final String[] AUTH_ENDPOINTS = {
-            "/user/current_user", "/user/changePassword"
+            "/user/current_user", "/user/changePassword","/ai-service/**"
     };
     private final String[] ADMIN_ENDPOINTS = {
             "/role/**", "/user/{id}", "/user/{id}/update", "/user/{id}delete", "/user/createStaff", "/user/staffs","/dashboard","/dashboard/**"
