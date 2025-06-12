@@ -34,4 +34,6 @@ spring:
                         enable: true
 frontend:
     url: http://hethongquanlybanle.xyz
+aiService:
+    url: http://localhost:8001
 

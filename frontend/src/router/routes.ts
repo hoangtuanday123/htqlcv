@@ -177,6 +177,15 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('pages/Owner/Dashboard/dashboard-view.vue')
               }
             ]
+          },
+          {
+            path: 'ai-service',
+            children: [
+              {
+                path: '',
+                component: () => import('pages/AiService.vue')
+              }
+            ]
           }
         ]
       },
