@@ -1,7 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -28,16 +28,16 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
     private final businessRespository businessRespository;
     private final productRespository productRespository;
     @Override
-    public List<purchaseOrders> getAllPurchaseOrders(UUID businessId) {
+    public List<purchaseOrders> getAllPurchaseOrders(String businessId) {
         business business_value=businessRespository.findById(businessId).orElse(null);
         return purchaseOrdersRespository.findByBusiness(business_value);
     }
     @Override
-    public purchaseOrders getPurchaseOrdersById(UUID id) {
+    public purchaseOrders getPurchaseOrdersById(String id) {
         return purchaseOrdersRespository.findById(id).orElse(null);
     }
     @Override
-    public UUID createPurchaseOrders(purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
+    public String createPurchaseOrders(purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
         var supplier = supplierRespository.findById(purchaseOrdersRequestDTO.getSupplierId()).orElse(null);
         business business_value=businessRespository.findById(purchaseOrdersRequestDTO.getBusinessId()).orElse(null);
         purchaseOrders purchaseOrders_value = purchaseOrders.builder()
@@ -54,7 +54,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         for (var item : purchaseOrdersRequestDTO.getPurchaseOrderItemsRequestDTO()) {
             item.setPurchaseOrdersId(purchaseOrdersId);
             purchaseOrderItemsServices.createPurchaseOrderItems(item);
-            if("Completed".equals(purchaseOrdersRequestDTO.getStatus())){
+            if("Hoàn thành".equals(purchaseOrdersRequestDTO.getStatus())){
                 product product_value=productRespository.findById(item.getProductId()).orElse(null);
                 Long increaseQuantity=product_value.getStockQuantity()+item.getQuantity();
                 product_value.setStockQuantity(increaseQuantity);
@@ -65,7 +65,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
     }
 
     @Override
-    public void updatePurchaseOrders(UUID id, purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
+    public void updatePurchaseOrders(String id, purchaseOrdersRequestDTO purchaseOrdersRequestDTO) {
         purchaseOrders purchaseOrders_value = purchaseOrdersRespository.findById(id).orElse(null);
         if (purchaseOrders_value != null) {
             var supplier = supplierRespository.findById(purchaseOrdersRequestDTO.getSupplierId()).orElse(null);
@@ -83,7 +83,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
                 } else {
                     purchaseOrderItemsServices.createPurchaseOrderItems(item);
                 }
-                if("Completed".equals(purchaseOrdersRequestDTO.getStatus())){
+                if("Hoàn thành".equals(purchaseOrdersRequestDTO.getStatus())){
                     product product_value=productRespository.findById(item.getProductId()).orElse(null);
                     Long increaseQuantity=product_value.getStockQuantity()+item.getQuantity();
                     product_value.setStockQuantity(increaseQuantity);
@@ -93,7 +93,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         }
     }
     @Override
-    public void deletePurchaseOrders(UUID id) {
+    public void deletePurchaseOrders(String id) {
         purchaseOrders purchaseOrders_value = purchaseOrdersRespository.findById(id).orElse(null);
         for(var item:purchaseOrders_value.getPurchaseOrderItems()){
             purchaseOrderItemRespository.deleteById(item.getId());
@@ -101,7 +101,7 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         purchaseOrdersRespository.deleteById(id);
     }
     @Override
-    public Long getTotalAmountThisMonthByBusinessId(UUID businessId){
+    public Long getTotalAmountThisMonthByBusinessId(String businessId){
         var total= purchaseOrdersRespository.getTotalAmountThisMonthByBusinessId(businessId);
         if (total==null){
             return (long) 0;
@@ -109,8 +109,8 @@ public class purchaseOrdersServiceImpl implements purchaseOrdersServices {
         return total;
     }
     @Override
-    public void refundPurchaseOrder(UUID id,purchaseOrdersRequestDTO purchaseOrdersRequestDTO){
-        if("Refunded".equals(purchaseOrdersRequestDTO.getStatus())){
+    public void refundPurchaseOrder(String id,purchaseOrdersRequestDTO purchaseOrdersRequestDTO){
+        if("Hoàn trả".equals(purchaseOrdersRequestDTO.getStatus())){
             for (var item:purchaseOrdersRequestDTO.getPurchaseOrderItemsRequestDTO()){
                 product product_value=productRespository.findById(item.getProductId()).orElse(null);
                 Long decreaseQuantity=product_value.getStockQuantity()-item.getQuantity();

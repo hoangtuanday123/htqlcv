@@ -96,9 +96,13 @@
           </q-select>
           <q-input v-model="purchaseOrder.totalAmount" :label="t('purchase_order.total_amound')" type="number"
             readonly />
+          <q-input :model-value="(purchaseOrder.totalAmount *8)/100"
+            label="Thuế 8%" type="number" readonly />
+            <q-input :model-value="purchaseOrder.totalAmount+((purchaseOrder.totalAmount *8)/100)"
+            label="Tổng cộng tiền thanh toán" type="number" readonly />
           <q-input v-model="purchaseOrder.totalAmountPaid" :label="t('purchase_order.total_amound_paid')"
             type="number" />
-          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid"
+          <q-input :model-value="(purchaseOrder.totalAmount+((purchaseOrder.totalAmount *8)/100)) - purchaseOrder.totalAmountPaid"
             :label="t('purchase_order.dept')" type="number" readonly />
           <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions"
             :label="t('purchase_order.sub_status')" map-options emit-value>
@@ -141,8 +145,8 @@ import api, { PurchaseOrderRequest, ProductRequest } from '../../../services/api
 const route = useRouter();
 const loading = ref(false);
 const supplierOptions = ref([])
-const subStatusOptions = ['None', 'Not Paid']
-const statusOptions = ['None', 'Processing', 'Completed', 'Cancelled']
+const subStatusOptions = ['Trả đủ', 'Chưa trả đủ']
+const statusOptions = ['Đang tiến hành', 'Hoàn thành', 'Hủy bỏ']
 const categoryOptions = ref([])
 const branchProductOptions = ref([])
 const openPopupCategory = ref(false)
@@ -159,8 +163,8 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   supplierId: null,
-  subStatus: 'None',
-  status: 'None',
+  subStatus: 'Trả đủ',
+  status: 'Đang tiến hành',
   purchaseOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -177,6 +181,8 @@ const productOptions = ref([])
 const purchaseOrderItems = ref([])
 const openDiaglog = ref(false)
 let productAdd: ProductRequest = reactive({
+  unitCalculate: 'Cái',
+  sku: '',
   name: '',
   capitalPrice: 0,
   salePrice: 0,
@@ -223,7 +229,7 @@ async function fetch() {
   }));
   const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
   productOptions.value = productRes.map((item) => ({
-    label: item.name,
+    label: item.name+', Số lượng: '+item.stockQuantity,
     value: item.id,
   }))
   const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
@@ -252,7 +258,7 @@ async function save() {
     }))
     console.log(purchaseOrder)
     const res = await api.api.purchaseOrder.createPurchaseOrder(purchaseOrder)
-    if (purchaseOrder.status == 'Completed') {
+    if (purchaseOrder.status == 'Hoàn thành') {
       isDisabled.value = true
     }
     const dataUrl = await until.generateQRcode(res);

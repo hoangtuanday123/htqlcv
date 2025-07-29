@@ -1,7 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -19,18 +19,18 @@ public class customerServiceImpl implements customerServices {
     private final customerRespository customerRespository;
     private final businessRespository businessRespository;
     @Override
-    public List<customer> getCustomers(UUID businessId){
+    public List<customer> getCustomers(String businessId){
         business business_value=businessRespository.findById(businessId).orElse(null);
         return customerRespository.findByBusiness(business_value);
     }
 
     @Override
-    public customer getCustomer(UUID id){
+    public customer getCustomer(String id){
         return customerRespository.findById(id).orElse(null);
     }
 
     @Override
-    public UUID createCustomer(customerRequestDTO customerRequestDTO){
+    public String createCustomer(customerRequestDTO customerRequestDTO){
         business business_value=businessRespository.findById(customerRequestDTO.getBusinessId()).orElse(null);
         customer customer_value=customer.builder()
         .name(customerRequestDTO.getName())
@@ -51,7 +51,7 @@ public class customerServiceImpl implements customerServices {
     }
 
     @Override
-    public void updateCustomer(UUID id,customerRequestDTO customerRequestDTO){
+    public void updateCustomer(String id,customerRequestDTO customerRequestDTO){
         customer customer_value=customerRespository.findById(id).orElse(null);
         if(customer_value!=null){
             customer_value.setName(customerRequestDTO.getName());
@@ -70,12 +70,12 @@ public class customerServiceImpl implements customerServices {
     }
 
     @Override
-    public void deleteCustomer(UUID id){
+    public void deleteCustomer(String id){
         customerRespository.deleteById(id);
     }
 
     @Override
-    public Integer countCustomerByBusiness(UUID businessId){
+    public Integer countCustomerByBusiness(String businessId){
         business business_value=businessRespository.findById(businessId).orElse(null);
         return customerRespository.countCustomerByBusiness(business_value);
     }

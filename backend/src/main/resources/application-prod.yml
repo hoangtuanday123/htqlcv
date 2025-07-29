@@ -35,5 +35,7 @@ spring:
 frontend:
     url: http://hethongquanlybanle.xyz
 aiService:
-    url: http://localhost:8001
+    url: http://aiService:8001
+backend:
+    url: https://hethongquanlybanle-api.xyz
 

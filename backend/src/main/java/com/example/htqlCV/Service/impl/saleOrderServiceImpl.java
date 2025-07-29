@@ -1,7 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -29,17 +29,17 @@ public class saleOrderServiceImpl implements saleOrdersServices{
     private final businessRespository businessRespository;
     private final productRespository productRespository;
     @Override
-    public List<saleOrders> getAllSaleOrders(UUID businessId){
+    public List<saleOrders> getAllSaleOrders(String businessId){
         business business_value=businessRespository.findById(businessId).orElse(null);
         return saleOrdersRespository.findByBusiness(business_value);
     }
 
     @Override
-    public saleOrders getSaleOrdersById(UUID id){
+    public saleOrders getSaleOrdersById(String id){
         return saleOrdersRespository.findById(id).orElse(null);
     }
     @Override
-    public UUID createSaleOrder(saleOrdersRequestDTO saleOrdersRequestDTO){
+    public String createSaleOrder(saleOrdersRequestDTO saleOrdersRequestDTO){
         var customer=customerRespository.findById(saleOrdersRequestDTO.getCustomerId()).orElse(null);
         business business_value=businessRespository.findById(saleOrdersRequestDTO.getBusinessId()).orElse(null);
         saleOrders saleOrders_value=saleOrders.builder()
@@ -56,7 +56,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         for (var item:saleOrdersRequestDTO.getSaleOrderItemsRequestDTO()){
             item.setSaleOrdersId(saleOrderId);
             saleOrderItemsServices.createSaleOrderItems(item);
-            if("Completed".equals(saleOrdersRequestDTO.getStatus())){
+            if("Hoàn thành".equals(saleOrdersRequestDTO.getStatus())){
                 product product_value=productRespository.findById(item.getProductId()).orElse(null);
                 Long decreaseQuantity=product_value.getStockQuantity()-item.getQuantity();
                 product_value.setStockQuantity(decreaseQuantity);
@@ -67,7 +67,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         return saleOrderId;
     } 
     @Override
-    public void updateSaleOrder(UUID id,saleOrdersRequestDTO saleOrdersRequestDTO){
+    public void updateSaleOrder(String id,saleOrdersRequestDTO saleOrdersRequestDTO){
         saleOrders saleOrders_value=saleOrdersRespository.findById(id).orElse(null);
         if(saleOrders_value!=null){
             var customer=customerRespository.findById(saleOrdersRequestDTO.getCustomerId()).orElse(null);
@@ -86,7 +86,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
                 else{
                     saleOrderItemsServices.createSaleOrderItems(item);
                 }
-                if("Completed".equals(saleOrdersRequestDTO.getStatus())){
+                if("Hoàn thành".equals(saleOrdersRequestDTO.getStatus())){
                     product product_value=productRespository.findById(item.getProductId()).orElse(null);
                     Long decreaseQuantity=product_value.getStockQuantity()-item.getQuantity();
                     product_value.setStockQuantity(decreaseQuantity);
@@ -97,8 +97,8 @@ public class saleOrderServiceImpl implements saleOrdersServices{
     }
 
     @Override
-    public void refundSaleOrder(UUID id,saleOrdersRequestDTO saleOrdersRequestDTO){
-        if("Refunded".equals(saleOrdersRequestDTO.getStatus())){
+    public void refundSaleOrder(String id,saleOrdersRequestDTO saleOrdersRequestDTO){
+        if("Hoàn trả".equals(saleOrdersRequestDTO.getStatus())){
             for (var item:saleOrdersRequestDTO.getSaleOrderItemsRequestDTO()){
                 product product_value=productRespository.findById(item.getProductId()).orElse(null);
                 Long increaseQuantity=product_value.getStockQuantity()+item.getQuantity();
@@ -111,7 +111,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         }
     }
     @Override
-    public void deleteSaleOrder(UUID id){
+    public void deleteSaleOrder(String id){
         saleOrders saleOrders_value=saleOrdersRespository.findById(id).orElse(null);
         for(var item:saleOrders_value.getSaleOrderItems()){
             saleOrderItemsRespository.deleteById(item.getId());
@@ -119,7 +119,7 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         saleOrdersRespository.deleteById(id);
     }
     @Override
-    public Long getTotalAmountThisMonthByBusinessId(UUID businessId){
+    public Long getTotalAmountThisMonthByBusinessId(String businessId){
         var total= saleOrdersRespository.getTotalAmountThisMonthByBusinessId(businessId);
         if (total==null){
             return (long) 0;
@@ -127,16 +127,18 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         return total;
     }
     @Override
-    public Long getMonthlyProfitByBusinessId(UUID businessId){
+    public Long getMonthlyProfitByBusinessId(String businessId){
+        
         return saleOrdersRespository.getMonthlyProfitByBusinessId(businessId);
     }
 
     @Override  
-    public List<RevenueByProductAndMonth> getMonthlyRevenueNative(Integer currentYear,UUID businessId){
+    public List<RevenueByProductAndMonth> getMonthlyRevenueNative(Integer currentYear,String businessId){
+        
         return saleOrdersRespository.getMonthlyRevenueNative(currentYear, businessId);
     }
     @Override
-    public Long getTotalAmountThisDailyByBusinessId(UUID businessId){
+    public Long getTotalAmountThisDailyByBusinessId(String businessId){
         var total= saleOrdersRespository.getTotalAmountThisDailyByBusinessId(businessId);
         if (total==null){
             return (long) 0;
@@ -144,7 +146,8 @@ public class saleOrderServiceImpl implements saleOrdersServices{
         return total;
     }
     @Override
-    public Long getDailyProfitByBusinessId(UUID businessId){
+    public Long getDailyProfitByBusinessId(String businessId){
+        
         var total= saleOrdersRespository.getDailyProfitByBusinessId(businessId);
         if (total==null){
             return (long) 0;

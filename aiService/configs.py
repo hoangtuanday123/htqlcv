@@ -21,5 +21,10 @@ class Configs:
     MYSQL_PASSWORD: str = os.getenv("MYSQL_PASSWORD", "12345678")
     MYSQL_PORT: int = int(os.getenv("MYSQL_PORT", 3306))
     MYSQL_DB: str = os.getenv("MYSQL_DB", "htqlcv")
+    LANGSMITH_TRACING: str = os.getenv("LANGSMITH_TRACING")
+    LANGSMITH_API_KEY: str = os.getenv("LANGSMITH_API_KEY")
+    LANGSMITH_PROJECT: str = os.getenv("LANGSMITH_PROJECT")
+    GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY")
+
 
 configs = Configs()

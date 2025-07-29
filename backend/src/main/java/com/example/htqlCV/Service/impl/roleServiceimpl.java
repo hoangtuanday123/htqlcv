@@ -1,7 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class roleServiceimpl implements roleServices {
     }
 
     @Override
-    public role getRoleById(UUID id) {
+    public role getRoleById(String id) {
         return roleRespository.findById(id).orElse(null);
     }
     @Override
@@ -39,7 +39,7 @@ public class roleServiceimpl implements roleServices {
     }
 
     @Override
-    public role updateRole(UUID id, roleRequestDTO roleRequestDTO) {
+    public role updateRole(String id, roleRequestDTO roleRequestDTO) {
         role role_value = roleRespository.findById(id).orElse(null);
         if (role_value != null) {
             role_value.setName(roleRequestDTO.getName());
@@ -49,7 +49,7 @@ public class roleServiceimpl implements roleServices {
     }
 
     @Override
-    public void deleteRole(UUID id) {
+    public void deleteRole(String id) {
         roleRespository.deleteById(id);
     }
     

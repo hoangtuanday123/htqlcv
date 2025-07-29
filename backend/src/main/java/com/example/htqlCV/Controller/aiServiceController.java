@@ -21,8 +21,9 @@ public class aiServiceController {
     public aiServiceResponse getaiservice(@RequestBody aiServiceRequest aiServiceRequest) {
         // String businessId =URLEncoder.encode(aiServiceRequest.getBusinessId(), StandardCharsets.UTF_8) ;
         // String text = URLEncoder.encode(aiServiceRequest.getMessage(), StandardCharsets.UTF_8);
-        
-        return webClient.get()
+        try 
+        {
+            return webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path("/")
                 .queryParam("business_id", aiServiceRequest.getBusinessId())
@@ -31,6 +32,14 @@ public class aiServiceController {
             .retrieve()
             .bodyToMono(aiServiceResponse.class)
             .block();
+        } catch (IllegalArgumentException e) {
+            // Handle the exception, e.g., log it or return an error response
+            System.err.println("Error: " + e.getMessage());
+            aiServiceResponse ai= new aiServiceResponse();
+            ai.setMessage("Tìm kiếm không hợp lệ");
+            return ai;
+        }
+        
       
     }
     

@@ -1,16 +1,16 @@
 package com.example.htqlCV.Service;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import com.example.htqlCV.DAO.request.purchaseOrdersRequestDTO;
 import com.example.htqlCV.Model.purchaseOrders;
 public interface  purchaseOrdersServices {
-    List<purchaseOrders> getAllPurchaseOrders(UUID businessId);
-    purchaseOrders getPurchaseOrdersById(UUID id);
-    UUID createPurchaseOrders(purchaseOrdersRequestDTO purchaseOrders);
-    void updatePurchaseOrders(UUID id, purchaseOrdersRequestDTO purchaseOrders);
-    void deletePurchaseOrders(UUID id);
-    Long getTotalAmountThisMonthByBusinessId(UUID businessId);
-    void refundPurchaseOrder(UUID id,purchaseOrdersRequestDTO purchaseOrdersRequestDTO);
+    List<purchaseOrders> getAllPurchaseOrders(String businessId);
+    purchaseOrders getPurchaseOrdersById(String id);
+    String createPurchaseOrders(purchaseOrdersRequestDTO purchaseOrders);
+    void updatePurchaseOrders(String id, purchaseOrdersRequestDTO purchaseOrders);
+    void deletePurchaseOrders(String id);
+    Long getTotalAmountThisMonthByBusinessId(String businessId);
+    void refundPurchaseOrder(String id,purchaseOrdersRequestDTO purchaseOrdersRequestDTO);
 }

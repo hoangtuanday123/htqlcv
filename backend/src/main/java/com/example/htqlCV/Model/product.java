@@ -26,6 +26,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "tbl_product")
 public class product extends abstractEntity {
+    @Column(name = "sku")
+    private String sku;
     @Column(name = "name")
     private String name;
     @Column(name="capital_price")
@@ -34,6 +36,8 @@ public class product extends abstractEntity {
     private Long salePrice;
     @Column(name="stock_quantity")
     private Long stockQuantity;
+    @Column(name="unit_calculate")
+    private String UnitCalculate;
     @Column(name="qrcode_url",columnDefinition = "LONGTEXT")
     @Lob
     private String qrcodeUrl;

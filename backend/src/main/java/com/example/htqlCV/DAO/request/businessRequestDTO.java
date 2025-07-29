@@ -8,4 +8,8 @@ public class businessRequestDTO {
     private String mst;
     private String email;
     private String phone;
+    private String address;
+    private String bankAccount;
+    private String bankName;
 }
+

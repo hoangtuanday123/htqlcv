@@ -50,10 +50,12 @@ const scannedResult = ref('');
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const columns = [
+    { name: 'sku', label: 'Mã sản phẩm', align: 'left' as const, field: 'sku', sortable: true },
     { name: 'name', label: t('product.name'), align: 'left' as const, field: 'name', sortable: true },
     { name: 'capitalPrice', label: t('product.capital_price'), align: 'left' as const, field: 'capitalPrice', sortable: true },
     { name: 'salePrice', label: t('product.sale_price'), align: 'left' as const, field: 'salePrice', sortable: true },
     { name: 'stockQuantity', label: t('product.stock_quantity'), align: 'left' as const, field: 'stockQuantity', sortable: true },
+    { name: 'unitCalculate', label:'Đơn vị tính', align: 'left' as const, field: 'unitCalculate', sortable: true },
     { name: 'actions', label: t('product.action'), align: 'right' as const, field: '', sortable: false }
 ];
 const onScanned = (text) => {

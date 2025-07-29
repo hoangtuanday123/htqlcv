@@ -1,7 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,27 +26,27 @@ import lombok.RequiredArgsConstructor;
 public class saleOrdersController {
     private final saleOrdersServices saleOrdersServices;
     @GetMapping
-    public List<saleOrders> getSaleOrders(@RequestParam UUID businessId) {
+    public List<saleOrders> getSaleOrders(@RequestParam String businessId) {
         return saleOrdersServices.getAllSaleOrders(businessId);
     }
     @GetMapping("/{id}")
-    public saleOrders getSaleOrder(@PathVariable UUID id) {
+    public saleOrders getSaleOrder(@PathVariable String id) {
         return saleOrdersServices.getSaleOrdersById(id);
     }
     @PostMapping("/")
-    public UUID createSaleOrder(@RequestBody saleOrdersRequestDTO saleOrdersRequestDTO) {
+    public String createSaleOrder(@RequestBody saleOrdersRequestDTO saleOrdersRequestDTO) {
         return saleOrdersServices.createSaleOrder(saleOrdersRequestDTO);
     }
     @PutMapping("/{id}/update")
-    public void updateSaleOrder(@PathVariable UUID id, @RequestBody saleOrdersRequestDTO saleOrdersRequestDTO) {
+    public void updateSaleOrder(@PathVariable String id, @RequestBody saleOrdersRequestDTO saleOrdersRequestDTO) {
         saleOrdersServices.updateSaleOrder(id, saleOrdersRequestDTO);
     }
     @PutMapping("/{id}/refund")
-    public void refundSaleOrder(@PathVariable UUID id, @RequestBody saleOrdersRequestDTO saleOrdersRequestDTO) {
+    public void refundSaleOrder(@PathVariable String id, @RequestBody saleOrdersRequestDTO saleOrdersRequestDTO) {
         saleOrdersServices.refundSaleOrder(id, saleOrdersRequestDTO);
     }
     @DeleteMapping("/{id}/delete")
-    public void deleteSaleOrder(@PathVariable UUID id){
+    public void deleteSaleOrder(@PathVariable String id){
         saleOrdersServices.deleteSaleOrder(id);
     }
 }

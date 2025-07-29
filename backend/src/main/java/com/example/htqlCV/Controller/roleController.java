@@ -1,7 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,17 +37,17 @@ public class roleController {
     }
     
     @GetMapping("/{id}")
-    public role getRole(@PathVariable UUID id) {
+    public role getRole(@PathVariable String id) {
         return roleServices.getRoleById(id);
     }
     
     @PutMapping("/{id}/update")
-    public role updateRole(@PathVariable UUID id, @RequestBody roleRequestDTO roleRequestDTO) {
+    public role updateRole(@PathVariable String id, @RequestBody roleRequestDTO roleRequestDTO) {
        return roleServices.updateRole(id, roleRequestDTO);
     }
     
     @DeleteMapping("/{id}/delete")
-    public void deleteRole(@PathVariable UUID id) {
+    public void deleteRole(@PathVariable String id) {
         roleServices.deleteRole(id);
     }
 }

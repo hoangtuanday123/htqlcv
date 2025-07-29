@@ -1,7 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,19 +23,19 @@ import lombok.RequiredArgsConstructor;
 public class categoryController {
     private final categoryServices categoryServices;
     @GetMapping
-    public List<category> getCategoryList(@RequestParam UUID businessId) {
+    public List<category> getCategoryList(@RequestParam String businessId) {
         return categoryServices.getAllCategory(businessId);
     }
     @GetMapping("/{id}")
-    public category getCategoryById(@PathVariable UUID id) {
+    public category getCategoryById(@PathVariable String id) {
         return categoryServices.getCategoryById(id);
     }
     @PostMapping("/")
-    public UUID createCategory(@RequestBody categoryRequestDTO category) {
+    public String createCategory(@RequestBody categoryRequestDTO category) {
         return categoryServices.createCategory(category);
     }
     @DeleteMapping("/{id}/delete")
-    public void deleteCategory(@PathVariable UUID id) {
+    public void deleteCategory(@PathVariable String id) {
         categoryServices.deleteCategory(id);
     }
 }

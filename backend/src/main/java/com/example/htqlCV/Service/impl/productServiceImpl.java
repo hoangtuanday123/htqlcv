@@ -1,7 +1,6 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -25,16 +24,16 @@ public class productServiceImpl implements productServices {
     private final categoryServices categoryServices;
     private final businessRespository businessRespository;
     @Override
-    public List<product> getAllProduct(UUID businessId) {
+    public List<product> getAllProduct(String businessId) {
         business business_value=businessRespository.findById(businessId).orElse(null);
         return productRespository.findByBusiness(business_value);
     }
     @Override
-    public product getProductById(UUID id) {
+    public product getProductById(String id) {
         return productRespository.findById(id).orElse(null);
     }
     @Override
-    public UUID createProduct(productRequestDTO productRequestDTO) {
+    public String createProduct(productRequestDTO productRequestDTO) {
         branchProduct branchProduct=null;
         if(productRequestDTO.getBranchProductId()!=null){
             branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
@@ -46,10 +45,12 @@ public class productServiceImpl implements productServices {
         business business_value=businessRespository.findById(productRequestDTO.getBusinessId()).orElse(null);
         product product_value;
         product_value = product.builder()
+                .sku(productRequestDTO.getSku())
                 .name(productRequestDTO.getName())
                 .capitalPrice(productRequestDTO.getCapitalPrice())
                 .salePrice(productRequestDTO.getSalePrice())
                 .qrcodeUrl(productRequestDTO.getQrcodeUrl())
+                .UnitCalculate(productRequestDTO.getUnitCalculate())
                 .branchProduct(branchProduct)
                 .stockQuantity(productRequestDTO.getStockQuantity())
                 .category(category)
@@ -59,15 +60,17 @@ public class productServiceImpl implements productServices {
         return product_value.getId();
     }
     @Override
-    public void updateProduct(UUID id, productRequestDTO productRequestDTO) {
+    public void updateProduct(String id, productRequestDTO productRequestDTO) {
         product product_value=productRespository.findById(id).orElse(null);
         if (product_value != null) {
             branchProduct branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
             category category=categoryServices.getCategoryById(productRequestDTO.getCategoryId());
+            product_value.setSku(productRequestDTO.getSku());
             product_value.setName(productRequestDTO.getName());
             product_value.setCapitalPrice(productRequestDTO.getCapitalPrice());
             product_value.setSalePrice(productRequestDTO.getSalePrice());
             product_value.setQrcodeUrl(productRequestDTO.getQrcodeUrl());
+            product_value.setUnitCalculate(productRequestDTO.getUnitCalculate());
             product_value.setBranchProduct(branchProduct);
             product_value.setCategory(category);
             product_value.setStockQuantity(productRequestDTO.getStockQuantity());
@@ -75,11 +78,11 @@ public class productServiceImpl implements productServices {
         }
     }
     @Override
-    public void deleteProduct(UUID id) {
+    public void deleteProduct(String id) {
         productRespository.deleteById(id);
     }
     @Override
-    public Integer getTotalStockQuantityByBusinessId(UUID businessId){
+    public Integer getTotalStockQuantityByBusinessId(String businessId){
         return productRespository.getTotalStockQuantityByBusinessId(businessId);
     }
 }

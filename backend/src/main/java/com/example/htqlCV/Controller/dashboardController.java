@@ -2,7 +2,7 @@ package com.example.htqlCV.Controller;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class dashboardController {
     private final purchaseOrdersServices purchaseOrdersServices;
     private final productServices productServices;
     @GetMapping
-    public dashboardResponse getDashBoard(@RequestParam UUID businessId) {
+    public dashboardResponse getDashBoard(@RequestParam String businessId) {
         Integer totalCustomer=customerServices.countCustomerByBusiness(businessId);
         Integer totalStaff=userSevices.countUserByBusiness(businessId);
         Integer totalSupplier=supplierServices.countSupplierByBusiness(businessId);
@@ -56,7 +56,7 @@ public class dashboardController {
     }
 
     @GetMapping("/revenueMonthly")
-    public List<RevenueByProductAndMonth> getMonthlyRevenueNative(@RequestParam UUID businessId) {
+    public List<RevenueByProductAndMonth> getMonthlyRevenueNative(@RequestParam String businessId) {
         int currentYear = LocalDate.now().getYear();
         return saleOrdersServices.getMonthlyRevenueNative(currentYear, businessId);
     }

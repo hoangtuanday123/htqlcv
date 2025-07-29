@@ -98,12 +98,16 @@
           </q-select>
           <q-input v-model="purchaseOrder.totalAmount" :label="t('purchase_order.total_amound')" type="number"
             readonly />
+          <q-input :model-value="(purchaseOrder.totalAmount *8)/100"
+            label="Thuế 8%" type="number" readonly />
+            <q-input :model-value="purchaseOrder.totalAmount+((purchaseOrder.totalAmount *8)/100)"
+            label="Tổng cộng tiền thanh toán" type="number" readonly />
           <q-input v-model="purchaseOrder.totalAmountPaid" :label="t('purchase_order.total_amound_paid')"
             type="number" />
-          <q-input :model-value="purchaseOrder.totalAmount - purchaseOrder.totalAmountPaid"
+          <q-input :model-value="(purchaseOrder.totalAmount+((purchaseOrder.totalAmount *8)/100)) - purchaseOrder.totalAmountPaid"
             :label="t('purchase_order.dept')" type="number" readonly />
           <q-select v-model="purchaseOrder.subStatus" :options="subStatusOptions"
-            :label="t('purchase_order.sub_status')">
+            :label="t('purchase_order.sub_status')" map-options emit-value>
           </q-select>
           <q-select v-model="purchaseOrder.status" :options="statusOptions" :label="t('purchase_order.status')"
             map-options emit-value :disable="isDisabled">
@@ -143,7 +147,7 @@
           <q-btn :label="t('button.view_order')" @click="openDiaglogOrder = true" type="button" outline
             color="grey-9" />
           <q-btn :label="t('button.refund')" @click="refund" type="button" outline color="grey-9"
-            v-if="purchaseOrder.status == 'Completed'" />
+            v-if="purchaseOrder.status == 'Hoàn thành'" />
         </div>
       </div>
     </q-form>
@@ -165,8 +169,8 @@ import Order from '../../../components/OrderPurchaseInvoice.vue'
 const route = useRoute();
 const loading = ref(false);
 const supplierOptions = ref([])
-const subStatusOptions = ['None', 'Not Paid']
-const statusOptions = ['None', 'Processing', 'Completed', 'Cancelled']
+const subStatusOptions = ['Trả đủ', 'Chưa trả đủ']
+const statusOptions = ['Đang tiến hành', 'Hoàn thành', 'Hủy bỏ']
 const categoryOptions = ref([])
 const branchProductOptions = ref([])
 const openPopupCategory = ref(false)
@@ -181,8 +185,8 @@ let purchaseOrder: PurchaseOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   supplierId: null,
-  subStatus: 'None',
-  status: 'None',
+  subStatus: 'Trả đủ',
+  status: 'Đang tiến hành',
   purchaseOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -199,6 +203,8 @@ const productOptions = ref([])
 const purchaseOrderItems = ref([])
 const openDiaglog = ref(false)
 let productAdd: ProductRequest = reactive({
+  unitCalculate: 'Cái',
+  sku: '', // Add default value for sku
   name: '',
   capitalPrice: 0,
   salePrice: 0,
@@ -258,7 +264,7 @@ async function fetch() {
 
     const purchaseOrderRes = await api.api.purchaseOrder.getPurchaseOrder(route.params.id as string)
     Object.assign(purchaseOrder, purchaseOrderRes)
-    if (['Completed', 'Cancelled', 'Refunded'].includes(purchaseOrder.status)) {
+    if (['Hoàn thành', 'Hủy bỏ', 'Hoàn trả'].includes(purchaseOrder.status)) {
       isDisabled.value = true
     }
     purchaseOrder.supplierId = purchaseOrderRes['supplier']['id']
@@ -277,7 +283,7 @@ async function fetch() {
     productOptions.value = productRes
       .filter(item => !existingProductIds.has(item.id)) // loại trừ những sản phẩm đã có
       .map(item => ({
-        label: item.name,
+        label: item.name+', Số lượng: '+item.stockQuantity,
         value: item.id,
       }));
 
@@ -305,7 +311,7 @@ async function save() {
     }))
 
     await api.api.purchaseOrder.updatePurchaseOrder(route.params.id as string, purchaseOrder)
-    if (purchaseOrder.status == 'Completed') {
+    if (purchaseOrder.status == 'Hoàn thành') {
       // purchaseOrder.purchaseOrderItemsRequestDTO.forEach(async (item) => {
       //   const product_value = await api.api.product.getProduct(String(item.productId))
       //   const increase_quantity = product_value['stockQuantity'] + item.quantity
@@ -318,7 +324,7 @@ async function save() {
       // })
       isDisabled.value = true
     }
-    if (purchaseOrder.status == 'Cancelled') {
+    if (purchaseOrder.status == 'Hủy bỏ') {
       isDisabled.value = false
     }
     loading.value = false;
@@ -331,7 +337,7 @@ async function save() {
 async function refund() {
   try {
     loading.value = true;
-    purchaseOrder.status = 'Refunded'
+    purchaseOrder.status = 'Hoàn trả'
     purchaseOrder.purchaseOrderItemsRequestDTO = purchaseOrderItems.value.map((item) => ({
       id: item.id,
       productId: item.productId,
@@ -362,8 +368,9 @@ async function deletePurchaseItem(item) {
       await nextTick();
     }
     if (!productOptions.value.some(p => p.value === item.productId)) {
+      const productRes = await api.api.product.getProduct(item.productId);
       productOptions.value.push({
-        label: item.name,
+        label: item.name+', Số lượng: '+productRes['stockQuantity'],
         value: item.productId,
       });
     }
@@ -377,13 +384,13 @@ async function onProductSelect() {
 
     const selectedProduct = productOptions.value.find((item) => item.value === product.value);
     if (!selectedProduct) return;
-
+    var p = api.api.product.getProduct(product.value)
     // Thêm vào danh sách purchaseOrderItems
     purchaseOrderItems.value.push({
       productId: product.value,
       name: selectedProduct.label,
       quantity: 0,
-      unitPrice: 0,
+      unitPrice: (await p).salePrice,
       note: null,
     });
 

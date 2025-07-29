@@ -118,10 +118,12 @@ export interface BranchProductRequest {
 
 export interface Product {
   id: number;
+  sku: string;
   name: string;
   capitalPrice: number;
   salePrice: number;
   stockQuantity: number;
+  unitCalculate: string;
   category: Category;
   branchProduct: BranchProduct;
   businessId: number;
@@ -129,10 +131,12 @@ export interface Product {
 }
 
 export interface ProductRequest {
+  sku: string;
   name: string;
   capitalPrice: number;
   salePrice: number;
   stockQuantity: number;
+  unitCalculate: string;
   categoryId: number;
   branchProductId: number;
   businessId: number;
@@ -177,6 +181,7 @@ export interface PurchaseOrder {
   purchaseOrderItemsRequestDTO: PurchaseOrderItem[];
   businessId: number;
   qrcodeId: string;
+  createdAt?: Date;
 }
 
 export interface PurchaseOrderRequest {
@@ -197,6 +202,7 @@ export interface SaleOrderItem {
   quantity: number;
   unitPrice: number;
   note: string;
+  createdAt?: Date;
 
 }
 
@@ -238,6 +244,9 @@ export interface Business {
   mst: string;
   email: string;
   phone: string;
+  address: string;
+  bankAccount: string;
+  bankName: string;
 }
 
 export interface BusinessRequest {
@@ -245,6 +254,9 @@ export interface BusinessRequest {
   mst: string;
   email: string;
   phone: string;
+  address: string;
+  bankAccount: string;
+  bankName: string;
 }
 
 export interface ChangePassword {

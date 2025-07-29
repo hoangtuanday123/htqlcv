@@ -30,6 +30,12 @@ public class business extends abstractEntity {
     private String email;
     @Column(name="phone")
     private String phone;
+    @Column(name="address")
+    private String address;
+    @Column(name="bank_name")
+    private String bankName;
+    @Column(name="bank_account")
+    private String bankAccount;
     @OneToMany(mappedBy="business")
     @JsonManagedReference
     private List<user> users;

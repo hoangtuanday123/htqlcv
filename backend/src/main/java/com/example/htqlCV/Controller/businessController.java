@@ -1,7 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,27 +29,27 @@ public class businessController {
     }
 
     @GetMapping("/{id}")
-    public business getBusiness(@PathVariable UUID id){
+    public business getBusiness(@PathVariable String id){
         return businessServices.getBusinessById(id);
     }
 
     @PostMapping("/")
-    public UUID createBusiness(@RequestBody businessRequestDTO businessRequestDTO) {
+    public String createBusiness(@RequestBody businessRequestDTO businessRequestDTO) {
        return businessServices.createBusiness(businessRequestDTO);
     }
 
     @PutMapping("/{id}/update")
-    public void  updateBusiness(@PathVariable UUID id, @RequestBody businessRequestDTO businessRequestDTO) {
+    public void  updateBusiness(@PathVariable String id, @RequestBody businessRequestDTO businessRequestDTO) {
         businessServices.updateBusiness(id, businessRequestDTO);
     }
 
     @PutMapping("/{id}/block")
-    public void blockBusiness(@PathVariable UUID id) {
+    public void blockBusiness(@PathVariable String id) {
         businessServices.blockBusiness(id);
     }
 
     @PutMapping("/{id}/open")
-    public void openBlockBusiness(@PathVariable UUID id) {
+    public void openBlockBusiness(@PathVariable String id) {
         businessServices.openBlockBusiness(id);
     }
     

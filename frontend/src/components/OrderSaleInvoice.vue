@@ -4,17 +4,34 @@
     <div class="qr-code">
       <img :src="qrCodeUrl" alt="QR Code" width="150" height="150" />
     </div>
+    <div class="info">
+      <strong>Mã hóa đơn:</strong> {{ props.saleOrderId }}<br />
+    </div>
+    <q-separator color="dark" size="2px" />
 
     <div class="info">
-      <strong>Mã:</strong> {{ props.saleOrderId }}<br />
-      <strong v-if="customer.customerType == 'individual'">{{ t('customer.title') }}:</strong> {{ customer.name }}<br
-        v-if="customer.customerType == 'individual'" />
+
+      <strong >Đơn vị bán hàng:</strong> {{ business.name }}<br
+        />
+      <strong>Mã số thế:</strong> {{
+        business.mst }}<br />
+      <strong>Địa chỉ:</strong> {{ business.address
+      }}<br/>
+      <strong>Điện thoại:</strong> {{ business.phone }}<br />
+      <strong>Tên Ngân hàng :</strong> {{ business.bankName }}<br />
+      <strong>Tài khoản Ngân hàng :</strong> {{ business.bankAccount }}<br />
+    </div>
+    <q-separator color="dark" size="2px" />
+    <div class="info">
+      <strong >Họ tên người mua hàng:</strong> {{ customer.name }}<br
+        />
       <strong v-if="customer.customerType == 'companyCustomer'">{{ t('customer.company_name') }}:</strong> {{
         customer.companyName }}<br v-if="customer.customerType == 'companyCustomer'" />
       <strong v-if="customer.customerType == 'companyCustomer'">{{ t('customer.tax_code') }}:</strong> {{ customer.mst
       }}<br v-if="customer.customerType == 'companyCustomer'" />
       <strong>{{ t('customer.phone') }}:</strong> {{ customer.phone }}<br />
       <strong>{{ t('customer.address') }}:</strong> {{ customer.address }}<br />
+      <strong >Hình thức thanh toán:</strong> Tiền mặt hoặc chuyển khoản<br/>
       <strong>{{ t('sale_order.created_date') }}:</strong> {{ createDate }}
     </div>
 
@@ -46,12 +63,20 @@
 
     </div>
     <div class="total">
+      <strong>Thuế 8%: {{ formatCurrency((totalAmount*8)/100) }}</strong>
+
+    </div>
+    <div class="total">
+      <strong>Tổng cộng tiền thanh toán: {{ formatCurrency(totalAmount+((totalAmount*8)/100)) }}</strong>
+
+    </div>
+    <div class="total">
 
       <strong>{{ t('sale_order.total_amound_paid') }}: {{ formatCurrency(props.paid) }}</strong>
     </div>
     <div class="total">
 
-      <strong>{{ t('sale_order.dept') }}: {{ formatCurrency(totalAmount - props.paid) }}</strong>
+      <strong>{{ t('sale_order.dept') }}: {{ formatCurrency((totalAmount+((totalAmount*8)/100)) - props.paid) }}</strong>
     </div>
 
     <div class="print-button">
@@ -59,9 +84,11 @@
       <button @click="printInvoice" :loading="loading">{{ t('sale_order.print') }}</button>
     </div>
   </div>
+
 </template>
 
 <script lang="ts" setup>
+
 import { ref, computed, nextTick, reactive, onMounted, watch } from 'vue'
 import QRCode from 'qrcode'
 import { defineProps } from 'vue'
@@ -70,13 +97,14 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro';
-import api, { SaleOrderRequest, Customer } from '../services/api';
+import api, { SaleOrderRequest, Customer, Business  } from '../services/api';
 const loading = ref(false)
 const props = defineProps<{
   saleOrderId: string
   paid: number
   businessId: string
 }>()
+
 const qrCodeUrl = ref('')
 const customer = ref<Customer>({
   id: null,
@@ -109,6 +137,17 @@ let saleOrder: SaleOrderRequest = reactive({
   businessId: null,
   qrcodeId: null
 });
+
+const business = ref<Business>({
+    id: null,
+    name: '',
+    mst: '',
+    email: '',
+    phone: '',
+    address: '',
+    bankName: '',
+    bankAccount: ''
+})
 const saleOrderItems = ref([])
 const createDate = ref(null)
 
@@ -151,6 +190,10 @@ async function fetch() {
       item.name = productRes.find(product => product.id === item.productId)?.name || '';
     });
     loading.value = false;
+
+    const res_user = await api.api.user.getCurrentUser()
+    const res_business = await api.api.business.getBusiness(res_user['businessId'])
+    business.value = res_business
   } catch {
     ui.error(t('error.unknown'))
   }
@@ -159,32 +202,60 @@ async function downloadPdf() {
   try {
     loading.value = true
     const printButton = document.querySelector('.print-button') as HTMLElement
-    const element = document.querySelector('.invoice-wrapper') as HTMLElement;
+    const element = document.querySelector('.invoice-wrapper') as HTMLElement
     if (printButton) printButton.style.display = 'none'
+
     await nextTick()
-    if (!element) return;
+    if (!element) return
 
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      windowWidth: document.body.scrollWidth,
+      windowHeight: document.body.scrollHeight
     });
 
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'mm', 'a4');
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pdfWidth = pdf.internal.pageSize.getWidth(); // 210mm
+    const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`HoaDon_${props.saleOrderId}.pdf`);
+    // Kích thước ảnh thực tế (pixel), cần quy đổi ra mm
+    const pxToMm = (px: number) => px * 0.264583; // 1px = ~0.264583mm
+    const imgWidthMm = pxToMm(canvas.width);
+    const imgHeightMm = pxToMm(canvas.height);
+
+    // Tính tỷ lệ scale để vừa trang A4
+    const scale = Math.min(pdfWidth / imgWidthMm, pdfHeight / imgHeightMm);
+
+    const finalWidth = imgWidthMm * scale;
+    const finalHeight = imgHeightMm * scale;
+
+    const offsetX = (pdfWidth - finalWidth) / 2;
+    const offsetY = (pdfHeight - finalHeight) / 2;
+
+    pdf.addImage(imgData, 'PNG', offsetX, offsetY, finalWidth, finalHeight);
+
+    const blobUrl = URL.createObjectURL(pdf.output('blob'));
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = `HoaDon_${props.saleOrderId}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     printButton.style.display = 'block'
     loading.value = false
-    ui.success('download sucessfull')
-  } catch {
+    ui.success('Tải thành công')
+  } catch (e) {
+    console.error(e)
     ui.error(t('error.unknown'))
   }
 }
+
+
 function printInvoice() {
   try {
     const printWindow = window.open('', '_blank')
@@ -337,6 +408,12 @@ onMounted(async () => {
 @media print {
   .print-button {
     display: none !important;
+  }
+}
+@media (max-width: 768px) {
+  .invoice-wrapper {
+    transform: scale(0.8);
+    transform-origin: top left;
   }
 }
 </style>

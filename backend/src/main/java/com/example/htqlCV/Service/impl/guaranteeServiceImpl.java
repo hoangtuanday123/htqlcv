@@ -1,7 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -19,12 +19,12 @@ public class guaranteeServiceImpl implements guaranteeServices{
     private final guaranteeRespository guaranteeRespository;
     private final productRespository productRespository;
     @Override
-    public guarantee getGuaranteeById(UUID id) {
+    public guarantee getGuaranteeById(String id) {
         return guaranteeRespository.findById(id).orElse(null);
     }
 
     @Override
-    public UUID createGuarantee(guaranteeRequestDTO guaranteeRequestDTO) {
+    public String createGuarantee(guaranteeRequestDTO guaranteeRequestDTO) {
         product product_value = productRespository.findById(guaranteeRequestDTO.getProductId()).orElse(null);
         guarantee guarantee_value = guarantee.builder()
                 .name(guaranteeRequestDTO.getName())
@@ -36,12 +36,12 @@ public class guaranteeServiceImpl implements guaranteeServices{
     }
 
     @Override
-    public void deleteGuarantee(UUID id) {
+    public void deleteGuarantee(String id) {
         guaranteeRespository.deleteById(id);
     }
 
     @Override
-    public List<guarantee> getGuaranteeByProductId(UUID productId) {
+    public List<guarantee> getGuaranteeByProductId(String productId) {
         return guaranteeRespository.findByProductId(productId);
     }
 }

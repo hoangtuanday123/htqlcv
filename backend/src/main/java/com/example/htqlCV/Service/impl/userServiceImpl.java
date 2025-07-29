@@ -19,7 +19,7 @@ import com.example.htqlCV.Service.roleServices;
 import com.example.htqlCV.Service.userHasRoleServices;
 import com.example.htqlCV.Service.userSevices;
 import com.example.htqlCV.Model.business;
-import java.util.UUID;
+
 
 
 import com.example.htqlCV.Respository.businessRespository;
@@ -59,7 +59,7 @@ public class userServiceImpl implements userSevices {
                 role role_value=roleServices.getRoleByName("owner");
                 userHasRoleServices.createUserHasRole(user_value,role_value);
             }
-            for(UUID role:userRequestDTO.getRoles()){
+            for(String role:userRequestDTO.getRoles()){
                 role role_value=roleServices.getRoleById(role);
                 userHasRoleServices.createUserHasRole(user_value,role_value);
             }
@@ -111,7 +111,7 @@ public class userServiceImpl implements userSevices {
             } else {
                 userResponse.setBusinessId(null); // hoặc không set gì tùy yêu cầu
             }
-            List<UUID> roles = new ArrayList<>();
+            List<String> roles = new ArrayList<>();
             if (!CollectionUtils.isEmpty(user.getUserRoles())) {
                 user.getUserRoles().forEach(userHasRole -> {
                     roles.add(userHasRole.getRole().getId());
@@ -123,7 +123,7 @@ public class userServiceImpl implements userSevices {
         return userResponses;
     }
     @Override
-    public List<userResponse> getUsersByBusiness(UUID businessId){
+    public List<userResponse> getUsersByBusiness(String businessId){
         business business_value=businessRespository.findById(businessId).orElse(null);
         var users= userRepository.findByBusiness(business_value);
         var userResponses = new ArrayList<userResponse>();
@@ -145,7 +145,7 @@ public class userServiceImpl implements userSevices {
         
     }
     @Override
-    public userResponse getUserById(UUID id) {
+    public userResponse getUserById(String id) {
         var user= userRepository.findById(id).orElse(null);
         userResponse userResponse = new userResponse();
         userResponse.setId(user.getId());
@@ -158,7 +158,7 @@ public class userServiceImpl implements userSevices {
         } else {
             userResponse.setBusinessId(null); // hoặc không set gì tùy yêu cầu
         }
-        List<UUID> roles = new ArrayList<>();
+        List<String> roles = new ArrayList<>();
         if (!CollectionUtils.isEmpty(user.getUserRoles())) {
             user.getUserRoles().forEach(userHasRole -> {
                 roles.add(userHasRole.getRole().getId());
@@ -169,7 +169,7 @@ public class userServiceImpl implements userSevices {
     }
 
     @Override
-    public void updateUser(UUID id, userRequestDTO userRequestDTO) {
+    public void updateUser(String id, userRequestDTO userRequestDTO) {
         user user_value = userRepository.findById(id).orElse(null);
         if (user_value != null) {
             user_value.setUsername(userRequestDTO.getUsername());
@@ -181,7 +181,7 @@ public class userServiceImpl implements userSevices {
     }
 
     @Override
-    public void deleteUser(UUID id) {
+    public void deleteUser(String id) {
         userRepository.deleteById(id);
     }
 
@@ -220,7 +220,7 @@ public class userServiceImpl implements userSevices {
         }
     }
     @Override
-    public Integer countUserByBusiness(UUID businessId){
+    public Integer countUserByBusiness(String businessId){
         business business_value=businessRespository.findById(businessId).orElse(null);
         return userRepository.countUserByBusiness(business_value);
     }

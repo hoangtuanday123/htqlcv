@@ -29,7 +29,7 @@
             <q-input v-model="customer.mst" :label="t('customer.tax_code')" />
             <q-input v-model="customer.cmnd" :label="t('customer.personal_code')" />
             <q-input v-model="customer.email" :label="t('customer.email')" />
-            <q-input v-model="customer.mst" :label="t('customer.note')" />
+            <q-input v-model="customer.note" :label="t('customer.note')" />
             <div v-if="customer.customerType === 'companyCustomer'">
                 <q-input v-model="customer.companyName" :label="t('customer.company_name')" />
 
@@ -62,7 +62,7 @@ let customer = reactive({
     phone: '',
     dob: '', // Use string for dob to match v-model requirements
     address: '',
-    customerType: 'individual',
+    customerType: 'companyCustomer',
     mst: '',
     cmnd: '',
     email: '',

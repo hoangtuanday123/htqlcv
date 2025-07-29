@@ -1,7 +1,6 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -22,34 +21,40 @@ public class businessServiceImpl implements businessServices{
     }
 
     @Override
-    public business getBusinessById(UUID id){
+    public business getBusinessById(String id){
         return businessRespository.findById(id).orElse(null);
     }
 
     @Override
-    public UUID createBusiness(businessRequestDTO businessRequestDTO){
+    public String createBusiness(businessRequestDTO businessRequestDTO){
         business business_value=business.builder()
         .name(businessRequestDTO.getName())
         .email(businessRequestDTO.getEmail())
         .mst(businessRequestDTO.getMst())
+        .address(businessRequestDTO.getAddress())
+        .bankAccount(businessRequestDTO.getBankAccount())
+        .bankName(businessRequestDTO.getBankName())
         .build();
         businessRespository.save(business_value);
         return business_value.getId();
     }
 
     @Override
-    public void updateBusiness(UUID id,businessRequestDTO businessRequestDTO){
+    public void updateBusiness(String id,businessRequestDTO businessRequestDTO){
         business business_value=businessRespository.findById(id).orElse(null);
         if(business_value!=null){
             business_value.setName(businessRequestDTO.getName());
             business_value.setEmail(businessRequestDTO.getEmail());
             business_value.setMst(businessRequestDTO.getMst());
             business_value.setPhone(businessRequestDTO.getPhone());
+            business_value.setAddress(businessRequestDTO.getAddress());
+            business_value.setBankAccount(businessRequestDTO.getBankAccount());
+            business_value.setBankName(businessRequestDTO.getBankName());
             businessRespository.save(business_value);
         }
     }
     @Override
-    public void blockBusiness(UUID id){
+    public void blockBusiness(String id){
         business business_value=businessRespository.findById(id).orElse(null);
         if(business_value!=null){
             business_value.setIsBlocked(true);
@@ -57,7 +62,7 @@ public class businessServiceImpl implements businessServices{
     }
 
     @Override
-    public void openBlockBusiness(UUID id){
+    public void openBlockBusiness(String id){
         business business_value=businessRespository.findById(id).orElse(null);
         if(business_value!=null){
             business_value.setIsBlocked(false);

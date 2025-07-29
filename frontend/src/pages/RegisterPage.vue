@@ -12,6 +12,9 @@
           <q-input filled v-model="business.phone" :label="t('register.phone_number')"
             :hint="t('register.phone_number')" lazy-rules
             :rules="[val => val && val.length > 0 || t('register.invalid')]" />
+          <q-input filled v-model="business.address" label="Địa chỉ" hint="Địa chỉ" />
+          <q-input filled v-model="business.bankName" label="Tên ngân hàng" hint="Tên ngân hàng" />
+          <q-input filled v-model="business.bankAccount" label="Tài khoản ngân hàng" hint="Tài khoản ngân hàng" />
         </q-form>
       </q-step>
 
@@ -58,7 +61,10 @@ let business: BusinessRequest = reactive({
   name: '',
   email: '',
   phone: '',
-  mst: ''
+  mst: '',
+  address: '',
+  bankName: '',
+  bankAccount: ''
 })
 
 let user: User = reactive({

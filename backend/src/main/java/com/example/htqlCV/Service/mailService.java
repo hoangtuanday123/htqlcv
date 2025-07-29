@@ -2,7 +2,7 @@ package com.example.htqlCV.Service;
 
 
 
-import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -29,7 +29,7 @@ public class mailService {
         mailSender.send(message);
     }
 
-    public void sendForgotPasswordEmail(String recipients, UUID verification_id, String token,Integer expirationTime) throws MessagingException {
+    public void sendForgotPasswordEmail(String recipients, String verification_id, String token,Integer expirationTime) throws MessagingException {
         MimeMessage message=mailSender.createMimeMessage();
         MimeMessageHelper helper=new MimeMessageHelper(message,true,"UTF-8");
         helper.setFrom("pnhtuanhcmus@gmail.com");

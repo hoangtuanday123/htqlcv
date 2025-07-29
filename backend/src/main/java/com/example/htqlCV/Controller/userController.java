@@ -1,7 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,23 +55,23 @@ public class userController {
         return userSevices.getAllUser();
     }
     @GetMapping("/staffs")
-    public List<userResponse> getAllstaff(@RequestParam UUID businessId) {
+    public List<userResponse> getAllstaff(@RequestParam String businessId) {
         return userSevices.getUsersByBusiness(businessId);
     }
 
     @GetMapping("/{id}")
-    public userResponse getUser(@PathVariable UUID id) {
+    public userResponse getUser(@PathVariable String id) {
         return userSevices.getUserById(id);
     }
 
     @PutMapping("/{id}/update")
-    public void updateUser(@PathVariable UUID id, @RequestBody userRequestDTO userRequestDTO) {
+    public void updateUser(@PathVariable String id, @RequestBody userRequestDTO userRequestDTO) {
         // System.out.println("Update user request received with id: " + userRequestDTO.getPassword());
         userSevices.updateUser(id, userRequestDTO);
     }
     
     @DeleteMapping("/{id}/delete")
-    public void deleteUser(@PathVariable UUID id) {
+    public void deleteUser(@PathVariable String id) {
         userSevices.deleteUser(id);
     }
 

@@ -1,7 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,27 +25,27 @@ public class supplierController {
     private final supplierServices supplierServices;
 
     @GetMapping
-    public List<supplier> getSuppliers(@RequestParam UUID businessId) {
+    public List<supplier> getSuppliers(@RequestParam String businessId) {
         return supplierServices.getAllSupplier(businessId);
     }
 
     @GetMapping("/{id}")
-    public supplier getSupplier(@PathVariable UUID id) {
+    public supplier getSupplier(@PathVariable String id) {
         return supplierServices.getSupplierById(id);
     }
 
     @PostMapping("/")
-    public UUID createSupplier(@RequestBody supplierRequestDTO supplierRequestDTO) {
+    public String createSupplier(@RequestBody supplierRequestDTO supplierRequestDTO) {
         return supplierServices.createSupplier(supplierRequestDTO);
     }
 
     @PutMapping("{id}/update")
-    public void updateSupplier(@PathVariable UUID id, @RequestBody supplierRequestDTO supplierRequestDTO) {
+    public void updateSupplier(@PathVariable String id, @RequestBody supplierRequestDTO supplierRequestDTO) {
        supplierServices.updateSupplier(id, supplierRequestDTO);
     }
 
     @DeleteMapping("/{id}/delete")
-    public void deleteSupplier(@PathVariable UUID id) {
+    public void deleteSupplier(@PathVariable String id) {
         supplierServices.deleteSupplier(id);
     }
     

@@ -1,7 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -20,18 +20,18 @@ public class supplierServiceImpl implements supplierServices {
     private final supplierRespository supplierRespository;
     private final businessRespository businessRespository;
     @Override
-    public List<supplier> getAllSupplier(UUID businessId) {
+    public List<supplier> getAllSupplier(String businessId) {
         business business_value=businessRespository.findById(businessId).orElse(null);
         return supplierRespository.findByBusiness(business_value);
     }
 
     @Override
-    public supplier getSupplierById(UUID id) {
+    public supplier getSupplierById(String id) {
         return supplierRespository.findById(id).orElse(null);
     }
 
     @Override
-    public UUID createSupplier(supplierRequestDTO supplierRequestDTO) {
+    public String createSupplier(supplierRequestDTO supplierRequestDTO) {
         business business_value=businessRespository.findById(supplierRequestDTO.getBusinessId()).orElse(null);
         supplier supplier_value = supplier.builder()
                 .name(supplierRequestDTO.getName())
@@ -48,7 +48,7 @@ public class supplierServiceImpl implements supplierServices {
     }
 
     @Override
-    public void updateSupplier(UUID id, supplierRequestDTO supplierRequestDTO) {
+    public void updateSupplier(String id, supplierRequestDTO supplierRequestDTO) {
         supplier supplier_value=supplierRespository.findById(id).orElse(null);
         if (supplier_value != null) {
             supplier_value.setName(supplierRequestDTO.getName());
@@ -63,12 +63,12 @@ public class supplierServiceImpl implements supplierServices {
     }
 
     @Override
-    public void deleteSupplier(UUID id) {
+    public void deleteSupplier(String id) {
         supplierRespository.deleteById(id);
     }
 
     @Override
-    public Integer countSupplierByBusiness(UUID businessId){
+    public Integer countSupplierByBusiness(String businessId){
         business business_value=businessRespository.findById(businessId).orElse(null);
         return supplierRespository.countSupplierByBusiness(business_value);
     }

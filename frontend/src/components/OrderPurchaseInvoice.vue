@@ -156,29 +156,55 @@ async function downloadPdf() {
   try {
     loading.value = true
     const printButton = document.querySelector('.print-button') as HTMLElement
-    const element = document.querySelector('.invoice-wrapper') as HTMLElement;
+    const element = document.querySelector('.invoice-wrapper') as HTMLElement
     if (printButton) printButton.style.display = 'none'
+
     await nextTick()
-    if (!element) return;
+    if (!element) return
 
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      windowWidth: document.body.scrollWidth,
+      windowHeight: document.body.scrollHeight
     });
 
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'mm', 'a4');
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pdfWidth = pdf.internal.pageSize.getWidth(); // 210mm
+    const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`HoaDon_${props.purchaseOrderId}.pdf`);
+    // Kích thước ảnh thực tế (pixel), cần quy đổi ra mm
+    const pxToMm = (px: number) => px * 0.264583; // 1px = ~0.264583mm
+    const imgWidthMm = pxToMm(canvas.width);
+    const imgHeightMm = pxToMm(canvas.height);
+
+    // Tính tỷ lệ scale để vừa trang A4
+    const scale = Math.min(pdfWidth / imgWidthMm, pdfHeight / imgHeightMm);
+
+    const finalWidth = imgWidthMm * scale;
+    const finalHeight = imgHeightMm * scale;
+
+    const offsetX = (pdfWidth - finalWidth) / 2;
+    const offsetY = (pdfHeight - finalHeight) / 2;
+
+    pdf.addImage(imgData, 'PNG', offsetX, offsetY, finalWidth, finalHeight);
+
+    const blobUrl = URL.createObjectURL(pdf.output('blob'));
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = `HoaDon_${props.purchaseOrderId}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     printButton.style.display = 'block'
     loading.value = false
-    ui.success('download sucessfull')
-  } catch {
+    ui.success('Tải thành công')
+  } catch (e) {
+    console.error(e)
     ui.error(t('error.unknown'))
   }
 }

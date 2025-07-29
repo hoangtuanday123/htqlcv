@@ -91,15 +91,23 @@
           </q-dialog>
         </div>
         <div class="col-1"></div>
-        <div class="col-4">
-          <q-select v-model="saleOrder.customerId" :options="customerOptions" label="Customer" map-options emit-value
-            use-input :filter="customFilter" input-debounce="300" :rules="[val => !!val || 'Category is required']">
+       <div class="col-4">
+          <q-select v-model="saleOrder.customerId" :options="customerOptions" :label="t('customer.title')" map-options
+            emit-value use-input :filter="customFilter" input-debounce="300"
+            :rules="[val => !!val || t('customer.required')]">
           </q-select>
-          <q-input v-model="saleOrder.totalAmount" :label="t('sale_order.total_amound')" type="number" readonly />
-          <q-input v-model="saleOrder.totalAmountPaid" :label="t('sale_order.total_amound_paid')" type="number" />
-          <q-input :model-value="saleOrder.totalAmount - saleOrder.totalAmountPaid" :label="t('sale_order.dept')"
-            type="number" readonly />
-          <q-select v-model="saleOrder.subStatus" :options="subStatusOptions" :label="t('sale_order.sub_status')">
+          <q-input v-model="saleOrder.totalAmount" :label="t('sale_order.total_amound')" type="number"
+            readonly />
+          <q-input :model-value="(saleOrder.totalAmount *8)/100"
+            label="Thuế 8%" type="number" readonly />
+            <q-input :model-value="saleOrder.totalAmount+((saleOrder.totalAmount *8)/100)"
+            label="Tổng cộng tiền thanh toán" type="number" readonly />
+          <q-input v-model="saleOrder.totalAmountPaid" :label="t('sale_order.total_amound_paid')"
+            type="number" />
+          <q-input :model-value="(saleOrder.totalAmount+((saleOrder.totalAmount *8)/100)) - saleOrder.totalAmountPaid"
+            :label="t('sale_order.dept')" type="number" readonly />
+          <q-select v-model="saleOrder.subStatus" :options="subStatusOptions" :label="t('sale_order.sub_status')"
+            map-options emit-value>
           </q-select>
           <q-select v-model="saleOrder.status" :options="statusOptions" :label="t('sale_order.status')" map-options
             emit-value :disable="isDisabled">
@@ -139,7 +147,7 @@
           <q-btn :label="t('button.view_order')" @click="openDiaglogOrder = true" type="button" outline
             color="grey-9" />
           <q-btn :label="t('button.refund')" @click="refund" type="button" outline color="grey-9"
-            v-if="saleOrder.status == 'Completed'" />
+            v-if="saleOrder.status == 'Hoàn thành'" />
         </div>
       </div>
     </q-form>
@@ -162,8 +170,8 @@ const openDiaglogOrder = ref(false)
 const route = useRoute();
 const loading = ref(false);
 const customerOptions = ref([])
-const subStatusOptions = ['None', 'Not Paid']
-const statusOptions = ['None', 'Processing', 'Completed', 'Cancelled']
+const subStatusOptions = ['Trả đủ', 'Chưa trả đủ']
+const statusOptions = ['Đang tiến hành', 'Hoàn thành', 'Hủy bỏ']
 const categoryOptions = ref([])
 const branchProductOptions = ref([])
 const openPopupCategory = ref(false)
@@ -177,8 +185,8 @@ let saleOrder: SaleOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   customerId: null,
-  subStatus: 'None',
-  status: 'None',
+  subStatus: 'Trả đủ',
+  status: 'Đang tiến hành',
   saleOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -195,6 +203,8 @@ const productOptions = ref([])
 const saleOrderItems = ref([])
 const openDiaglog = ref(false)
 let productAdd: ProductRequest = reactive({
+  unitCalculate: 'Cái',
+  sku: '', // Added the missing 'sku' property
   name: '',
   capitalPrice: 0,
   salePrice: 0,
@@ -254,7 +264,7 @@ async function fetch() {
 
     const saleOrderRes = await api.api.saleOrder.getSaleOrder(route.params.id as string)
     Object.assign(saleOrder, saleOrderRes)
-    if (['Completed', 'Cancelled', 'Refunded'].includes(saleOrder.status)) {
+    if (['Hoàn thành', 'Hủy bỏ', 'Hoàn trả'].includes(saleOrder.status)) {
       isDisabled.value = true
     }
     saleOrder.customerId = saleOrderRes['customer']['id']
@@ -274,7 +284,7 @@ async function fetch() {
     productOptions.value = productRes
       .filter(item => !existingProductIds.has(item.id)) // loại trừ những sản phẩm đã có
       .map(item => ({
-        label: item.name,
+        label: item.name+', Số lượng: '+item.stockQuantity,
         value: item.id,
       }));
 
@@ -291,7 +301,7 @@ async function fetch() {
 async function refund() {
   try {
     loading.value = true;
-    saleOrder.status = 'Refunded'
+    saleOrder.status = 'Hoàn trả'
     saleOrder.saleOrderItemsRequestDTO = saleOrderItems.value.map((item) => ({
       id: item.id,
       productId: item.productId,
@@ -320,7 +330,7 @@ async function save() {
     }))
 
     await api.api.saleOrder.updateSaleOrder(route.params.id as string, saleOrder)
-    if (saleOrder.status == 'Completed') {
+    if (saleOrder.status == 'Hoàn thành') {
       // saleOrder.saleOrderItemsRequestDTO.forEach(async (item) => {
       //   const product_value = await api.api.product.getProduct(String(item.productId))
       //   const increase_quantity = product_value['stockQuantity'] + item.quantity
@@ -333,7 +343,7 @@ async function save() {
       // })
       isDisabled.value = true
     }
-    if (saleOrder.status == 'Cancelled') {
+    if (saleOrder.status == 'Hủy bỏ') {
       isDisabled.value = false
     }
     loading.value = false;
@@ -360,8 +370,9 @@ async function deleteSaleItem(item) {
       await nextTick();
     }
     if (!productOptions.value.some(p => p.value === item.productId)) {
+      const productRes = await api.api.product.getProduct(item.productId);
       productOptions.value.push({
-        label: item.name,
+        label: item.name+', Số lượng: '+productRes['stockQuantity'],
         value: item.productId,
       });
     }

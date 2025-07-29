@@ -1,7 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -20,20 +20,20 @@ public class purchaseOrderItemsServiceImpl implements purchaseOrderItemsServices
     private final productRespository productRespository;
     private final purchaseOrdersRespository purchaseOrdersRespository;
     @Override
-    public List<purchaseOrderItems> getPurchaseOrderItemsByPurchaseOrder(UUID purchaseOrdersId) {
+    public List<purchaseOrderItems> getPurchaseOrderItemsByPurchaseOrder(String purchaseOrdersId) {
         return purchaseOrderItemRespository.findByPurchaseOrders_Id(purchaseOrdersId);
     }
     @Override
-    public purchaseOrderItems getPurchaseOrderItemsById(UUID id) {
+    public purchaseOrderItems getPurchaseOrderItemsById(String id) {
         return purchaseOrderItemRespository.findById(id).orElse(null);
     }
     @Override
-    public purchaseOrderItems getPurchaseOrderItemsByProductIDPurchaseOrder(UUID purchaseOrdersId, UUID productId){
+    public purchaseOrderItems getPurchaseOrderItemsByProductIDPurchaseOrder(String purchaseOrdersId, String productId){
         return purchaseOrderItemRespository.findByPurchaseOrders_IdAndProduct_Id(purchaseOrdersId, productId);
     }
 
     @Override
-    public UUID createPurchaseOrderItems(purchaseOrderItemsRequestDTO purchaseOrderItemsRequestDTO) {
+    public String createPurchaseOrderItems(purchaseOrderItemsRequestDTO purchaseOrderItemsRequestDTO) {
         var product = productRespository.findById(purchaseOrderItemsRequestDTO.getProductId()).orElse(null);
         var purchaseOrders = purchaseOrdersRespository.findById(purchaseOrderItemsRequestDTO.getPurchaseOrdersId()).orElse(null);
         purchaseOrderItems purchaseOrderItems_value = purchaseOrderItems.builder()
@@ -47,7 +47,7 @@ public class purchaseOrderItemsServiceImpl implements purchaseOrderItemsServices
         return purchaseOrderItems_value.getId();
     }
     @Override
-    public void updatePurchaseOrderItems(UUID id, purchaseOrderItemsRequestDTO purchaseOrderItemsRequestDTO) {
+    public void updatePurchaseOrderItems(String id, purchaseOrderItemsRequestDTO purchaseOrderItemsRequestDTO) {
         purchaseOrderItems purchaseOrderItems_value = purchaseOrderItemRespository.findById(id).orElse(null);
         if (purchaseOrderItems_value != null) {
             purchaseOrderItems_value.setQuantity(purchaseOrderItemsRequestDTO.getQuantity());
@@ -58,7 +58,7 @@ public class purchaseOrderItemsServiceImpl implements purchaseOrderItemsServices
     }
 
     @Override
-    public void deletePurchaseOrderItems(UUID id) {
+    public void deletePurchaseOrderItems(String id) {
         purchaseOrderItems item = purchaseOrderItemRespository.findById(id)
         .orElseThrow(() -> new RuntimeException("Not found"));
 

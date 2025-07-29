@@ -1,11 +1,13 @@
 package com.example.htqlCV.Model;
 
 import java.util.Date;
-import java.util.UUID;
+
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -22,8 +24,9 @@ public abstract  class abstractEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @JdbcTypeCode(SqlTypes.VARCHAR) 
     @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+    private String id;
 
     @Column(name = "created_at")
     @CreationTimestamp

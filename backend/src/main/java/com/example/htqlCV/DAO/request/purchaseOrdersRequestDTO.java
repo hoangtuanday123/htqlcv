@@ -1,7 +1,7 @@
 package com.example.htqlCV.DAO.request;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import lombok.Data;
 
@@ -9,10 +9,10 @@ import lombok.Data;
 public class purchaseOrdersRequestDTO {
     private Long totalAmount;
     private Long totalAmountPaid;
-    private UUID supplierId;
+    private String supplierId;
     private String status;
     private String SubStatus;
     private List<purchaseOrderItemsRequestDTO>purchaseOrderItemsRequestDTO;
-    private UUID businessId;
+    private String businessId;
     private String qrcodeId;
 }

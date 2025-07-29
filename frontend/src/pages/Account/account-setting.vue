@@ -46,6 +46,9 @@
                     <q-input filled v-model="business.email" :label="t('business.email')" :hint="t('business.email')" />
                     <q-input filled v-model="business.phone" :label="t('business.phone')" :hint="t('business.phone')"
                         lazy-rules :rules="[val => val && val.length > 0 || t('business.invalid')]" />
+                    <q-input filled v-model="business.address" label="Địa chỉ" hint="Địa chỉ" />
+                    <q-input filled v-model="business.bankName" label="Tên ngân hàng" hint="Tên ngân hàng" />
+                    <q-input filled v-model="business.bankAccount" label="Tài khoản ngân hàng" hint="Tài khoản ngân hàng" />
 
 
                     <div class="row">
@@ -87,7 +90,10 @@ const business = ref<Business>({
     name: '',
     mst: '',
     email: '',
-    phone: ''
+    phone: '',
+    address: '',
+    bankName: '',
+    bankAccount: ''
 })
 
 async function fetch() {
@@ -131,7 +137,8 @@ async function saveBusiness() {
         console.log(business.value)
         await api.api.business.updateBusiness(business.value.id, {
             name: business.value.name,
-            mst: business.value.mst, email: business.value.email, phone: business.value.phone
+            mst: business.value.mst, email: business.value.email, phone: business.value.phone,
+            address: business.value.address, bankName: business.value.bankName, bankAccount: business.value.bankAccount
         })
         loading.value = false
         ui.success(t('success.save'))

@@ -1,7 +1,7 @@
 package com.example.htqlCV.Service.impl;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -19,16 +19,16 @@ public class categoryServiceImpl implements categoryServices{
     private final categoryRespository categoryRespository;
     private final businessRespository businessRespository;
     @Override
-    public List<category> getAllCategory(UUID businessId) {
+    public List<category> getAllCategory(String businessId) {
         business business_value=businessRespository.findById(businessId).orElse(null);
         return categoryRespository.findByBusiness(business_value);
     }
     @Override
-    public category getCategoryById(UUID id) {
+    public category getCategoryById(String id) {
         return categoryRespository.findById(id).orElse(null);
     }
     @Override
-    public UUID createCategory(categoryRequestDTO categoryRequestDTO) {
+    public String createCategory(categoryRequestDTO categoryRequestDTO) {
         business business_value=businessRespository.findById(categoryRequestDTO.getBusinessId()).orElse(null);
         category category_value = category.builder()
                 .name(categoryRequestDTO.getName())
@@ -38,7 +38,7 @@ public class categoryServiceImpl implements categoryServices{
         return category_value.getId();
     }
     @Override
-    public void deleteCategory(UUID id) {
+    public void deleteCategory(String id) {
         categoryRespository.deleteById(id);
     }
 }

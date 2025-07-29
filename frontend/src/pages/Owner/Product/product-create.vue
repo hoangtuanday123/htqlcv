@@ -3,10 +3,12 @@
         <h2>{{ t('product.create') }}</h2>
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
             spellcheck="false">
+            <q-input v-model="product.sku" label="Mã sản phẩm"  />
             <q-input v-model="product.name" :label="t('product.name')" required />
             <q-input v-model="product.capitalPrice" :label="t('product.capital_price')" type="number" required />
             <q-input v-model="product.salePrice" :label="t('product.sale_price')" type="number" required />
             <q-input v-model="product.stockQuantity" :label="t('product.stock_quantity')" type="number" required />
+            <q-input v-model="product.unitCalculate" label="Đơn vị tính" readonly  />
             <q-select v-model="product.categoryId" :options="categoryOptions" :label="t('product.category')" map-options
                 emit-value>
                 <template v-slot:append>
@@ -74,6 +76,8 @@ const newCategoryName = ref('')
 const openPopupBranchProduct = ref(false)
 const newBranchProductName = ref('')
 let product: ProductRequest = reactive({
+    unitCalculate: 'Cái',
+    sku: null,
     name: '',
     capitalPrice: 0,
     salePrice: 0,

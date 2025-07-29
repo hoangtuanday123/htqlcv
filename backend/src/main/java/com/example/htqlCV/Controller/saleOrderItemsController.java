@@ -16,7 +16,7 @@ import com.example.htqlCV.Model.saleOrderItems;
 import com.example.htqlCV.Service.saleOrderItemsServices;
 
 import lombok.RequiredArgsConstructor;
-import java.util.UUID;
+
 
 
 
@@ -26,22 +26,22 @@ import java.util.UUID;
 public class saleOrderItemsController {
     private final saleOrderItemsServices saleOrderItemsServices;
     @GetMapping("/{id}/saleOrder")
-    public List<saleOrderItems> getItemsByOrder(@PathVariable UUID id) {
+    public List<saleOrderItems> getItemsByOrder(@PathVariable String id) {
         return saleOrderItemsServices.getSaleOrderItemsBySaleOrder(id);
     }
 
     @PostMapping("/")
-    public UUID createItem(@RequestBody saleOrderItemsRequestDTO saleOrderItemsRequestDTO) {
+    public String createItem(@RequestBody saleOrderItemsRequestDTO saleOrderItemsRequestDTO) {
         return saleOrderItemsServices.createSaleOrderItems(saleOrderItemsRequestDTO);
     }
     
     @PutMapping("/{id}/update")
-    public void updateItem(@PathVariable UUID id, @RequestBody saleOrderItemsRequestDTO saleOrderItemsRequestDTO) {
+    public void updateItem(@PathVariable String id, @RequestBody saleOrderItemsRequestDTO saleOrderItemsRequestDTO) {
         saleOrderItemsServices.updateSaleOrderItems(id, saleOrderItemsRequestDTO);
     }
 
     @DeleteMapping("{id}/delete")
-    public void deleteItem(@PathVariable UUID id){
+    public void deleteItem(@PathVariable String id){
         saleOrderItemsServices.deleteSaleOrderItems(id);
     }
     

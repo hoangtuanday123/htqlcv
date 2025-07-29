@@ -1,6 +1,6 @@
 package com.example.htqlCV.Controller;
 
-import java.util.UUID;
+
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,7 +62,7 @@ public class authController {
         authService.forgotPassword(email.getEmail());
     }
     @GetMapping("/get_token")
-    public String getToken(@RequestParam UUID verification_id, @RequestParam String token) {
+    public String getToken(@RequestParam String verification_id, @RequestParam String token) {
         return authService.getToken(verification_id, token);
     }
 

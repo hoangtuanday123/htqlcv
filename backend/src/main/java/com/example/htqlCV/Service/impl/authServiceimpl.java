@@ -244,7 +244,7 @@ public class authServiceimpl implements authServices {
             e.printStackTrace();
         }
     }
-    verificationCode _get_verification_code(UUID verification_id, String token) {
+    verificationCode _get_verification_code(String verification_id, String token) {
         verificationCode verificationCode_value = verificationCodeRespository.findById(verification_id).orElse(null);
         if (verificationCode_value == null) {
             throw new RuntimeException("Verification code not found");
@@ -259,7 +259,7 @@ public class authServiceimpl implements authServices {
     }
 
     @Override
-    public String getToken(UUID verification_id, String token) {
+    public String getToken(String verification_id, String token) {
         verificationCode verificationCode_value = _get_verification_code(verification_id, token);
         return verificationCode_value.getCode();
     }

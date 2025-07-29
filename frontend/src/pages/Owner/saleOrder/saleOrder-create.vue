@@ -94,10 +94,16 @@
             emit-value use-input :filter="customFilter" input-debounce="300"
             :rules="[val => !!val || t('customer.required')]">
           </q-select>
-          <q-input v-model="SaleOrder.totalAmount" :label="t('sale_order.total_amound')" type="number" readonly />
-          <q-input v-model="SaleOrder.totalAmountPaid" :label="t('sale_order.total_amound_paid')" type="number" />
-          <q-input :model-value="SaleOrder.totalAmount - SaleOrder.totalAmountPaid" :label="t('sale_order.dept')"
-            type="number" readonly />
+          <q-input v-model="SaleOrder.totalAmount" :label="t('sale_order.total_amound')" type="number"
+            readonly />
+          <q-input :model-value="(SaleOrder.totalAmount *8)/100"
+            label="Thuế 8%" type="number" readonly />
+            <q-input :model-value="SaleOrder.totalAmount+((SaleOrder.totalAmount *8)/100)"
+            label="Tổng cộng tiền thanh toán" type="number" readonly />
+          <q-input v-model="SaleOrder.totalAmountPaid" :label="t('sale_order.total_amound_paid')"
+            type="number" />
+          <q-input :model-value="(SaleOrder.totalAmount+((SaleOrder.totalAmount *8)/100)) - SaleOrder.totalAmountPaid"
+            :label="t('sale_order.dept')" type="number" readonly />
           <q-select v-model="SaleOrder.subStatus" :options="subStatusOptions" :label="t('sale_order.sub_status')"
             map-options emit-value>
           </q-select>
@@ -142,8 +148,8 @@ const userInfo = currentUser.info
 const route = useRouter();
 const loading = ref(false);
 const customerOptions = ref([])
-const subStatusOptions = ['None', 'Not Paid']
-const statusOptions = ['None', 'Processing', 'Completed', 'Cancelled']
+const subStatusOptions = ['Trả đủ', 'Chưa trả đủ']
+const statusOptions = [ 'Đang tiến hành', 'Hoàn thành', 'Hủy bỏ']
 const categoryOptions = ref([])
 const branchProductOptions = ref([])
 const openPopupCategory = ref(false)
@@ -157,8 +163,8 @@ let SaleOrder: SaleOrderRequest = reactive({
   totalAmount: 0,
   totalAmountPaid: 0,
   customerId: null,
-  subStatus: 'None',
-  status: 'None',
+  subStatus: 'Trả đủ',
+  status: 'Đang tiến hành',
   saleOrderItemsRequestDTO: [{
     id: null,
     productId: null,
@@ -175,6 +181,8 @@ const productOptions = ref([])
 const saleOrderItems = ref([])
 const openDiaglog = ref(false)
 let productAdd: ProductRequest = reactive({
+  unitCalculate: 'Cái',
+  sku: '',
   name: '',
   capitalPrice: 0,
   salePrice: 0,
@@ -222,7 +230,7 @@ async function fetch() {
     }));
     const productRes = await api.api.product.getProducts(String(userInfo.value.businessId));
     productOptions.value = productRes.map((item) => ({
-      label: item.name,
+      label: item.name+', Số lượng: '+item.stockQuantity,
       value: item.id,
     }))
     const categoryRes = await api.api.category.getCategories(userInfo.value.businessId)
@@ -254,7 +262,7 @@ async function save() {
     }))
     console.log(SaleOrder)
     const res = await api.api.saleOrder.createSaleOrder(SaleOrder)
-    if (SaleOrder.status == 'Completed') {
+    if (SaleOrder.status == 'Hoàn thành') {
       // SaleOrder.saleOrderItemsRequestDTO.forEach(async (item) => {
       //   const product_value = await api.api.product.getProduct(String(item.productId))
       //   const increase_quantity = product_value['stockQuantity'] + item.quantity

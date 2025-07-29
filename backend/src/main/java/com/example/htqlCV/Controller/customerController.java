@@ -1,7 +1,7 @@
 package com.example.htqlCV.Controller;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,29 +27,29 @@ public class customerController {
     private final customerServices customerServices;
 
     @GetMapping
-    public List<customer>getCustomerList(@RequestParam UUID businessId) {
+    public List<customer>getCustomerList(@RequestParam String businessId) {
         return customerServices.getCustomers(businessId);
     }
 
     @GetMapping("/{id}")
-    public customer getcustomer(@PathVariable UUID id){
+    public customer getcustomer(@PathVariable String id){
         return customerServices.getCustomer(id);
     }
 
     @PostMapping("/")
-    public UUID createCustomer(@RequestBody customerRequestDTO customerRequestDTO) {
+    public String createCustomer(@RequestBody customerRequestDTO customerRequestDTO) {
     
         return customerServices.createCustomer(customerRequestDTO);
     }
 
     @PutMapping("{id}/update")
-    public void updateCustomer(@PathVariable UUID id, @RequestBody customerRequestDTO customerRequestDTO) {
+    public void updateCustomer(@PathVariable String id, @RequestBody customerRequestDTO customerRequestDTO) {
         customerServices.updateCustomer(id, customerRequestDTO);
         
     }
 
     @DeleteMapping("/{id}/delete")
-    public void deleteCustomer(@PathVariable UUID id){
+    public void deleteCustomer(@PathVariable String id){
         customerServices.deleteCustomer(id);
     }
     

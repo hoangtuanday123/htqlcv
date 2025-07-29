@@ -1,6 +1,6 @@
 package com.example.htqlCV.Service;
 
-import java.util.UUID;
+
 
 import com.example.htqlCV.DAO.request.authRequestDTO;
 import com.example.htqlCV.DAO.request.invalidTokenRequest;
@@ -14,5 +14,5 @@ public interface authServices {
     String refreshToken(refreshTokenDTO refreshTokenDTO);
     void forgotPassword(String email);
     void resetPassword(reserPasswordRequestDTO reserPasswordRequestDTO);
-    String getToken(UUID verification_id, String token);
+    String getToken(String verification_id, String token);
 }

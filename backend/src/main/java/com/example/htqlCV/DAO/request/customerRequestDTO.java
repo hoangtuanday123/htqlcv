@@ -1,7 +1,7 @@
 package com.example.htqlCV.DAO.request;
 
 import java.sql.Date;
-import java.util.UUID;
+
 
 import lombok.Data;
 
@@ -17,5 +17,5 @@ public class customerRequestDTO {
     private String email;
     private String note;
     private String companyName;
-    private UUID businessId;
+    private String businessId;
 }
