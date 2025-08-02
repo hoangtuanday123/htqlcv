@@ -10,7 +10,7 @@
       <q-tab-panel name="infomations">
         <q-form @submit="save" class="q-gutter-md" autocorrect="off" autocapitalize="off" autocomplete="off"
           spellcheck="false">
-          <q-input v-model="product.sku" label="Mã sản phẩm" required />
+          <q-input v-model="product.sku" label="Mã sản phẩm"  />
           <q-input v-model="product.name" :label="t('product.name')" required />
           <q-input v-model="product.capitalPrice" :label="t('product.capital_price')" type="number" required />
           <q-input v-model="product.salePrice" :label="t('product.sale_price')" type="number" required />

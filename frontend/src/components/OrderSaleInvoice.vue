@@ -13,7 +13,7 @@
 
       <strong >Đơn vị bán hàng:</strong> {{ business.name }}<br
         />
-      <strong>Mã số thế:</strong> {{
+      <strong>Mã số thuế:</strong> {{
         business.mst }}<br />
       <strong>Địa chỉ:</strong> {{ business.address
       }}<br/>
@@ -40,6 +40,7 @@
         <tr>
           <th>{{ t('sale_order.number') }}</th>
           <th>{{ t('sale_order.product') }}</th>
+          <th> Đơn vị tính</th>
           <th>{{ t('sale_order.si_quantity') }}</th>
           <th>{{ t('sale_order.si_unitprice') }}</th>
           <th>{{ t('sale_order.si_totalprice') }}</th>
@@ -50,6 +51,7 @@
         <tr v-for="(item, index) in saleOrderItems" :key="index">
           <td>{{ index + 1 }}</td>
           <td>{{ item.name }}</td>
+          <td>Cái</td>
           <td>{{ item.quantity }}</td>
           <td>{{ formatCurrency(item.unitPrice) }}</td>
           <td>{{ formatCurrency(item.unitPrice * item.quantity) }}</td>
@@ -194,6 +196,7 @@ async function fetch() {
     const res_user = await api.api.user.getCurrentUser()
     const res_business = await api.api.business.getBusiness(res_user['businessId'])
     business.value = res_business
+
   } catch {
     ui.error(t('error.unknown'))
   }
@@ -397,7 +400,7 @@ onMounted(async () => {
 .total {
   text-align: right;
   margin-top: 10px;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .print-button {

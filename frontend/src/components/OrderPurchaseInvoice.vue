@@ -35,9 +35,16 @@
         </tr>
       </tbody>
     </table>
-
     <div class="total">
       <strong>{{ t('purchase_order.total_amound') }}: {{ formatCurrency(totalAmount) }}</strong>
+
+    </div>
+    <div class="total">
+      <strong>Thuế 8%: {{ formatCurrency((totalAmount*8)/100) }}</strong>
+
+    </div>
+    <div class="total">
+      <strong>Tổng cộng tiền thanh toán: {{ formatCurrency(totalAmount+((totalAmount*8)/100)) }}</strong>
 
     </div>
     <div class="total">
@@ -46,7 +53,7 @@
     </div>
     <div class="total">
 
-      <strong>{{ t('purchase_order.dept') }}: {{ formatCurrency(totalAmount - props.paid) }}</strong>
+      <strong>{{ t('purchase_order.dept') }}: {{ formatCurrency((totalAmount+((totalAmount*8)/100)) - props.paid) }}</strong>
     </div>
 
     <div class="print-button">
@@ -262,7 +269,7 @@ function printInvoice() {
         .total {
           margin-top: 10px;
           text-align: right;
-          font-weight: bold;
+
         }
 
         .print-button {
@@ -349,7 +356,7 @@ onMounted(async () => {
 .total {
   text-align: right;
   margin-top: 10px;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .print-button {

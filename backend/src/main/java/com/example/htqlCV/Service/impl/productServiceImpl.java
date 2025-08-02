@@ -63,8 +63,14 @@ public class productServiceImpl implements productServices {
     public void updateProduct(String id, productRequestDTO productRequestDTO) {
         product product_value=productRespository.findById(id).orElse(null);
         if (product_value != null) {
-            branchProduct branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
-            category category=categoryServices.getCategoryById(productRequestDTO.getCategoryId());
+            branchProduct branchProduct=null;
+            if(productRequestDTO.getBranchProductId()!=null){
+                branchProduct= branchProductServices.getBranchProductById(productRequestDTO.getBranchProductId());
+            }
+            category category=null;
+            if(productRequestDTO.getCategoryId()!=null){
+                category=categoryServices.getCategoryById(productRequestDTO.getCategoryId());
+            }
             product_value.setSku(productRequestDTO.getSku());
             product_value.setName(productRequestDTO.getName());
             product_value.setCapitalPrice(productRequestDTO.getCapitalPrice());
