@@ -99,7 +99,7 @@
           <q-input v-model="saleOrder.totalAmount" :label="t('sale_order.total_amound')" type="number"
             readonly />
           <q-input :model-value="(saleOrder.totalAmount *8)/100"
-            label="Thuế 8%" type="number" readonly />
+            label="Thuế Suất GTGT 8%" type="number" readonly />
             <q-input :model-value="saleOrder.totalAmount+((saleOrder.totalAmount *8)/100)"
             label="Tổng cộng tiền thanh toán" type="number" readonly />
           <q-input v-model="saleOrder.totalAmountPaid" :label="t('sale_order.total_amound_paid')"

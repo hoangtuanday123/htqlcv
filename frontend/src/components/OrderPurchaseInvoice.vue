@@ -40,7 +40,7 @@
 
     </div>
     <div class="total">
-      <strong>Thuế 8%: {{ formatCurrency((totalAmount*8)/100) }}</strong>
+      <strong>Thuế Suất GTGT 8%: {{ formatCurrency((totalAmount*8)/100) }}</strong>
 
     </div>
     <div class="total">

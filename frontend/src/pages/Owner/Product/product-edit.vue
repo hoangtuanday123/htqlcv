@@ -15,7 +15,7 @@
           <q-input v-model="product.capitalPrice" :label="t('product.capital_price')" type="number" required />
           <q-input v-model="product.salePrice" :label="t('product.sale_price')" type="number" required />
           <q-input v-model="product.stockQuantity" :label="t('product.stock_quantity')" type="number" required />
-          <q-input v-model="product.stockQuantity" label="Đơn vị tính"  readonly  />
+          <q-input v-model="product.unitCalculate" label="Đơn vị tính"  readonly  />
           <q-select v-model="product.category.id" :options="categoryOptions" :label="t('product.category')" map-options
             emit-value>
             <template v-slot:append>
